@@ -1,0 +1,146 @@
+version: '3.7'
+
+services:
+  db:
+    image: ${REGISTRY_PREFIX}r_austria_bot_database:${R_AUSTRIA_BOT_VERSION}
+    container_name: database
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USER}
+    ports:
+      - "127.0.0.1:${DATABASE_PORT}:5432"
+    networks:
+      - raustriabot
+    volumes:
+      - r-austria-bot-db-data:/var/lib/postgresql/data
+  deployment_container:
+    container_name: deployment
+    image: ${REGISTRY_PREFIX}r_austria_bot_deployment:${R_AUSTRIA_BOT_VERSION}
+    depends_on:
+      - db
+    environment:
+      DB_PASS: ${DATABASE_PASSWORD}
+      DB_HOST: ${DATABASE_HOST}
+      DB_PORT: ${DATABASE_PORT}
+      DB_USER: ${DATABASE_USER}
+      DB_NAME: ${DATABASE_NAME}
+      ABSTRACTO_GRAFANA_DB_PASS: ${GRAFANA_DATABASE_PASSWORD}
+      ABSTRACTO_GRAFANA_DB_USER: ${GRAFANA_DATABASE_USER}
+      EXECUTE_DEPLOYMENT: ${EXECUTE_DEPLOYMENT}
+      EXECUTE_LIQUIBASE: ${EXECUTE_LIQUIBASE}
+      EXECUTE_TEMPLATES: ${EXECUTE_TEMPLATES}
+      LIQUIBASE_PATH: ${LIQUIBASE_PATH:-/liquibase}
+      POSTGRES_DRIVER_PATH: ${EXECUTE_DEPLOYMENT:-/postgres/driver.jar}
+      WAIT_HOSTS: ${DATABASE_HOST}:${DATABASE_PORT}
+    networks:
+      - raustriabot
+  bot:
+    image: ${REGISTRY_PREFIX}r_austria_bot:${R_AUSTRIA_BOT_VERSION}
+    depends_on:
+      - db
+      - deployment_container
+    restart: on-failure
+    container_name: raustriabot
+    environment:
+      TOKEN: ${TOKEN}
+      REMOTE_DEBUG: ${REMOTE_DEBUG}
+      DB_PASS: ${DATABASE_PASSWORD}
+      DB_HOST: ${DATABASE_HOST}
+      DB_PORT: ${DATABASE_PORT}
+      DB_USER: ${DATABASE_USER}
+      DB_NAME: ${DATABASE_NAME}
+      REST_USER_NAME: ${REST_USER_NAME}
+      REST_PASSWORD: ${REST_PASSWORD}
+      YOUTUBE_API_KEY: ${YOUTUBE_API_KEY}
+    command: sh -c "while ping -c1 deployment_container &>/dev/null; do sleep 1; done; echo 'Liquibase finished!' && ./start.sh"
+    ports:
+      - "127.0.0.1:${DEBUG_PORT}:5005"
+      - "127.0.0.1:${TOMCAT_PORT}:8080"
+    networks:
+      - raustriabot
+    volumes:
+      - r-austria-bot-bot-logs:/logs
+      - ./config:/config
+  pgadmin:
+    container_name: pgadmin
+    image: ${REGISTRY_PREFIX}r_austria_bot_pg_admin:${R_AUSTRIA_BOT_VERSION}
+    depends_on:
+      - db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - "127.0.0.1:${PGADMIN_PORT}:80"
+    restart: unless-stopped
+    networks:
+      - raustriabot
+  prometheus:
+    container_name: prometheus
+    image: ${REGISTRY_PREFIX}r_austria_bot_prometheus:${R_AUSTRIA_BOT_VERSION}
+    depends_on:
+      - bot
+    ports:
+      - "127.0.0.1:${PROMETHEUS_PORT}:9090"
+    restart: unless-stopped
+    networks:
+      - raustriabot
+    volumes:
+      - ./res/prometheus-scrapper-password-filled:/etc/prometheus/micrometer_password
+      - r-austria-bot-prometheus-data:/prometheus
+  grafana:
+    container_name: grafana
+    image: ${REGISTRY_PREFIX}r_austria_bot_grafana:${R_AUSTRIA_BOT_VERSION}
+    depends_on:
+      - prometheus
+      - bot
+    ports:
+      - "127.0.0.1:${GRAFANA_PORT}:3000"
+    restart: unless-stopped
+    environment:
+      DB_PASS: ${GRAFANA_DATABASE_PASSWORD}
+      DB_HOST: ${DATABASE_HOST}
+      DB_PORT: ${DATABASE_PORT}
+      DB_USER: ${GRAFANA_DATABASE_USER}
+      DB_NAME: ${DATABASE_NAME}
+      PROMETHEUS_HOST: 'prometheus'
+      PROMETHEUS_PORT: 9090
+      LOKI_HOST: 'loki'
+      LOKI_PORT: ${LOKI_PORT}
+    volumes:
+      - r-austria-bot-grafana-user-data:/var/lib/grafana
+    networks:
+      - raustriabot
+  promtail:
+    container_name: promtail
+    image: ${REGISTRY_PREFIX}r_austria_bot_promtail:${R_AUSTRIA_BOT_VERSION}
+    depends_on:
+      - bot
+    restart: unless-stopped
+    command: -config.file=/mnt/config/promtail-config.yaml
+    volumes:
+      - r-austria-bot-bot-logs:/logs
+    networks:
+      - raustriabot
+  loki:
+    container_name: loki
+    image: ${REGISTRY_PREFIX}r_austria_bot_loki:${R_AUSTRIA_BOT_VERSION}
+    depends_on:
+      - promtail
+    command: -config.file=/mnt/config/loki-config.yaml
+    ports:
+      - "127.0.0.1:${LOKI_PORT}:3100"
+    restart: unless-stopped
+    networks:
+      - raustriabot
+
+networks:
+  raustriabot:
+    driver: bridge
+    name: raustriabot-network
+
+volumes:
+  r-austria-bot-db-data:
+  r-austria-bot-grafana-user-data:
+  r-austria-bot-prometheus-data:
+  r-austria-bot-bot-logs:

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.3.1.RELEASE</version>
+        <relativePath />
+    </parent>
+
+    <groupId>dev.sheldan.raustria.bot</groupId>
+    <artifactId>r-austria-bot</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+
+    <properties>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <!-- edit in release.yml as well -->
+        <!-- when releasing a new bot version, update the .env as well-->
+        <abstracto.version>1.3.11</abstracto.version>
+        <abstracto.templates.version>1.3.1</abstracto.templates.version>
+    </properties>
+
+    <modules>
+        <module>application</module>
+        <module>templates</module>
+        <module>deployment</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>jcenter</id>
+            <name>jcenter-bintray</name>
+            <url>https://jcenter.bintray.com</url>
+        </repository>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/Sheldan/*</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+
+    </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Packages</name>
+            <url>https://maven.pkg.github.com/Sheldan/r-austria-bot</url>
+        </repository>
+    </distributionManagement>
+
+    <scm>
+        <url>https://maven.pkg.github.com/Sheldan/r-austria-bot</url>
+        <developerConnection>scm:git:git@github.com:Sheldan/r-austria-bot.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+</project>

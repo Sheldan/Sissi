@@ -1,0 +1,13 @@
+{
+  "Servers": {
+    "1": {
+      "Name": "r-austria bot database",
+      "Group": "Server Group 1",
+      "Port": 5432,
+      "Username": "abstracto",
+      "Host": "db",
+      "SSLMode": "prefer",
+      "MaintenanceDB": "postgres"
+    }
+  }
+}

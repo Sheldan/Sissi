@@ -1,0 +1,38 @@
+name: Publish package to GitHub Packages
+on:
+  release:
+    types: [created]
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+      - name: Set up Java for publishing to GitHub Packages
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - name: Load current version
+        id: version
+        run: echo "version=$(mvn -s settings.xml --file pom.xml -q -Dexec.executable="echo" -Dexec.args='${project.version}' --non-recursive exec:exec)" >> $GITHUB_ENV
+      - name: Publish to GitHub Packages
+        run: mvn -s settings.xml --file pom.xml -B deploy -Dmaven.wagon.http.pool=false -DskipTests=true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          user: Sheldan
+          token: ${{ secrets.ABSTRACTO_PAT }}
+      - name: Login to GitHub Packages Docker Registry
+        uses: docker/login-action@v1
+        with:
+          registry: docker.pkg.github.com
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Push deployment container
+        working-directory: ./deployment/image-packaging/src/main/docker
+        run: docker-compose build && docker-compose push
+        env:
+          REGISTRY_PREFIX: docker.pkg.github.com/sheldan/r-austria-bot/
+          VERSION: ${{ env.version }}
+          ABSTRACTO_VERSION: 1.3.11
+          ABSTRACTO_REGISTRY_PREFIX: docker.pkg.github.com/sheldan/abstracto/
