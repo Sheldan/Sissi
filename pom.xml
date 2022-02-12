@@ -12,7 +12,7 @@
 
     <groupId>dev.sheldan.raustria.bot</groupId>
     <artifactId>r-austria-bot</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
 
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
@@ -56,7 +56,7 @@
     <scm>
         <url>https://maven.pkg.github.com/Sheldan/r-austria-bot</url>
         <developerConnection>scm:git:git@github.com:Sheldan/r-austria-bot.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>r-austria-bot-1.0.0</tag>
     </scm>
 
 </project>
