@@ -11,7 +11,7 @@ scrape_configs:
     scheme: http
     static_configs:
       - targets:
-          - r_austra:8080
+          - raustriabot:8080
     basic_auth:
       username: "abstracto"
       password_file: /etc/prometheus/micrometer_password
