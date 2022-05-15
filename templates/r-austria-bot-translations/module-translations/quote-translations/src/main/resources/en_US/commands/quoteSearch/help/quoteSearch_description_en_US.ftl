@@ -1,0 +1,1 @@
+Used to search quotes by the text

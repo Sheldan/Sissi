@@ -72,6 +72,16 @@
                             <destFileName>starboard.zip</destFileName>
                         </artifactItem>
 
+                        <artifactItem>
+                            <groupId>dev.sheldan.raustria.bot.templates</groupId>
+                            <artifactId>quotes-templates</artifactId>
+                            <version>${project.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <destFileName>quotes.zip</destFileName>
+                        </artifactItem>
+
                         <!-- translation artefacts -->
 
                         <artifactItem>
@@ -102,6 +112,16 @@
                             <overWrite>true</overWrite>
                             <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
                             <destFileName>starboard.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.raustria.bot.templates.translations</groupId>
+                            <artifactId>quote-translations</artifactId>
+                            <version>${project.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <destFileName>quotes.zip</destFileName>
                         </artifactItem>
 
                         <!-- custom -->
@@ -149,6 +169,19 @@
                             <overWrite>true</overWrite>
                             <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
                             <destFileName>starboard.zip</destFileName>
+                        </artifactItem>
+
+                        <!-- custom modules -->
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.raustria.bot.application.module</groupId>
+                            <artifactId>quotes</artifactId>
+                            <version>${project.version}</version>
+                            <classifier>liquibase</classifier>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <destFileName>quotes.zip</destFileName>
                         </artifactItem>
 
                         <!-- customizations -->

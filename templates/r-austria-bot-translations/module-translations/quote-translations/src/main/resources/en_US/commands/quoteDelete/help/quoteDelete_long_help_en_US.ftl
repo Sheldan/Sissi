@@ -1,0 +1,1 @@
+Deletes a quote completely from the database. Will ask for confirmation before doing so.

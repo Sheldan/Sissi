@@ -1,0 +1,1 @@
+The member to retrieve the quote stats for

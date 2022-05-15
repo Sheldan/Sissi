@@ -27,6 +27,7 @@
 
     <modules>
         <module>executable</module>
+        <module>r-austria-modules</module>
     </modules>
 
     <dependencies>

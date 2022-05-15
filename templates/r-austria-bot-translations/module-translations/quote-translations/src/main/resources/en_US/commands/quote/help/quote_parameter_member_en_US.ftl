@@ -1,0 +1,1 @@
+The member to show a random quote for

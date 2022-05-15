@@ -1,0 +1,54 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog.xsd
+    http://www.liquibase.org/xml/ns/pro dbchangelog.xsd" >
+    <changeSet author="Sheldan" id="quote-table">
+        <createTable tableName="quote">
+            <column autoIncrement="true" name="id" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="quote_pkey"/>
+            </column>
+            <column name="author_user_in_server_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="adder_user_in_server_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="source_channel_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="server_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="text" type="VARCHAR(4096)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="updated" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="author_user_in_server_id" baseTableName="quote" constraintName="fk_quote_author_user_in_server_id" 
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="user_in_server_id" 
+                                 referencedTableName="user_in_server" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="adder_user_in_server_id" baseTableName="quote" constraintName="fk_quote_adder_user_in_server_id" 
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="user_in_server_id" 
+                                 referencedTableName="user_in_server" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="source_channel_id" baseTableName="quote" constraintName="fk_quote_source_channel"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id" 
+                                 referencedTableName="channel" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="server_id" baseTableName="quote" constraintName="fk_quote_server"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION" referencedColumnNames="id"
+                                 referencedTableName="server" validate="true"/>
+
+        <sql>
+            DROP TRIGGER IF EXISTS quote_update_trigger ON quote;
+            CREATE TRIGGER quote_update_trigger BEFORE UPDATE ON quote FOR EACH ROW EXECUTE PROCEDURE update_trigger_procedure();
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,1 @@
+Retrieves a single quote by the ID

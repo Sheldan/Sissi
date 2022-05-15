@@ -7,7 +7,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
+    <groupId>dev.sheldan.raustria.bot.templates</groupId>
     <artifactId>templates</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>r-austria-bot-templates</module>
+        <module>r-austria-bot-translations</module>
+    </modules>
 
 
 </project>
