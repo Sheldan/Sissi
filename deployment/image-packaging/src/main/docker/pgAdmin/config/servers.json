@@ -5,7 +5,7 @@
       "Group": "Server Group 1",
       "Port": 5432,
       "Username": "abstracto",
-      "Host": "db",
+      "Host": "r-austria_db",
       "SSLMode": "prefer",
       "MaintenanceDB": "postgres"
     }
