@@ -37,12 +37,12 @@
       },
       "targets": [
         {
-          "expr": "{job=\"r-austria-bot-logs\", filename=\"/logs/log.log\"}",
+          "expr": "{job=\"sissi-logs\", filename=\"/logs/log.log\"}",
           "queryType": "randomWalk",
           "refId": "A"
         }
       ],
-      "title": "RAustria Bot logs",
+      "title": "Sissi logs",
       "type": "logs"
     }
   ],
@@ -59,7 +59,7 @@
   },
   "timepicker": {},
   "timezone": "",
-  "title": "RAustria Bot logs",
+  "title": "Sissi logs",
   "uid": "1uGb0q4nz",
   "version": 2
 }

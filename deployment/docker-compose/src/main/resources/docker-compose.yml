@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   db:
-    image: ${REGISTRY_PREFIX}r_austria_bot_database:${R_AUSTRIA_BOT_VERSION}
+    image: ${REGISTRY_PREFIX}sissi_database:${SISSI_VERSION}
     container_name: ${COMPOSE_PROJECT_NAME}_database
     restart: always
     environment:
@@ -11,12 +11,12 @@ services:
     ports:
       - "127.0.0.1:${DATABASE_PORT}:5432"
     networks:
-      - raustriabot
+      - sissi
     volumes:
       - db-data:/var/lib/postgresql/data
   deployment_container:
     container_name: ${COMPOSE_PROJECT_NAME}_deployment
-    image: ${REGISTRY_PREFIX}r_austria_bot_deployment:${R_AUSTRIA_BOT_VERSION}
+    image: ${REGISTRY_PREFIX}sissi_deployment:${SISSI_VERSION}
     depends_on:
       - db
     environment:
@@ -34,14 +34,14 @@ services:
       POSTGRES_DRIVER_PATH: ${EXECUTE_DEPLOYMENT:-/postgres/driver.jar}
       WAIT_HOSTS: ${COMPOSE_PROJECT_NAME}_${DATABASE_HOST}:${DATABASE_PORT}
     networks:
-      - raustriabot
+      - sissi
   bot:
-    image: ${REGISTRY_PREFIX}r_austria_bot:${R_AUSTRIA_BOT_VERSION}
+    image: ${REGISTRY_PREFIX}sissi:${SISSI_VERSION}
     depends_on:
       - db
       - deployment_container
     restart: on-failure
-    container_name: ${COMPOSE_PROJECT_NAME}_raustriabot
+    container_name: ${COMPOSE_PROJECT_NAME}bot
     environment:
       TOKEN: ${TOKEN}
       REMOTE_DEBUG: ${REMOTE_DEBUG}
@@ -58,13 +58,13 @@ services:
       - "127.0.0.1:${DEBUG_PORT}:5005"
       - "127.0.0.1:${TOMCAT_PORT}:8080"
     networks:
-      - raustriabot
+      - sissi
     volumes:
       - bot-logs:/logs
       - ./config:/config
   pgadmin:
     container_name: ${COMPOSE_PROJECT_NAME}_pgadmin
-    image: ${REGISTRY_PREFIX}r_austria_bot_pg_admin:${R_AUSTRIA_BOT_VERSION}
+    image: ${REGISTRY_PREFIX}sissi_pg_admin:${SISSI_VERSION}
     depends_on:
       - db
     environment:
@@ -74,23 +74,23 @@ services:
       - "127.0.0.1:${PGADMIN_PORT}:80"
     restart: unless-stopped
     networks:
-      - raustriabot
+      - sissi
   prometheus:
     container_name: ${COMPOSE_PROJECT_NAME}_prometheus
-    image: ${REGISTRY_PREFIX}r_austria_bot_prometheus:${R_AUSTRIA_BOT_VERSION}
+    image: ${REGISTRY_PREFIX}sissi_prometheus:${SISSI_VERSION}
     depends_on:
       - bot
     ports:
       - "127.0.0.1:${PROMETHEUS_PORT}:9090"
     restart: unless-stopped
     networks:
-      - raustriabot
+      - sissi
     volumes:
       - ./res/prometheus-scrapper-password-filled:/etc/prometheus/micrometer_password
       - prometheus-data:/prometheus
   grafana:
     container_name: ${COMPOSE_PROJECT_NAME}_grafana
-    image: ${REGISTRY_PREFIX}r_austria_bot_grafana:${R_AUSTRIA_BOT_VERSION}
+    image: ${REGISTRY_PREFIX}sissi_grafana:${SISSI_VERSION}
     depends_on:
       - prometheus
       - bot
@@ -110,10 +110,10 @@ services:
     volumes:
       - grafana-user-data:/var/lib/grafana
     networks:
-      - raustriabot
+      - sissi
   promtail:
     container_name: ${COMPOSE_PROJECT_NAME}_promtail
-    image: ${REGISTRY_PREFIX}r_austria_bot_promtail:${R_AUSTRIA_BOT_VERSION}
+    image: ${REGISTRY_PREFIX}sissi_promtail:${SISSI_VERSION}
     depends_on:
       - bot
     restart: unless-stopped
@@ -121,10 +121,10 @@ services:
     volumes:
       - bot-logs:/logs
     networks:
-      - raustriabot
+      - sissi
   loki:
     container_name: ${COMPOSE_PROJECT_NAME}_loki
-    image: ${REGISTRY_PREFIX}r_austria_bot_loki:${R_AUSTRIA_BOT_VERSION}
+    image: ${REGISTRY_PREFIX}sissi_loki:${SISSI_VERSION}
     depends_on:
       - promtail
     command: -config.file=/mnt/config/loki-config.yaml
@@ -132,12 +132,12 @@ services:
       - "127.0.0.1:${LOKI_PORT}:3100"
     restart: unless-stopped
     networks:
-      - raustriabot
+      - sissi
 
 networks:
-  raustriabot:
+  sissi:
     driver: bridge
-    name: raustriabot-network
+    name: sissi-network
 
 volumes:
   db-data:

@@ -1,11 +1,11 @@
 {
   "Servers": {
     "1": {
-      "Name": "r-austria bot database",
+      "Name": "Sissi database",
       "Group": "Server Group 1",
       "Port": 5432,
       "Username": "abstracto",
-      "Host": "r-austria_db",
+      "Host": "sissi_database",
       "SSLMode": "prefer",
       "MaintenanceDB": "postgres"
     }

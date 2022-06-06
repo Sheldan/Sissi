@@ -10,8 +10,8 @@
         <relativePath />
     </parent>
 
-    <groupId>dev.sheldan.raustria.bot</groupId>
-    <artifactId>r-austria-bot</artifactId>
+    <groupId>dev.sheldan.sissi</groupId>
+    <artifactId>sissi</artifactId>
     <version>1.0.3-SNAPSHOT</version>
 
     <properties>
@@ -49,13 +49,13 @@
         <repository>
             <id>github</id>
             <name>GitHub Packages</name>
-            <url>https://maven.pkg.github.com/Sheldan/r-austria-bot</url>
+            <url>https://maven.pkg.github.com/Sheldan/Sissi</url>
         </repository>
     </distributionManagement>
 
     <scm>
-        <url>https://maven.pkg.github.com/Sheldan/r-austria-bot</url>
-        <developerConnection>scm:git:git@github.com:Sheldan/r-austria-bot.git</developerConnection>
+        <url>https://maven.pkg.github.com/Sheldan/Sissi</url>
+        <developerConnection>scm:git:git@github.com:Sheldan/Sissi.git</developerConnection>
         <tag>HEAD</tag>
     </scm>
 

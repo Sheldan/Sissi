@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <groupId>dev.sheldan.raustria.bot</groupId>
-        <artifactId>r-austria-bot</artifactId>
+        <groupId>dev.sheldan.sissi</groupId>
+        <artifactId>sissi</artifactId>
         <version>1.0.3-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
 
-    <groupId>dev.sheldan.raustria.bot.application</groupId>
+    <groupId>dev.sheldan.sissi.application</groupId>
     <artifactId>application</artifactId>
 
     <dependencyManagement>
@@ -27,7 +27,7 @@
 
     <modules>
         <module>executable</module>
-        <module>r-austria-modules</module>
+        <module>sissi-modules</module>
     </modules>
 
     <dependencies>

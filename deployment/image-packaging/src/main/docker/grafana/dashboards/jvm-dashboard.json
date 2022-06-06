@@ -14,7 +14,7 @@
       }
     ]
   },
-  "description": "Dashboard for RAustria Bot spring boot monitoring (adapted from https://grafana.com/grafana/dashboards/4701)",
+  "description": "Dashboard for Sissi spring boot monitoring (adapted from https://grafana.com/grafana/dashboards/4701)",
   "editable": true,
   "gnetId": null,
   "graphTooltip": 1,
@@ -1502,8 +1502,8 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "text": "raustriabot",
-          "value": "raustriabot"
+          "text": "Sissi",
+          "value": "sissi"
         },
         "datasource": "prometheus",
         "definition": "",
