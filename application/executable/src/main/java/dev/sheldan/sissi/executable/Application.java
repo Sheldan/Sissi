@@ -1,4 +1,4 @@
-package dev.sheldan.raustria.bot.executable;
+package dev.sheldan.sissi.executable;
 
 import dev.sheldan.abstracto.core.service.Startup;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +15,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
 @EnableAutoConfiguration(exclude = { FreeMarkerAutoConfiguration.class })
-@ComponentScan(basePackages = {"dev.sheldan.abstracto", "dev.sheldan.raustria.bot"})
+@ComponentScan(basePackages = {"dev.sheldan.abstracto", "dev.sheldan.sissi"})
 @EnableCaching
-@EnableJpaRepositories(basePackages = {"dev.sheldan.abstracto", "dev.sheldan.raustria.bot"})
-@EntityScan(basePackages = {"dev.sheldan.abstracto", "dev.sheldan.raustria.bot"})
+@EnableJpaRepositories(basePackages = {"dev.sheldan.abstracto", "dev.sheldan.sissi"})
+@EntityScan(basePackages = {"dev.sheldan.abstracto", "dev.sheldan.sissi"})
 @EnableTransactionManagement
 public class Application implements CommandLineRunner {
 
