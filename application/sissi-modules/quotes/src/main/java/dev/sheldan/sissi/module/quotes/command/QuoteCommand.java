@@ -4,9 +4,12 @@ import dev.sheldan.abstracto.core.command.condition.AbstractConditionableCommand
 import dev.sheldan.abstracto.core.command.config.CommandConfiguration;
 import dev.sheldan.abstracto.core.command.config.HelpInfo;
 import dev.sheldan.abstracto.core.command.config.Parameter;
+import dev.sheldan.abstracto.core.command.config.SlashCommandConfig;
 import dev.sheldan.abstracto.core.command.execution.CommandContext;
 import dev.sheldan.abstracto.core.command.execution.CommandResult;
+import dev.sheldan.abstracto.core.command.slash.parameter.SlashCommandParameterService;
 import dev.sheldan.abstracto.core.config.FeatureDefinition;
+import dev.sheldan.abstracto.core.interaction.InteractionService;
 import dev.sheldan.abstracto.core.models.database.AServer;
 import dev.sheldan.abstracto.core.models.database.AUserInAServer;
 import dev.sheldan.abstracto.core.service.ChannelService;
@@ -14,6 +17,7 @@ import dev.sheldan.abstracto.core.service.management.ServerManagementService;
 import dev.sheldan.abstracto.core.service.management.UserInServerManagementService;
 import dev.sheldan.abstracto.core.templating.model.MessageToSend;
 import dev.sheldan.abstracto.core.utils.FutureUtils;
+import dev.sheldan.sissi.module.quotes.config.QuoteSlashCommandNames;
 import dev.sheldan.sissi.module.quotes.config.QuotesFeatureDefinition;
 import dev.sheldan.sissi.module.quotes.config.QuotesModuleDefinition;
 import dev.sheldan.sissi.module.quotes.exception.QuoteNotFoundException;
@@ -21,6 +25,8 @@ import dev.sheldan.sissi.module.quotes.model.database.Quote;
 import dev.sheldan.sissi.module.quotes.service.QuoteServiceBean;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.InteractionHook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -32,6 +38,9 @@ import java.util.concurrent.CompletableFuture;
 
 @Component
 public class QuoteCommand extends AbstractConditionableCommand {
+
+    private static final String QUOTE_COMMAND = "quote";
+    private static final String MEMBER_PARAMETER = "member";
 
     @Autowired
     private QuoteServiceBean quoteServiceBean;
@@ -48,6 +57,11 @@ public class QuoteCommand extends AbstractConditionableCommand {
     @Autowired
     private QuoteCommand self;
 
+    @Autowired
+    private SlashCommandParameterService slashCommandParameterService;
+
+    @Autowired
+    private InteractionService interactionService;
 
     @Override
     public CompletableFuture<CommandResult> executeAsync(CommandContext commandContext) {
@@ -61,14 +75,10 @@ public class QuoteCommand extends AbstractConditionableCommand {
             AUserInAServer user = userInServerManagementService.loadOrCreateUser(targetMember);
             foundQuote = quoteServiceBean.getRandomQuoteForMember(user);
         }
-        if(foundQuote.isPresent()) {
-                Quote quoteToDisplay = foundQuote.get();
-                return quoteServiceBean.renderQuoteToMessageToSend(quoteToDisplay)
-                        .thenCompose(messageToSend -> self.sendMessageToChannel(messageToSend, commandContext.getChannel()))
-                        .thenApply(unused -> CommandResult.fromSuccess());
-            } else {
-                throw new QuoteNotFoundException();
-            }
+        Quote quoteToDisplay = foundQuote.orElseThrow(QuoteNotFoundException::new);
+        return quoteServiceBean.renderQuoteToMessageToSend(quoteToDisplay)
+                .thenCompose(messageToSend -> self.sendMessageToChannel(messageToSend, commandContext.getChannel()))
+                .thenApply(unused -> CommandResult.fromSuccess());
         }
 
     @Transactional
@@ -77,14 +87,54 @@ public class QuoteCommand extends AbstractConditionableCommand {
     }
 
     @Override
+    public CompletableFuture<CommandResult> executeSlash(SlashCommandInteractionEvent event) {
+        Optional<Quote> foundQuote;
+        if(slashCommandParameterService.hasCommandOption(MEMBER_PARAMETER, event)) {
+            Member targetMember = slashCommandParameterService.getCommandOption(MEMBER_PARAMETER, event, Member.class);
+            AUserInAServer user = userInServerManagementService.loadOrCreateUser(targetMember);
+            foundQuote = quoteServiceBean.getRandomQuoteForMember(user);
+        } else {
+            AServer server = serverManagementService.loadServer(event.getGuild().getIdLong());
+            foundQuote = quoteServiceBean.getRandomQuote(server);
+        }
+        Quote quoteToDisplay = foundQuote.orElseThrow(QuoteNotFoundException::new);
+        return quoteServiceBean.renderQuoteToMessageToSend(quoteToDisplay)
+                .thenCompose(messageToSend -> self.replyMessage(event, messageToSend))
+                .thenApply(unused -> CommandResult.fromSuccess());
+    }
+
+    @Transactional
+    public CompletableFuture<InteractionHook> replyMessage(SlashCommandInteractionEvent event, MessageToSend messageToSend) {
+        return interactionService.replyMessageToSend(messageToSend, event);
+    }
+
+    @Override
     public CommandConfiguration getConfiguration() {
-        Parameter memberParameter = Parameter.builder().templated(true).name("member").type(Member.class).optional(true).build();
+        Parameter memberParameter = Parameter
+                .builder()
+                .templated(true)
+                .name(MEMBER_PARAMETER)
+                .type(Member.class)
+                .optional(true)
+                .build();
+
+        SlashCommandConfig slashCommandConfig = SlashCommandConfig
+                .builder()
+                .enabled(true)
+                .rootCommandName(QuoteSlashCommandNames.QUOTE)
+                .commandName("random")
+                .build();
+
         List<Parameter> parameters = Collections.singletonList(memberParameter);
-        HelpInfo helpInfo = HelpInfo.builder().templated(true).build();
+        HelpInfo helpInfo = HelpInfo
+                .builder()
+                .templated(true)
+                .build();
         return CommandConfiguration.builder()
-                .name("quote")
+                .name(QUOTE_COMMAND)
                 .module(QuotesModuleDefinition.QUOTES)
                 .templated(true)
+                .slashCommandConfig(slashCommandConfig)
                 .async(true)
                 .supportsEmbedException(true)
                 .causesReaction(false)

@@ -1,0 +1,1 @@
+Quote has been deleted.
