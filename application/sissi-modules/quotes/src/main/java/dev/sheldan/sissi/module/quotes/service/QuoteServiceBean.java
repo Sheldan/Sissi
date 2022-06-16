@@ -18,10 +18,7 @@ import dev.sheldan.sissi.module.quotes.model.database.Quote;
 import dev.sheldan.sissi.module.quotes.model.database.QuoteAttachment;
 import dev.sheldan.sissi.module.quotes.repository.QuoteRepository;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.entities.AbstractChannel;
-import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -127,7 +124,7 @@ public class QuoteServiceBean {
         Long quoteAdderUserId = quote.getAdder().getUserReference().getId();
         Long serverId = quote.getServer().getId();
         Long channelId = quote.getSourceChannel().getId();
-        Optional<TextChannel> sourceChannel = channelService.getTextChannelFromServerOptional(serverId, channelId);
+        Optional<GuildMessageChannel> sourceChannel = channelService.getMessageChannelFromServerOptional(serverId, channelId);
         List<Long> userIds = Arrays.asList(quotedUserId, quoteAdderUserId);
         CompletableFutureList<User> futureList = userService.retrieveUsers(userIds);
         CompletableFuture<MessageToSend> messageFuture = new CompletableFuture<>();
@@ -143,7 +140,7 @@ public class QuoteServiceBean {
     }
 
     private CompletableFuture<MessageToSend> createMessageToSend( CompletableFutureList<User> possibleUsers, QuoteResponseModel.QuoteResponseModelBuilder modelBuilder,
-                                                                 Long quotedUserId, Long quoteAdderUserId, Long serverId, Optional<TextChannel> sourceChannel) {
+                                                                 Long quotedUserId, Long quoteAdderUserId, Long serverId, Optional<GuildMessageChannel> sourceChannel) {
         return memberService.getMembersInServerAsync(serverId, Arrays.asList(quotedUserId, quoteAdderUserId))
                 .thenApply(members -> {
                     List<User> foundUsers = possibleUsers.getObjects();
@@ -196,7 +193,7 @@ public class QuoteServiceBean {
                                     .map(User::getName)
                                     .orElse(null));
                     String channelName = sourceChannel
-                            .map(AbstractChannel::getName)
+                            .map(Channel::getName)
                             .orElse(null);
                     QuoteResponseModel model = modelBuilder
                             .adderAvatarURL(adderAvatar)
