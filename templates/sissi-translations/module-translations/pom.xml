@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>quote-translations</module>
+        <module>meetup-translations</module>
     </modules>
 
 

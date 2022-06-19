@@ -62,6 +62,7 @@
                             <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
                             <destFileName>link-embed.zip</destFileName>
                         </artifactItem>
+
                         <artifactItem>
                             <groupId>dev.sheldan.abstracto-templates.templates</groupId>
                             <artifactId>starboard</artifactId>
@@ -80,6 +81,16 @@
                             <overWrite>true</overWrite>
                             <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
                             <destFileName>quotes.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.sissi.templates</groupId>
+                            <artifactId>meetup-templates</artifactId>
+                            <version>${project.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <destFileName>meetup.zip</destFileName>
                         </artifactItem>
 
                         <!-- translation artefacts -->
@@ -122,6 +133,16 @@
                             <overWrite>true</overWrite>
                             <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
                             <destFileName>quotes.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.sissi.templates.translations</groupId>
+                            <artifactId>meetup-translations</artifactId>
+                            <version>${project.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <destFileName>meetup.zip</destFileName>
                         </artifactItem>
 
                         <!-- custom -->
@@ -182,6 +203,17 @@
                             <overWrite>true</overWrite>
                             <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
                             <destFileName>quotes.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.sissi.application.module</groupId>
+                            <artifactId>meetup</artifactId>
+                            <version>${project.version}</version>
+                            <classifier>liquibase</classifier>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <destFileName>meetup.zip</destFileName>
                         </artifactItem>
 
                         <!-- customizations -->

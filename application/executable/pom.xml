@@ -81,6 +81,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>dev.sheldan.sissi.application.module</groupId>
+            <artifactId>meetup</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
     </dependencies>
 
 </project>

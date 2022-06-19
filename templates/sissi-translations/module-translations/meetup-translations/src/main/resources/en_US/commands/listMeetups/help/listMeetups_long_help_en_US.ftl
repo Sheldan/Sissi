@@ -1,0 +1,1 @@
+This command can be used to list all future meetups and get information about them.

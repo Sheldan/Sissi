@@ -1,4 +1,4 @@
-package dev.sheldan.sissi.module.quotes.command;
+package dev.sheldan.sissi.module.quotes.commands;
 
 import dev.sheldan.abstracto.core.command.condition.AbstractConditionableCommand;
 import dev.sheldan.abstracto.core.command.config.CommandConfiguration;

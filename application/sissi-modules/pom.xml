@@ -12,6 +12,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>quotes</module>
+        <module>meetup</module>
     </modules>
 
 

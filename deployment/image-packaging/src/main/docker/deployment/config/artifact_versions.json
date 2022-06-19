@@ -1,12 +1,13 @@
 {
-  "template_artifacts": ["core","starboard", "link-embed", "quotes"],
-  "translation_artifacts": ["core", "starboard", "link-embed", "quotes"],
+  "template_artifacts": ["core","starboard", "link-embed", "quotes", "meetup"],
+  "translation_artifacts": ["core", "starboard", "link-embed", "quotes", "meetup"],
   "liquibase_artifacts": [
     { "zip": "scheduling", "file": "scheduling-changeLog.xml" },
     { "zip": "core", "file": "core-changeLog.xml" },
     { "zip": "link-embed", "file": "link-embed-changeLog.xml"},
     { "zip": "starboard", "file": "starboard-changeLog.xml"},
-    { "zip": "quotes", "file": "quotes-changeLog.xml"}
+    { "zip": "quotes", "file": "quotes-changeLog.xml"},
+    { "zip": "meetup", "file": "meetup-changeLog.xml"}
   ]
 }
 

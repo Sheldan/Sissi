@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>quotes-templates</module>
+        <module>meetup-templates</module>
     </modules>
 
 </project>
