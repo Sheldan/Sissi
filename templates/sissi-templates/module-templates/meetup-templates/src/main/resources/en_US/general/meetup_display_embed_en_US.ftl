@@ -11,9 +11,9 @@
             <#assign time><@format_instant_date_time instant=meetupTime/></#assign>
             <#assign timeRelative><@format_instant_relative instant=meetupTime/></#assign>
             <#assign descriptionText>${description?json_string}</#assign>
-            <#assign participantsText><#list participants as member>${member.memberMention}<#else><#include "meetup_message_no_member"></#list></#assign>
-            <#assign maybeParticipantsText><#list maybeParticipants as member>${member.memberMention}<#else><#include "meetup_message_no_member"></#list></#assign>
-            <#assign declinedParticipantsText><#list declinedParticipants as member>${member.memberMention}<#else><#include "meetup_message_no_member"></#list></#assign>
+            <#assign participantsText> (${participants?size}) <#list participants as member>${member.memberMention}<#sep>, </#sep><#else><#include "meetup_message_no_member"></#list></#assign>
+            <#assign maybeParticipantsText> (${maybeParticipants?size}) <#list maybeParticipants as member>${member.memberMention}<#sep>, </#sep><#else><#include "meetup_message_no_member"></#list></#assign>
+            <#assign declinedParticipantsText> (${declinedParticipants?size}) <#list declinedParticipants as member>${member.memberMention}<#sep>, </#sep><#else><#include "meetup_message_no_member"></#list></#assign>
             "description": "<#if cancelled>~~</#if><#include "meetup_display_description"><#if cancelled>~~</#if>"
         }
     ],

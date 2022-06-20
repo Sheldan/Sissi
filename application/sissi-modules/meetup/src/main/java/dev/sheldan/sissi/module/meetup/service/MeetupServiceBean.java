@@ -147,12 +147,18 @@ public class MeetupServiceBean {
         Meetup meetup = meetupManagementServiceBean.getMeetup(meetupId, serverId);
         MeetupMessageModel model = getMeetupMessageModel(meetup);
         MessageToSend messageToSend = templateService.renderEmbedTemplate(MEETUP_CANCELLATION_TEMPLATE, model);
-        meetup.getParticipants().forEach(meetupParticipator -> {
-            Long userId = meetupParticipator.getParticipator().getUserReference().getId();
-            userService.retrieveUserForId(userId)
-                    .thenCompose(user -> messageService.sendMessageToSendToUser(user, messageToSend))
-                    .thenAccept(message -> log.info("Notified user {} about cancellation of meetup {} in server {}.", userId, meetupId, serverId));
-        });
+        meetup
+                .getParticipants()
+                .stream()
+                .filter(meetupParticipator ->
+                                meetupParticipator.getDecision().equals(MeetupDecision.MAYBE) ||
+                                meetupParticipator.getDecision().equals(MeetupDecision.YES))
+                .forEach(meetupParticipator -> {
+                    Long userId = meetupParticipator.getParticipator().getUserReference().getId();
+                    userService.retrieveUserForId(userId)
+                            .thenCompose(user -> messageService.sendMessageToSendToUser(user, messageToSend))
+                            .thenAccept(message -> log.info("Notified user {} about cancellation of meetup {} in server {}.", userId, meetupId, serverId));
+                });
     }
 
     @Transactional
@@ -209,11 +215,11 @@ public class MeetupServiceBean {
                         meetupParticipator.getDecision().equals(MeetupDecision.MAYBE) ||
                         meetupParticipator.getDecision().equals(MeetupDecision.YES))
                 .forEach(meetupParticipator -> {
-            Long userId = meetupParticipator.getParticipator().getUserReference().getId();
-            userService.retrieveUserForId(userId)
-                    .thenCompose(user -> messageService.sendMessageToSendToUser(user, messageToSend))
-                    .thenAccept(message -> log.info("Notified user {} about incoming meetup {} in server {}.", userId, meetupId, serverId));
-        });
+                    Long userId = meetupParticipator.getParticipator().getUserReference().getId();
+                    userService.retrieveUserForId(userId)
+                            .thenCompose(user -> messageService.sendMessageToSendToUser(user, messageToSend))
+                            .thenAccept(message -> log.info("Notified user {} about incoming meetup {} in server {}.", userId, meetupId, serverId));
+                });
     }
 
     @Transactional
