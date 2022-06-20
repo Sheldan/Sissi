@@ -58,6 +58,10 @@ public class MeetupManagementServiceBean {
         return meetupRepository.findAll();
     }
 
+    public List<Meetup> findCancelledMeetups() {
+        return meetupRepository.findByState(MeetupState.CANCELLED);
+    }
+
     public List<Meetup> getFutureMeetups() {
         return meetupRepository.findByMeetupTimeGreaterThan(Instant.now());
     }

@@ -225,11 +225,18 @@ public class MeetupServiceBean {
     @Transactional
     public void cleanupMeetups() {
         Instant time = Instant.now().minus(1, ChronoUnit.DAYS);
-        List<Meetup> oldMeetups = meetupManagementServiceBean.getMeetupsOlderThan(time)
-                .stream()
-                .filter(meetup -> meetup.getMessageId() != null)
-                .collect(Collectors.toList());
-        oldMeetups.forEach(meetup -> messageService.deleteMessageInChannelInServer(meetup.getServer().getId(), meetup.getMeetupChannel().getId(), meetup.getMessageId()));
+        List<Meetup> oldMeetups = meetupManagementServiceBean.getMeetupsOlderThan(time);
+        deleteMeetups(oldMeetups);
+        List<Meetup> cancelledMeetups = meetupManagementServiceBean.findCancelledMeetups();
+        deleteMeetups(cancelledMeetups);
+    }
+
+    private void deleteMeetups(List<Meetup> oldMeetups) {
+        oldMeetups.forEach(meetup -> {
+            if(meetup.getMessageId() != null) {
+                messageService.deleteMessageInChannelInServer(meetup.getServer().getId(), meetup.getMeetupChannel().getId(), meetup.getMessageId());
+            }
+        });
         meetupManagementServiceBean.deleteMeetups(oldMeetups);
     }
 }
