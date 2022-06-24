@@ -49,9 +49,13 @@ public class MeetupDecisionListener implements ButtonClickedListener {
     public ButtonClickedListenerResult execute(ButtonClickedListenerModel model) {
         MeetupDecisionPayload payload = (MeetupDecisionPayload) model.getDeserializedPayload();
         Meetup meetup = meetupManagementServiceBean.getMeetup(payload.getMeetupId(),  payload.getGuildId());
-        if(payload.getMeetupDecision().equals(MeetupDecision.CANCEL) && model.getEvent().getUser().getIdLong() == meetup.getOrganizer().getUserReference().getId())  {
-            meetupServiceBean.cancelMeetup(meetup, payload.getComponentPayloads());
-            return ButtonClickedListenerResult.ACKNOWLEDGED;
+        if(payload.getMeetupDecision().equals(MeetupDecision.CANCEL))  {
+            if(model.getEvent().getUser().getIdLong() == meetup.getOrganizer().getUserReference().getId()) {
+                meetupServiceBean.cancelMeetup(meetup, payload.getComponentPayloads());
+                return ButtonClickedListenerResult.ACKNOWLEDGED;
+            } else {
+                return ButtonClickedListenerResult.IGNORED;
+            }
         }
         AUserInAServer userInAServer = userInServerManagementService.loadOrCreateUser(model.getEvent().getMember());
 
@@ -64,12 +68,12 @@ public class MeetupDecisionListener implements ButtonClickedListener {
         MeetupMessageModel meetupMessageModel = meetupServiceBean.getMeetupMessageModel(meetup);
         addParticipationToModel(meetupMessageModel, userInAServer, payload.getMeetupDecision());
         MessageToSend messageToSend = meetupServiceBean.getMeetupMessage(meetupMessageModel);
-        channelService.editEmbedMessageInAChannel(messageToSend.getEmbeds().get(0), model.getEvent().getChannel(), meetup.getMessageId()).thenAccept(message -> {
-            log.info("Updated message of meetup {} in channel {} in server {}.", meetup.getId().getId(), meetup.getMeetupChannel().getId(), meetup.getServer().getId());
-        }).exceptionally(throwable -> {
-            log.info("Failed to update message of meetup {} in channel {} in server {}.", meetup.getId().getId(), meetup.getMeetupChannel().getId(), meetup.getServer().getId(), throwable);
-            return null;
-        });
+        channelService.editEmbedMessageInAChannel(messageToSend.getEmbeds().get(0), model.getEvent().getChannel(), meetup.getMessageId())
+                .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetup.getId().getId(), meetup.getMeetupChannel().getId(), meetup.getServer().getId()))
+                .exceptionally(throwable -> {
+                    log.info("Failed to update message of meetup {} in channel {} in server {}.", meetup.getId().getId(), meetup.getMeetupChannel().getId(), meetup.getServer().getId(), throwable);
+                    return null;
+                });
         return ButtonClickedListenerResult.ACKNOWLEDGED;
     }
 
