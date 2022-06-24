@@ -10,6 +10,7 @@
             },
             <#assign time><@format_instant_date_time instant=meetupTime/></#assign>
             <#assign timeRelative><@format_instant_relative instant=meetupTime/></#assign>
+            <#assign organizerText>${organizer.memberMention}</#assign>
             <#assign descriptionText>${description?json_string}</#assign>
             <#assign participantsText> (${participants?size}) <#list participants as member>${member.memberMention}<#sep>, </#sep><#else><#include "meetup_message_no_member"></#list></#assign>
             <#assign maybeParticipantsText> (${maybeParticipants?size}) <#list maybeParticipants as member>${member.memberMention}<#sep>, </#sep><#else><#include "meetup_message_no_member"></#list></#assign>
