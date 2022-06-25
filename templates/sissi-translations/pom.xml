@@ -12,6 +12,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>module-translations</module>
+        <module>customization-translations</module>
+        <module>translation-overrides</module>
     </modules>
 
 

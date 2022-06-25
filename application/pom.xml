@@ -26,8 +26,9 @@
     </dependencyManagement>
 
     <modules>
-        <module>executable</module>
         <module>sissi-modules</module>
+        <module>sissi-customizations</module>
+        <module>executable</module>
     </modules>
 
     <dependencies>

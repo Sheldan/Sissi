@@ -13,7 +13,7 @@ db_database = os.getenv('DB_NAME')
 db_user = os.getenv('DB_USER')
 db_password = os.getenv('DB_PASS')
 engine = db.create_engine('postgresql://%s:%s@%s:%s/%s' % (db_user, db_password, db_host, db_port, db_database))
-
+1
 with engine.connect() as con:
     with con.begin():
         create_users(server_id, all_quotes, con)

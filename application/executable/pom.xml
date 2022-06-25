@@ -76,6 +76,13 @@
         </dependency>
 
         <dependency>
+            <groupId>dev.sheldan.abstracto.modules</groupId>
+            <artifactId>moderation-impl</artifactId>
+        </dependency>
+
+        <!-- sissi modules  -->
+
+        <dependency>
             <groupId>dev.sheldan.sissi.application.module</groupId>
             <artifactId>quotes</artifactId>
             <version>${project.version}</version>
@@ -84,6 +91,14 @@
         <dependency>
             <groupId>dev.sheldan.sissi.application.module</groupId>
             <artifactId>meetup</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <!-- sissi customizations -->
+
+        <dependency>
+            <groupId>dev.sheldan.sissi.application.module.custom</groupId>
+            <artifactId>moderation-custom</artifactId>
             <version>${project.version}</version>
         </dependency>
 

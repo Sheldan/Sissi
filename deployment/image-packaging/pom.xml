@@ -42,7 +42,7 @@
                             <destFileName>app.jar</destFileName>
                         </artifactItem>
 
-                        <!-- template artefacts -->
+                        <!-- abstracto template artefacts -->
                         <artifactItem>
                             <groupId>dev.sheldan.abstracto-templates.templates</groupId>
                             <artifactId>core</artifactId>
@@ -73,6 +73,17 @@
                             <destFileName>starboard.zip</destFileName>
                         </artifactItem>
 
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.templates</groupId>
+                            <artifactId>moderation</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <destFileName>moderation.zip</destFileName>
+                        </artifactItem>
+
+                        <!-- sissi template artefacts -->
                         <artifactItem>
                             <groupId>dev.sheldan.sissi.templates</groupId>
                             <artifactId>quotes-templates</artifactId>
@@ -93,7 +104,7 @@
                             <destFileName>meetup.zip</destFileName>
                         </artifactItem>
 
-                        <!-- translation artefacts -->
+                        <!-- abstracto translation artefacts -->
 
                         <artifactItem>
                             <groupId>dev.sheldan.abstracto-templates.translations</groupId>
@@ -124,6 +135,18 @@
                             <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
                             <destFileName>starboard.zip</destFileName>
                         </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.translations</groupId>
+                            <artifactId>moderation</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <destFileName>moderation.zip</destFileName>
+                        </artifactItem>
+
+                        <!-- sissi translation artefacts -->
 
                         <artifactItem>
                             <groupId>dev.sheldan.sissi.templates.translations</groupId>
@@ -147,7 +170,7 @@
 
                         <!-- custom -->
 
-                        <!-- liquibase artifacts -->
+                        <!-- abstracto liquibase artifacts -->
                         <artifactItem>
                             <groupId>dev.sheldan.abstracto.scheduling</groupId>
                             <artifactId>scheduling-impl</artifactId>
@@ -192,7 +215,18 @@
                             <destFileName>starboard.zip</destFileName>
                         </artifactItem>
 
-                        <!-- custom modules -->
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto.modules</groupId>
+                            <artifactId>moderation-impl</artifactId>
+                            <version>${abstracto.version}</version>
+                            <classifier>liquibase</classifier>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <destFileName>moderation.zip</destFileName>
+                        </artifactItem>
+
+                        <!-- sissi liquibase artifacts -->
 
                         <artifactItem>
                             <groupId>dev.sheldan.sissi.application.module</groupId>
@@ -218,9 +252,50 @@
 
                         <!-- customizations -->
 
+                        <artifactItem>
+                            <groupId>dev.sheldan.sissi.application.module.custom</groupId>
+                            <artifactId>moderation-custom</artifactId>
+                            <version>${project.version}</version>
+                            <classifier>liquibase</classifier>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <destFileName>moderation-custom.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.sissi.templates.translations</groupId>
+                            <artifactId>moderation-customization-translations</artifactId>
+                            <version>${project.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <destFileName>moderation-custom.zip</destFileName>
+                        </artifactItem>
+
                         <!-- overrides -->
 
+                        <artifactItem>
+                            <groupId>dev.sheldan.sissi.templates</groupId>
+                            <artifactId>moderation-template-overrides</artifactId>
+                            <version>${project.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <destFileName>moderation-template-overrides.zip</destFileName>
+                        </artifactItem>
+
                         <!-- overrides translations -->
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.sissi.templates.translations.overrides</groupId>
+                            <artifactId>moderation-translation-overrides</artifactId>
+                            <version>${project.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <destFileName>moderation-translation-overrides.zip</destFileName>
+                        </artifactItem>
 
                     </artifactItems>
                 </configuration>

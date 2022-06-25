@@ -1,13 +1,25 @@
 {
-  "template_artifacts": ["core","starboard", "link-embed", "quotes", "meetup"],
-  "translation_artifacts": ["core", "starboard", "link-embed", "quotes", "meetup"],
+  "template_artifacts": [
+    "core","starboard", "link-embed", "moderation",
+    "quotes", "meetup",
+    "moderation-template-overrides"
+  ],
+  "translation_artifacts": [
+    "core",
+    "starboard", "link-embed", "moderation",
+    "quotes", "meetup",
+    "moderation-custom",
+    "moderation-translation-overrides"
+  ],
   "liquibase_artifacts": [
     { "zip": "scheduling", "file": "scheduling-changeLog.xml" },
     { "zip": "core", "file": "core-changeLog.xml" },
     { "zip": "link-embed", "file": "link-embed-changeLog.xml"},
     { "zip": "starboard", "file": "starboard-changeLog.xml"},
     { "zip": "quotes", "file": "quotes-changeLog.xml"},
-    { "zip": "meetup", "file": "meetup-changeLog.xml"}
+    { "zip": "meetup", "file": "meetup-changeLog.xml"},
+    { "zip": "moderation", "file": "moderation-changeLog.xml"},
+    { "zip": "moderation-custom", "file": "moderation-custom-changeLog.xml"}
   ]
 }
 

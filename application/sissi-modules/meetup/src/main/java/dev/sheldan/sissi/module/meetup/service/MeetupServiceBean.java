@@ -1,10 +1,11 @@
 package dev.sheldan.sissi.module.meetup.service;
 
+import dev.sheldan.abstracto.core.interaction.ComponentPayloadManagementService;
+import dev.sheldan.abstracto.core.interaction.ComponentPayloadService;
 import dev.sheldan.abstracto.core.models.ServerChannelMessage;
 import dev.sheldan.abstracto.core.models.database.AServer;
 import dev.sheldan.abstracto.core.models.template.display.MemberDisplay;
 import dev.sheldan.abstracto.core.service.*;
-import dev.sheldan.abstracto.core.service.management.ComponentPayloadManagementService;
 import dev.sheldan.abstracto.core.service.management.ServerManagementService;
 import dev.sheldan.abstracto.core.templating.model.MessageToSend;
 import dev.sheldan.abstracto.core.templating.service.TemplateService;
@@ -291,15 +292,24 @@ public class MeetupServiceBean {
     public void cleanupMeetups() {
         Instant time = Instant.now().minus(1, ChronoUnit.DAYS);
         List<Meetup> oldMeetups = meetupManagementServiceBean.getMeetupsOlderThan(time);
+        log.info("Deleting {} old meetup.s", oldMeetups.size());
         deleteMeetups(oldMeetups);
         List<Meetup> cancelledMeetups = meetupManagementServiceBean.findCancelledMeetups();
+        log.info("Deleting {} cancelled meetups.", cancelledMeetups.size());
         deleteMeetups(cancelledMeetups);
     }
 
     private void deleteMeetups(List<Meetup> oldMeetups) {
         oldMeetups.forEach(meetup -> {
             if(meetup.getMessageId() != null) {
-                messageService.deleteMessageInChannelInServer(meetup.getServer().getId(), meetup.getMeetupChannel().getId(), meetup.getMessageId());
+                Long messageId = meetup.getMessageId();
+                Long meetupId = meetup.getId().getId();
+                Long serverId = meetup.getServer().getId();
+                messageService.deleteMessageInChannelInServer(meetup.getServer().getId(), meetup.getMeetupChannel().getId(), meetup.getMessageId())
+                        .exceptionally(throwable -> {
+                            log.error("Failed to delete message {} for meetup {} in server {}.", messageId, meetupId, serverId);
+                            return null;
+                        });
             }
             meetupComponentManagementServiceBean.deleteAllComponents(meetup);
         });

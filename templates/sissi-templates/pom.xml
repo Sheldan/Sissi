@@ -12,5 +12,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>module-templates</module>
+        <module>template-overrides</module>
     </modules>
 </project>

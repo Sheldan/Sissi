@@ -1,0 +1,1 @@
+Amount of reactions used for report messages. Default: ${defaultValue}
