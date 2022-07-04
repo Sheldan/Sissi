@@ -61,7 +61,7 @@ public class ListMeetups extends AbstractConditionableCommand {
     }
 
     private MessageToSend getMessageToSend(Long serverId) {
-        List<Meetup> meetups = meetupManagementServiceBean.getFutureMeetups();
+        List<Meetup> meetups = meetupManagementServiceBean.getIncomingMeetups();
         List<MeetupListItemModel> listItems = meetups
                 .stream()
                 .map(MeetupListItemModel::fromMeetup)

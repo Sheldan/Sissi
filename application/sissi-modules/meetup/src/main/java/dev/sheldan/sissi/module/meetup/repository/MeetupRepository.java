@@ -13,5 +13,6 @@ import java.util.List;
 public interface MeetupRepository extends JpaRepository<Meetup, ServerSpecificId> {
     List<Meetup> findByMeetupTimeLessThan(Instant date);
     List<Meetup> findByMeetupTimeGreaterThan(Instant date);
+    List<Meetup> findByMeetupTimeGreaterThanAndState(Instant date, MeetupState state);
     List<Meetup> findByState(MeetupState state);
 }

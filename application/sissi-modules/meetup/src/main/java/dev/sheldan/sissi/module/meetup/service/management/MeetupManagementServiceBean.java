@@ -66,6 +66,10 @@ public class MeetupManagementServiceBean {
         return meetupRepository.findByMeetupTimeGreaterThan(Instant.now());
     }
 
+    public List<Meetup> getIncomingMeetups() {
+        return meetupRepository.findByMeetupTimeGreaterThanAndState(Instant.now(), MeetupState.CONFIRMED);
+    }
+
     public void deleteMeetups(List<Meetup> meetups) {
         meetupRepository.deleteAll(meetups);
     }
