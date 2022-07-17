@@ -1,0 +1,1 @@
+<#include "meetup_not_organizer_exception_message">

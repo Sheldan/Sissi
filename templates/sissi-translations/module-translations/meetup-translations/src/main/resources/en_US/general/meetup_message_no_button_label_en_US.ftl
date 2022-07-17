@@ -1,1 +1,1 @@
-No
+Not interested

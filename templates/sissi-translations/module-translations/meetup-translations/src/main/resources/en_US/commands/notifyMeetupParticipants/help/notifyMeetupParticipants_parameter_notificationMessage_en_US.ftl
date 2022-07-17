@@ -1,0 +1,1 @@
+The message to send to the participants

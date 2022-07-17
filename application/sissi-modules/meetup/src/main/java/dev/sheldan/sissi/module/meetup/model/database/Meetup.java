@@ -49,7 +49,15 @@ public class Meetup {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             mappedBy = "meetup")
     @Builder.Default
-    private List<MeetupParticipator> participants = new ArrayList<>();
+    private List<MeetupParticipant> participants = new ArrayList<>();
+
+    @OneToMany(
+            fetch = FetchType.LAZY,
+            orphanRemoval = true,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            mappedBy = "meetup")
+    @Builder.Default
+    private List<MeetupComponent> meetupComponents = new ArrayList<>();
 
     @Getter
     @Enumerated(EnumType.STRING)

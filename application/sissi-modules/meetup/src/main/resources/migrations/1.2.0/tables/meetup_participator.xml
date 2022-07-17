@@ -6,6 +6,11 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog.xsd
     http://www.liquibase.org/xml/ns/pro dbchangelog.xsd" >
-    <include file="1.1.0/collection.xml" relativeToChangelogFile="true"/>
-    <include file="1.2.0/collection.xml" relativeToChangelogFile="true"/>
+<changeSet author="Sheldan" id="meetup_participator-table">
+    <sql>
+        ALTER TABLE meetup_participator DROP CONSTRAINT check_meetup_participator_decision;
+        ALTER TABLE meetup_participator ADD CONSTRAINT check_meetup_participator_decision CHECK (decision IN ('YES','NO', 'MAYBE', 'NO_TIME'));
+    </sql>
+</changeSet>
+
 </databaseChangeLog>

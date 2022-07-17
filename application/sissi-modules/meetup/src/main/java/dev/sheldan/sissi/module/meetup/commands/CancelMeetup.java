@@ -8,76 +8,77 @@ import dev.sheldan.abstracto.core.command.config.Parameter;
 import dev.sheldan.abstracto.core.command.config.SlashCommandConfig;
 import dev.sheldan.abstracto.core.command.execution.CommandContext;
 import dev.sheldan.abstracto.core.command.execution.CommandResult;
+import dev.sheldan.abstracto.core.command.slash.parameter.SlashCommandParameterService;
 import dev.sheldan.abstracto.core.config.FeatureDefinition;
 import dev.sheldan.abstracto.core.interaction.InteractionService;
-import dev.sheldan.abstracto.core.service.ChannelService;
-import dev.sheldan.abstracto.core.templating.model.MessageToSend;
-import dev.sheldan.abstracto.core.templating.service.TemplateService;
 import dev.sheldan.abstracto.core.utils.FutureUtils;
 import dev.sheldan.sissi.module.meetup.config.MeetupFeatureDefinition;
 import dev.sheldan.sissi.module.meetup.config.MeetupSlashCommandNames;
-import dev.sheldan.sissi.module.meetup.model.command.MeetupListItemModel;
-import dev.sheldan.sissi.module.meetup.model.command.MeetupListModel;
+import dev.sheldan.sissi.module.meetup.exception.NotMeetupOrganizerException;
 import dev.sheldan.sissi.module.meetup.model.database.Meetup;
+import dev.sheldan.sissi.module.meetup.service.MeetupServiceBean;
 import dev.sheldan.sissi.module.meetup.service.management.MeetupManagementServiceBean;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.stream.Collectors;
 
 @Component
-public class ListMeetups extends AbstractConditionableCommand {
+public class CancelMeetup extends AbstractConditionableCommand {
 
-    private static final String LIST_MEETUPS_RESPONSE_TEMPLATE = "listMeetups_response";
-
-    @Autowired
-    private MeetupManagementServiceBean meetupManagementServiceBean;
-
-    @Autowired
-    private TemplateService templateService;
+    private static final String MEETUP_ID_PARAMETER = "meetupId";
+    private static final String CANCEL_MEETUP_COMMAND = "cancelMeetup";
+    private static final String CANCEL_MEETUP_RESPONSE = "cancelMeetup_response";
 
     @Autowired
-    private ChannelService channelService;
+    private MeetupServiceBean meetupServiceBean;
+
+    @Autowired
+    private SlashCommandParameterService slashCommandParameterService;
 
     @Autowired
     private InteractionService interactionService;
 
+    @Autowired
+    private MeetupManagementServiceBean meetupManagementServiceBean;
+
     @Override
     public CompletableFuture<CommandResult> executeAsync(CommandContext commandContext) {
-        MessageToSend messageToSend = getMessageToSend(commandContext.getGuild().getIdLong());
-        return FutureUtils.toSingleFutureGeneric(channelService.sendMessageToSendToChannel(messageToSend, commandContext.getChannel()))
-                .thenApply(unused -> CommandResult.fromIgnored());
+        Long meetupId = (Long) commandContext.getParameters().getParameters().get(0);
+        Meetup meetup = meetupManagementServiceBean.getMeetup(meetupId, commandContext.getGuild().getIdLong());
+        if(!meetup.getOrganizer().getUserReference().getId().equals(commandContext.getAuthor().getIdLong())) {
+            throw new NotMeetupOrganizerException();
+        }
+        return meetupServiceBean.cancelMeetup(meetup)
+                .thenApply(interactionHook -> CommandResult.fromSuccess());
     }
 
     @Override
     public CompletableFuture<CommandResult> executeSlash(SlashCommandInteractionEvent event) {
-        return interactionService.replyMessageToSend(getMessageToSend(event.getGuild().getIdLong()), event)
+        event.deferReply().queue();
+        Long meetupId = slashCommandParameterService.getCommandOption(MEETUP_ID_PARAMETER, event, Integer.class).longValue();
+        Meetup meetup = meetupManagementServiceBean.getMeetup(meetupId, event.getGuild().getIdLong());
+        if(!meetup.getOrganizer().getUserReference().getId().equals(event.getMember().getIdLong())) {
+            throw new NotMeetupOrganizerException();
+        }
+        return meetupServiceBean.cancelMeetup(meetup)
+                .thenCompose(unused -> FutureUtils.toSingleFutureGeneric(interactionService.sendMessageToInteraction(CANCEL_MEETUP_RESPONSE, new Object(), event.getHook())))
                 .thenApply(interactionHook -> CommandResult.fromSuccess());
-    }
-
-    private MessageToSend getMessageToSend(Long serverId) {
-        List<Meetup> meetups = meetupManagementServiceBean.getIncomingMeetups();
-        List<MeetupListItemModel> listItems = meetups
-                .stream()
-                .map(MeetupListItemModel::fromMeetup)
-                .sorted(Comparator.comparing(MeetupListItemModel::getMeetupTime))
-                .collect(Collectors.toList());
-        MeetupListModel model = MeetupListModel
-                .builder()
-                .meetups(listItems)
-                .build();
-        return templateService.renderEmbedTemplate(LIST_MEETUPS_RESPONSE_TEMPLATE, model, serverId);
     }
 
     @Override
     public CommandConfiguration getConfiguration() {
+        Parameter meetupIdParameter = Parameter
+                .builder()
+                .templated(true)
+                .name(MEETUP_ID_PARAMETER)
+                .type(Long.class)
+                .build();
 
-        List<Parameter> parameters = new ArrayList<>();
+        List<Parameter> parameters = Arrays.asList(meetupIdParameter);
         HelpInfo helpInfo = HelpInfo
                 .builder()
                 .templated(true)
@@ -86,18 +87,18 @@ public class ListMeetups extends AbstractConditionableCommand {
         SlashCommandConfig slashCommandConfig = SlashCommandConfig
                 .builder()
                 .enabled(true)
-                .rootCommandName(MeetupSlashCommandNames.MEETUP_PUBLIC)
-                .commandName("list")
+                .rootCommandName(MeetupSlashCommandNames.MEETUP)
+                .commandName("cancel")
                 .build();
 
         return CommandConfiguration.builder()
-                .name("listMeetups")
+                .name(CANCEL_MEETUP_COMMAND)
                 .module(UtilityModuleDefinition.UTILITY)
                 .templated(true)
                 .slashCommandConfig(slashCommandConfig)
                 .async(true)
                 .supportsEmbedException(true)
-                .causesReaction(false)
+                .causesReaction(true)
                 .parameters(parameters)
                 .help(helpInfo)
                 .build();

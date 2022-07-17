@@ -7,3 +7,5 @@ Participants: ${participantsText}
 Maybe: ${maybeParticipantsText}
 
 Declined: ${declinedParticipantsText}
+
+No time: ${noTimeParticipantsText}

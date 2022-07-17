@@ -13,7 +13,7 @@ import dev.sheldan.abstracto.core.templating.model.MessageToSend;
 import dev.sheldan.sissi.module.meetup.config.MeetupFeatureDefinition;
 import dev.sheldan.sissi.module.meetup.model.database.Meetup;
 import dev.sheldan.sissi.module.meetup.model.database.MeetupDecision;
-import dev.sheldan.sissi.module.meetup.model.database.MeetupParticipator;
+import dev.sheldan.sissi.module.meetup.model.database.MeetupParticipant;
 import dev.sheldan.sissi.module.meetup.model.payload.MeetupDecisionPayload;
 import dev.sheldan.sissi.module.meetup.model.template.MeetupMessageModel;
 import dev.sheldan.sissi.module.meetup.service.MeetupServiceBean;
@@ -49,17 +49,9 @@ public class MeetupDecisionListener implements ButtonClickedListener {
     public ButtonClickedListenerResult execute(ButtonClickedListenerModel model) {
         MeetupDecisionPayload payload = (MeetupDecisionPayload) model.getDeserializedPayload();
         Meetup meetup = meetupManagementServiceBean.getMeetup(payload.getMeetupId(),  payload.getGuildId());
-        if(payload.getMeetupDecision().equals(MeetupDecision.CANCEL))  {
-            if(model.getEvent().getUser().getIdLong() == meetup.getOrganizer().getUserReference().getId()) {
-                meetupServiceBean.cancelMeetup(meetup, payload.getComponentPayloads());
-                return ButtonClickedListenerResult.ACKNOWLEDGED;
-            } else {
-                return ButtonClickedListenerResult.IGNORED;
-            }
-        }
         AUserInAServer userInAServer = userInServerManagementService.loadOrCreateUser(model.getEvent().getMember());
 
-        Optional<MeetupParticipator> participationOptional = meetupParticipatorManagementServiceBean.getParticipation(meetup, userInAServer);
+        Optional<MeetupParticipant> participationOptional = meetupParticipatorManagementServiceBean.getParticipation(meetup, userInAServer);
         if(participationOptional.isPresent()) {
             participationOptional.get().setDecision(payload.getMeetupDecision());
         } else {
@@ -84,7 +76,8 @@ public class MeetupDecisionListener implements ButtonClickedListener {
             addIfMissing(model.getParticipants(), aUserInAServer);
         } else if(decision.equals(MeetupDecision.MAYBE)) {
             addIfMissing(model.getMaybeParticipants(), aUserInAServer);
-        }
+        } else if(decision.equals(MeetupDecision.NO_TIME))
+            addIfMissing(model.getNoTimeParticipants(), aUserInAServer);
     }
 
     private void addIfMissing(List<MemberDisplay> list, AUserInAServer aUserInAServer) {

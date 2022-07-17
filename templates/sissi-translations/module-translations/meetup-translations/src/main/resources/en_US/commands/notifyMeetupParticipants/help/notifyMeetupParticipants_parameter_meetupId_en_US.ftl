@@ -1,0 +1,1 @@
+The ID of the meetup to notify the participants for

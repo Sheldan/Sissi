@@ -1,0 +1,1 @@
+Cancels a meetup

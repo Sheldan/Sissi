@@ -16,12 +16,14 @@ public class MeetupMessageModel {
     private String description;
     private Instant meetupTime;
     private MemberDisplay organizer;
+    private Long meetupId;
     private String yesId;
     private String noId;
     private String maybeId;
-    private String cancelId;
+    private String noTimeId;
     private Boolean cancelled;
     private List<MemberDisplay> participants;
     private List<MemberDisplay> maybeParticipants;
+    private List<MemberDisplay> noTimeParticipants;
     private List<MemberDisplay> declinedParticipants;
 }

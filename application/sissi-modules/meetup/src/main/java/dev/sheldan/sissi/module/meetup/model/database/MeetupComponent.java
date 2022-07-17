@@ -1,7 +1,7 @@
 package dev.sheldan.sissi.module.meetup.model.database;
 
-import dev.sheldan.abstracto.core.models.database.AUserInAServer;
-import dev.sheldan.sissi.module.meetup.model.database.embed.MeetupParticipationId;
+import dev.sheldan.abstracto.core.models.database.ComponentPayload;
+import dev.sheldan.sissi.module.meetup.model.database.embed.MeetupComponentId;
 import lombok.*;
 
 import javax.persistence.*;
@@ -11,20 +11,20 @@ import java.time.Instant;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "meetup_participator")
+@Table(name = "meetup_component")
 @Getter
 @Setter
 @EqualsAndHashCode
-public class MeetupParticipator {
+public class MeetupComponent {
 
     @EmbeddedId
     @Getter
-    private MeetupParticipationId id;
+    private MeetupComponentId id;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @MapsId("voterId")
-    @JoinColumn(name = "meetup_participator_user_in_server_id", nullable = false)
-    private AUserInAServer participator;
+    @MapsId("componentId")
+    @JoinColumn(name = "component_id", nullable = false)
+    private ComponentPayload payload;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(
@@ -34,13 +34,7 @@ public class MeetupParticipator {
             })
     private Meetup meetup;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "decision", nullable = false)
-    private MeetupDecision decision;
-
     @Column(name = "created")
     private Instant created;
 
-    @Column(name = "updated")
-    private Instant updated;
 }

@@ -6,6 +6,7 @@ import dev.sheldan.abstracto.core.listener.ButtonClickedListenerResult;
 import dev.sheldan.abstracto.core.listener.async.jda.ButtonClickedListener;
 import dev.sheldan.abstracto.core.models.database.AChannel;
 import dev.sheldan.abstracto.core.models.database.AServer;
+import dev.sheldan.abstracto.core.models.database.ComponentPayload;
 import dev.sheldan.abstracto.core.models.listener.ButtonClickedListenerModel;
 import dev.sheldan.abstracto.core.service.ChannelService;
 import dev.sheldan.abstracto.core.service.ComponentPayloadService;
@@ -24,6 +25,7 @@ import dev.sheldan.sissi.module.meetup.model.payload.MeetupDecisionPayload;
 import dev.sheldan.sissi.module.meetup.model.payload.MeetupConfirmationPayload;
 import dev.sheldan.sissi.module.meetup.model.template.MeetupMessageModel;
 import dev.sheldan.sissi.module.meetup.service.MeetupServiceBean;
+import dev.sheldan.sissi.module.meetup.service.management.MeetupComponentManagementServiceBean;
 import dev.sheldan.sissi.module.meetup.service.management.MeetupManagementServiceBean;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Message;
@@ -71,6 +73,9 @@ public class MeetupConfirmationListener implements ButtonClickedListener {
     @Autowired
     private ComponentPayloadManagementService componentPayloadManagementService;
 
+    @Autowired
+    private MeetupComponentManagementServiceBean meetupComponentManagementServiceBean;
+
     @Override
     public ButtonClickedListenerResult execute(ButtonClickedListenerModel model) {
         MeetupConfirmationPayload payload = (MeetupConfirmationPayload) model.getDeserializedPayload();
@@ -83,22 +88,22 @@ public class MeetupConfirmationListener implements ButtonClickedListener {
         } else if(model.getEvent().getComponentId().equals(payload.getCancelId())){
             meetup.setState(MeetupState.CANCELLED);
             messageService.deleteMessage(model.getEvent().getMessage());
-            cleanupConfirmationMessage(payload);
+            cleanupConfirmationMessagePayloads(payload);
             meetupManagementServiceBean.deleteMeetup(meetup);
             return ButtonClickedListenerResult.ACKNOWLEDGED;
         } else {
             return ButtonClickedListenerResult.IGNORED;
         }
-        cleanupConfirmationMessage(payload);
+        cleanupConfirmationMessagePayloads(payload);
         String yesButtonId = componentService.generateComponentId();
         String noButtonId = componentService.generateComponentId();
         String maybeButtonId = componentService.generateComponentId();
-        String cancelButtonId = componentService.generateComponentId();
+        String noTimeButtonId = componentService.generateComponentId();
         MeetupMessageModel messageModel = meetupServiceBean.getMeetupMessageModel(meetup);
         messageModel.setYesId(yesButtonId);
         messageModel.setNoId(noButtonId);
         messageModel.setMaybeId(maybeButtonId);
-        messageModel.setCancelId(cancelButtonId);
+        messageModel.setNoTimeId(noTimeButtonId);
         messageModel.setCancelled(false);
         Long meetupId = payload.getMeetupId();
         Long serverId = payload.getGuildId();
@@ -108,7 +113,7 @@ public class MeetupConfirmationListener implements ButtonClickedListener {
             messageService.deleteMessage(model.getEvent().getMessage());
             Message meetupMessage = messageFutures.get(0).join();
             messageService.pinMessage(meetupMessage);
-            self.persistPayloads(meetupId, serverId, yesButtonId, noButtonId, maybeButtonId, cancelButtonId, meetupMessage);
+            self.persistPayloads(meetupId, serverId, yesButtonId, noButtonId, maybeButtonId, noTimeButtonId, meetupMessage);
         }).exceptionally(throwable -> {
             log.error("Failed to send meetup message for meetup {}.", meetupId, throwable);
             return null;
@@ -116,30 +121,36 @@ public class MeetupConfirmationListener implements ButtonClickedListener {
         return ButtonClickedListenerResult.ACKNOWLEDGED;
     }
 
-    private void cleanupConfirmationMessage(MeetupConfirmationPayload payload) {
+    private void cleanupConfirmationMessagePayloads(MeetupConfirmationPayload payload) {
         componentPayloadManagementService.deletePayload(payload.getCancelId());
         componentPayloadManagementService.deletePayload(payload.getConfirmationId());
     }
 
     @Transactional
-    public void persistPayloads(Long meetupId, Long serverId, String yesButtonId, String noButtonId, String maybeButtonId, String cancelButtonId, Message meetupMessage) {
+    public void persistPayloads(Long meetupId, Long serverId, String yesButtonId, String noButtonId, String maybeButtonId, String noTimeButtonId, Message meetupMessage) {
         MeetupDecisionPayload decisionPayload = MeetupDecisionPayload
                 .builder()
                 .meetupId(meetupId)
                 .guildId(serverId)
-                .componentPayloads(Arrays.asList(yesButtonId, noButtonId, maybeButtonId))
+                .componentPayloads(Arrays.asList(yesButtonId, noButtonId, maybeButtonId, noTimeButtonId))
                 .build();
         AServer server = serverManagementService.loadServer(serverId);
 
         decisionPayload.setMeetupDecision(MeetupDecision.YES);
-        componentPayloadService.createButtonPayload(yesButtonId, decisionPayload, MEETUP_DECISION_BUTTON, server);
+        ComponentPayload yesPayload = componentPayloadService.createButtonPayload(yesButtonId, decisionPayload, MEETUP_DECISION_BUTTON, server);
         decisionPayload.setMeetupDecision(MeetupDecision.NO);
-        componentPayloadService.createButtonPayload(noButtonId, decisionPayload, MEETUP_DECISION_BUTTON, server);
+        ComponentPayload noPayload = componentPayloadService.createButtonPayload(noButtonId, decisionPayload, MEETUP_DECISION_BUTTON, server);
         decisionPayload.setMeetupDecision(MeetupDecision.MAYBE);
-        componentPayloadService.createButtonPayload(maybeButtonId, decisionPayload, MEETUP_DECISION_BUTTON, server);
-        decisionPayload.setMeetupDecision(MeetupDecision.CANCEL);
-        componentPayloadService.createButtonPayload(cancelButtonId, decisionPayload, MEETUP_DECISION_BUTTON, server);
+        ComponentPayload maybePayload = componentPayloadService.createButtonPayload(maybeButtonId, decisionPayload, MEETUP_DECISION_BUTTON, server);
+        decisionPayload.setMeetupDecision(MeetupDecision.NO_TIME);
+        ComponentPayload noTimePayload = componentPayloadService.createButtonPayload(noTimeButtonId, decisionPayload, MEETUP_DECISION_BUTTON, server);
         Meetup meetup = meetupManagementServiceBean.getMeetup(meetupId, serverId);
+        // storing the button IDs, so we can remove them independently
+        meetupComponentManagementServiceBean.createComponent(meetup, yesButtonId, yesPayload);
+        meetupComponentManagementServiceBean.createComponent(meetup, noButtonId, noPayload);
+        meetupComponentManagementServiceBean.createComponent(meetup, maybeButtonId, maybePayload);
+        meetupComponentManagementServiceBean.createComponent(meetup, noTimeButtonId, noTimePayload);
+
         meetupServiceBean.scheduleReminders(meetup);
         meetup.setMessageId(meetupMessage.getIdLong());
         AChannel channel = channelManagementService.loadChannel(meetupMessage.getChannel());

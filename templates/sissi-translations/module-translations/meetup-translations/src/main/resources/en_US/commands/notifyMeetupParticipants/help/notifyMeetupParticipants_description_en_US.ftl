@@ -1,0 +1,1 @@
+Notifies all participant of the meetup
