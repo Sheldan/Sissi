@@ -1,13 +1,13 @@
 {
   "template_artifacts": [
-    "core","starboard", "link-embed", "moderation", "entertainment", "custom-command",
+    "core","starboard", "link-embed", "moderation", "entertainment", "custom-command", "utility", "webservices", "remind", "suggestion", "modmail", "assignable-roles",
     "quotes", "meetup",
     "moderation-custom",
     "moderation-template-overrides"
   ],
   "translation_artifacts": [
     "core",
-    "starboard", "link-embed", "moderation", "entertainment", "custom-command",
+    "starboard", "link-embed", "moderation", "entertainment", "custom-command", "utility", "webservices", "suggestion", "remind", "modmail", "assignable-roles",
     "quotes", "meetup",
     "moderation-custom",
     "moderation-translation-overrides"
@@ -22,6 +22,12 @@
     { "zip": "moderation", "file": "moderation-changeLog.xml"},
     { "zip": "entertainment", "file": "entertainment-changeLog.xml"},
     { "zip": "custom-command", "file": "custom-command-changeLog.xml"},
+    { "zip": "utility", "file": "utility-changeLog.xml"},
+    { "zip": "webservices", "file": "webservices-changeLog.xml"},
+    { "zip": "remind", "file": "remind-changeLog.xml"},
+    { "zip": "suggestion", "file": "suggestion-changeLog.xml"},
+    { "zip": "modmail", "file": "modMail-changeLog.xml"},
+    { "zip": "assignable-roles", "file": "assignableRoles-changeLog.xml"},
     { "zip": "moderation-custom", "file": "moderation-custom-changeLog.xml"}
   ]
 }

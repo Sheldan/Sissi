@@ -55,6 +55,66 @@
 
                         <artifactItem>
                             <groupId>dev.sheldan.abstracto-templates.templates</groupId>
+                            <artifactId>assignable-roles</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <destFileName>assignable-roles.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.templates</groupId>
+                            <artifactId>modmail</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <destFileName>modmail.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.templates</groupId>
+                            <artifactId>utility</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <destFileName>utility.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.templates</groupId>
+                            <artifactId>webservices</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <destFileName>webservices.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.templates</groupId>
+                            <artifactId>remind</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <destFileName>remind.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.templates</groupId>
+                            <artifactId>suggestion</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <destFileName>suggestion.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.templates</groupId>
                             <artifactId>link-embed</artifactId>
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
@@ -156,6 +216,66 @@
                             <overWrite>true</overWrite>
                             <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
                             <destFileName>link-embed.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.translations</groupId>
+                            <artifactId>modmail</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <destFileName>modmail.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.translations</groupId>
+                            <artifactId>assignable-roles</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <destFileName>assignable-roles.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.translations</groupId>
+                            <artifactId>utility</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <destFileName>utility.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.translations</groupId>
+                            <artifactId>webservices</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <destFileName>webservices.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.translations</groupId>
+                            <artifactId>remind</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <destFileName>remind.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.translations</groupId>
+                            <artifactId>suggestion</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <destFileName>suggestion.zip</destFileName>
                         </artifactItem>
 
                         <artifactItem>
@@ -265,6 +385,83 @@
                             <overWrite>true</overWrite>
                             <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
                             <destFileName>starboard.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto.modules</groupId>
+                            <artifactId>assignable-roles-impl</artifactId>
+                            <version>${abstracto.version}</version>
+                            <classifier>liquibase</classifier>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <destFileName>assignable-roles.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto.modules</groupId>
+                            <artifactId>utility-impl</artifactId>
+                            <version>${abstracto.version}</version>
+                            <classifier>liquibase</classifier>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <destFileName>utility.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto.modules</groupId>
+                            <artifactId>modmail-impl</artifactId>
+                            <version>${abstracto.version}</version>
+                            <classifier>liquibase</classifier>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <destFileName>modmail.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto.modules</groupId>
+                            <artifactId>utility-impl</artifactId>
+                            <version>${abstracto.version}</version>
+                            <classifier>liquibase</classifier>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <destFileName>utility.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto.modules</groupId>
+                            <artifactId>webservices-impl</artifactId>
+                            <version>${abstracto.version}</version>
+                            <classifier>liquibase</classifier>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <destFileName>webservices.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto.modules</groupId>
+                            <artifactId>remind-impl</artifactId>
+                            <version>${abstracto.version}</version>
+                            <classifier>liquibase</classifier>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <destFileName>remind.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto.modules</groupId>
+                            <artifactId>suggestion-impl</artifactId>
+                            <version>${abstracto.version}</version>
+                            <classifier>liquibase</classifier>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <destFileName>suggestion.zip</destFileName>
                         </artifactItem>
 
                         <artifactItem>
