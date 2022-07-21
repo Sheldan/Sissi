@@ -80,6 +80,16 @@
             <artifactId>moderation-impl</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>dev.sheldan.abstracto.modules</groupId>
+            <artifactId>entertainment-impl</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.sheldan.abstracto.modules</groupId>
+            <artifactId>custom-command-impl</artifactId>
+        </dependency>
+
         <!-- sissi modules  -->
 
         <dependency>

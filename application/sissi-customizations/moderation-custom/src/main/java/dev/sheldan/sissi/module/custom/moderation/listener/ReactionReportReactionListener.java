@@ -1,4 +1,4 @@
-package dev.sheldan.sissi.module.costum.listener;
+package dev.sheldan.sissi.module.custom.moderation.listener;
 
 import dev.sheldan.abstracto.core.config.FeatureDefinition;
 import dev.sheldan.abstracto.core.listener.DefaultListenerResult;
@@ -6,7 +6,7 @@ import dev.sheldan.abstracto.core.service.ConfigService;
 import dev.sheldan.abstracto.core.service.ReactionService;
 import dev.sheldan.abstracto.moderation.listener.ReportMessageCreatedListener;
 import dev.sheldan.abstracto.moderation.model.listener.ReportMessageCreatedModel;
-import dev.sheldan.sissi.module.costum.config.ModerationCustomFeatureDefinition;
+import dev.sheldan.sissi.module.custom.moderation.config.ModerationCustomFeatureDefinition;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

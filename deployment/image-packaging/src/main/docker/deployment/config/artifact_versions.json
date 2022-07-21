@@ -1,12 +1,13 @@
 {
   "template_artifacts": [
-    "core","starboard", "link-embed", "moderation",
+    "core","starboard", "link-embed", "moderation", "entertainment", "custom-command",
     "quotes", "meetup",
+    "moderation-custom",
     "moderation-template-overrides"
   ],
   "translation_artifacts": [
     "core",
-    "starboard", "link-embed", "moderation",
+    "starboard", "link-embed", "moderation", "entertainment", "custom-command",
     "quotes", "meetup",
     "moderation-custom",
     "moderation-translation-overrides"
@@ -19,6 +20,8 @@
     { "zip": "quotes", "file": "quotes-changeLog.xml"},
     { "zip": "meetup", "file": "meetup-changeLog.xml"},
     { "zip": "moderation", "file": "moderation-changeLog.xml"},
+    { "zip": "entertainment", "file": "entertainment-changeLog.xml"},
+    { "zip": "custom-command", "file": "custom-command-changeLog.xml"},
     { "zip": "moderation-custom", "file": "moderation-custom-changeLog.xml"}
   ]
 }

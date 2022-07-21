@@ -1,0 +1,1 @@
+Switches the moderation role to a different color

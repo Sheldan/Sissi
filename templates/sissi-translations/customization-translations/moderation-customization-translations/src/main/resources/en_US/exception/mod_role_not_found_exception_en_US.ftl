@@ -1,0 +1,1 @@
+Moderation role was not configured correctly. Role could not be found. Setup the feature.

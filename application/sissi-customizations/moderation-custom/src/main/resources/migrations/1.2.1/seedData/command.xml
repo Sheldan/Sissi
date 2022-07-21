@@ -6,6 +6,13 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog.xsd
     http://www.liquibase.org/xml/ns/pro dbchangelog.xsd" >
-    <include file="1.1.0/collection.xml" relativeToChangelogFile="true"/>
-    <include file="1.2.1/collection.xml" relativeToChangelogFile="true"/>
+    <property name="moderationCustomFeature" value="(SELECT id FROM feature WHERE key = 'moderationCustom')"/>
+    <property name="moderationModule" value="(SELECT id FROM module WHERE name = 'moderation')"/>
+    <changeSet  author="Sheldan" id="moderationCustom_modmode-commands">
+        <insert tableName="command">
+            <column name="name" value="modMode"/>
+            <column name="module_id" valueComputed="${moderationModule}"/>
+            <column name="feature_id" valueComputed="${moderationCustomFeature}"/>
+        </insert>
+    </changeSet>
 </databaseChangeLog>

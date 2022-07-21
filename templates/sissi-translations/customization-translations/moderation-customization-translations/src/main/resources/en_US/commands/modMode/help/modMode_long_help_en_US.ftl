@@ -1,0 +1,1 @@
+Changes the colors of the staff role (if enabled) to a defined color. If turned off, it removes the color again.

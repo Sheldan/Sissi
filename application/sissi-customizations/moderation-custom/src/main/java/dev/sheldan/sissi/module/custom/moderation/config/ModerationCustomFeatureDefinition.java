@@ -1,4 +1,4 @@
-package dev.sheldan.sissi.module.costum.config;
+package dev.sheldan.sissi.module.custom.moderation.config;
 
 import dev.sheldan.abstracto.core.config.FeatureDefinition;
 import lombok.Getter;
