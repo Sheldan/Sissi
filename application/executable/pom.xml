@@ -115,6 +115,11 @@
             <artifactId>custom-command-impl</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>dev.sheldan.abstracto.modules</groupId>
+            <artifactId>modmail-impl</artifactId>
+        </dependency>
+
         <!-- sissi modules  -->
 
         <dependency>
