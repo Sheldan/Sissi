@@ -1082,7 +1082,7 @@
         "hide": 2,
         "label": null,
         "name": "application",
-        "query": "sissi",
+        "query": "Sissi",
         "skipUrlSync": false,
         "type": "constant"
       }
