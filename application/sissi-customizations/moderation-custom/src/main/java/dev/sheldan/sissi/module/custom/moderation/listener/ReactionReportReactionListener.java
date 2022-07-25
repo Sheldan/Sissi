@@ -26,6 +26,9 @@ public class ReactionReportReactionListener implements ReportMessageCreatedListe
 
     @Override
     public DefaultListenerResult execute(ReportMessageCreatedModel model) {
+        if(model.getReportMessage() == null) {
+            return DefaultListenerResult.IGNORED;
+        }
         Long reactionAmount = configService.getLongValueOrConfigDefault(REACTION_REPORT_REACTION_AMOUNT_CONFIG_KEY, model.getServerId());
         for (int i = 0; i < reactionAmount; i++) {
             String emoteKey = buildReactionEmoteName(i + 1);

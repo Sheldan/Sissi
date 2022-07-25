@@ -159,7 +159,7 @@
         {
           "expr": "increase(command_processed_total[1m])",
           "interval": "",
-          "legendFormat": "{{status}}",
+          "legendFormat": "{{type}}-{{status}}",
           "refId": "A"
         }
       ],
