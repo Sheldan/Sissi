@@ -13,7 +13,7 @@
             <#if reportedMessage.attachments?size gt 0>
                 ,"imageUrl": "${reportedMessage.attachments[0].proxyUrl}"
             <#elseif reportedMessage.attachments?size = 0 && reportedMessage.embeds?size gt 0 && reportedMessage.embeds[0].cachedThumbnail??>
-                ,"imageUrl": "${message.embeds[0].cachedThumbnail.proxyUrl}"
+                ,"imageUrl": "${reportedMessage.embeds[0].cachedThumbnail.proxyUrl}"
             <#elseif reportedMessage.attachments?size = 0 && reportedMessage.embeds?size gt 0 && reportedMessage.embeds[0].cachedImageInfo??>
                 ,"imageUrl": "${reportedMessage.embeds[0].cachedImageInfo.proxyUrl}"
             </#if>
