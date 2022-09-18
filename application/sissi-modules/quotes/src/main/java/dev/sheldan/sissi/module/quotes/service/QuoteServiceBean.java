@@ -19,6 +19,8 @@ import dev.sheldan.sissi.module.quotes.model.database.QuoteAttachment;
 import dev.sheldan.sissi.module.quotes.repository.QuoteRepository;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.*;
+import net.dv8tion.jda.api.entities.channel.Channel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

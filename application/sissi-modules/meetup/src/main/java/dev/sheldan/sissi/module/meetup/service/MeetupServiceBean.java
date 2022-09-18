@@ -27,8 +27,8 @@ import dev.sheldan.sissi.module.meetup.service.management.MeetupComponentManagem
 import dev.sheldan.sissi.module.meetup.service.management.MeetupManagementServiceBean;
 import dev.sheldan.sissi.module.meetup.service.management.MeetupParticipatorManagementServiceBean;
 import lombok.extern.slf4j.Slf4j;
-import net.dv8tion.jda.api.entities.GuildMessageChannel;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -292,7 +292,7 @@ public class MeetupServiceBean {
     public void cleanupMeetups() {
         Instant time = Instant.now().minus(1, ChronoUnit.DAYS);
         List<Meetup> oldMeetups = meetupManagementServiceBean.getMeetupsOlderThan(time);
-        log.info("Deleting {} old meetup.s", oldMeetups.size());
+        log.info("Deleting {} old meetups.", oldMeetups.size());
         deleteMeetups(oldMeetups);
         List<Meetup> cancelledMeetups = meetupManagementServiceBean.findCancelledMeetups();
         log.info("Deleting {} cancelled meetups.", cancelledMeetups.size());

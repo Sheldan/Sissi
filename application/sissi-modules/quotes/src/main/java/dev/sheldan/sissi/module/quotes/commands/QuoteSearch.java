@@ -21,7 +21,7 @@ import dev.sheldan.sissi.module.quotes.config.QuotesModuleDefinition;
 import dev.sheldan.sissi.module.quotes.exception.QuoteNotFoundException;
 import dev.sheldan.sissi.module.quotes.model.database.Quote;
 import dev.sheldan.sissi.module.quotes.service.QuoteServiceBean;
-import net.dv8tion.jda.api.entities.MessageChannel;
+import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import org.springframework.beans.factory.annotation.Autowired;
