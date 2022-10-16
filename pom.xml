@@ -20,8 +20,8 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <!-- edit in release.yml as well -->
         <!-- when releasing a new bot version, update the .env as well-->
-        <abstracto.version>1.4.5-SNAPSHOT</abstracto.version>
-        <abstracto.templates.version>1.4.3</abstracto.templates.version>
+        <abstracto.version>1.4.6</abstracto.version>
+        <abstracto.templates.version>1.4.4</abstracto.templates.version>
     </properties>
 
     <modules>
