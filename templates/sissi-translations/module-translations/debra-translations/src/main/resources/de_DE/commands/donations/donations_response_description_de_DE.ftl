@@ -1,0 +1,1 @@
+Aktuell wurden **${donationAmount} Euro** für Debra Austria gespendet. Spende auch du unter https://tiny.cc/schmetterling2021.

@@ -134,6 +134,12 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>dev.sheldan.sissi.application.module</groupId>
+            <artifactId>debra</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <!-- sissi customizations -->
 
         <dependency>

@@ -1,0 +1,1 @@
+Currently **${donationAmount} Euro** were donated for Debra Austra. Donate via https://tiny.cc/schmetterling2021 too.

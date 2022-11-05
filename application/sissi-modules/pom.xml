@@ -13,6 +13,7 @@
     <modules>
         <module>quotes</module>
         <module>meetup</module>
+        <module>debra</module>
     </modules>
 
 

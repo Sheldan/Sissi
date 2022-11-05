@@ -1,14 +1,14 @@
 {
   "template_artifacts": [
     "core","starboard", "link-embed", "moderation", "entertainment", "custom-command", "utility", "webservices", "remind", "suggestion", "modmail", "assignable-roles",
-    "quotes", "meetup",
+    "quotes", "meetup", "debra",
     "moderation-custom",
     "moderation-template-overrides"
   ],
   "translation_artifacts": [
     "core",
     "starboard", "link-embed", "moderation", "entertainment", "custom-command", "utility", "webservices", "suggestion", "remind", "modmail", "assignable-roles",
-    "quotes", "meetup",
+    "quotes", "meetup", "debra",
     "moderation-custom",
     "moderation-translation-overrides"
   ],
@@ -19,6 +19,7 @@
     { "zip": "starboard", "file": "starboard-changeLog.xml"},
     { "zip": "quotes", "file": "quotes-changeLog.xml"},
     { "zip": "meetup", "file": "meetup-changeLog.xml"},
+    { "zip": "debra", "file": "debra-changeLog.xml"},
     { "zip": "moderation", "file": "moderation-changeLog.xml"},
     { "zip": "entertainment", "file": "entertainment-changeLog.xml"},
     { "zip": "custom-command", "file": "custom-command-changeLog.xml"},

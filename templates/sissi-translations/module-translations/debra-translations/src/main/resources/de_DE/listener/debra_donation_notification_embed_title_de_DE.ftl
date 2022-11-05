@@ -1,0 +1,1 @@
+:bell: ${donatorName} hat ${donationAmount} Euro gespendet :bell:

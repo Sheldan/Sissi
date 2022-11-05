@@ -12,6 +12,7 @@
     <modules>
         <module>quotes-templates</module>
         <module>meetup-templates</module>
+        <module>debra-templates</module>
     </modules>
 
 </project>

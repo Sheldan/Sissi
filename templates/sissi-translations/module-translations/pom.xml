@@ -12,6 +12,7 @@
     <modules>
         <module>quote-translations</module>
         <module>meetup-translations</module>
+        <module>debra-translations</module>
     </modules>
 
 
