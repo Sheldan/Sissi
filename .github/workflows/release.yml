@@ -34,5 +34,5 @@ jobs:
         env:
           REGISTRY_PREFIX: docker.pkg.github.com/sheldan/sissi/
           VERSION: ${{ env.version }}
-          ABSTRACTO_VERSION: 1.4.8
+          ABSTRACTO_VERSION: 1.4.9
           ABSTRACTO_REGISTRY_PREFIX: docker.pkg.github.com/sheldan/abstracto/
