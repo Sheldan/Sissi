@@ -120,6 +120,16 @@
             <artifactId>modmail-impl</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>dev.sheldan.abstracto.modules</groupId>
+            <artifactId>experience-tracking-impl</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.sheldan.abstracto.modules</groupId>
+            <artifactId>logging-impl</artifactId>
+        </dependency>
+
         <!-- sissi modules  -->
 
         <dependency>

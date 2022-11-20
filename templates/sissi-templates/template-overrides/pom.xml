@@ -11,6 +11,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>moderation-template-overrides</module>
+        <module>experience-template-overrides</module>
+        <module>logging-template-overrides</module>
     </modules>
 
 </project>

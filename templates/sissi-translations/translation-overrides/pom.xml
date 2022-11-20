@@ -13,6 +13,8 @@
 
     <modules>
         <module>moderation-translation-overrides</module>
+        <module>experience-translation-overrides</module>
+        <module>logging-translation-overrides</module>
     </modules>
 
 </project>
