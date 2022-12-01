@@ -17,6 +17,6 @@ public class DebraFeatureConfig implements FeatureConfig {
 
     @Override
     public List<PostTargetEnum> getRequiredPostTargets() {
-        return Arrays.asList(DebraPostTarget.DEBRA_DONATION_NOTIFICATION);
+        return Arrays.asList(DebraPostTarget.DEBRA_DONATION_NOTIFICATION, DebraPostTarget.DEBRA_DONATION_NOTIFICATION2);
     }
 }

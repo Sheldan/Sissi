@@ -10,6 +10,7 @@ import dev.sheldan.sissi.module.debra.config.DebraProperties;
 import dev.sheldan.sissi.module.debra.model.Donation;
 import dev.sheldan.sissi.module.debra.model.listener.DonationNotificationModel;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -19,6 +20,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.math.BigDecimal;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
@@ -86,6 +88,9 @@ public class DonationService {
                 .build();
         MessageToSend messageToSend = templateService.renderEmbedTemplate(DONATION_NOTIFICATION_TEMPLATE_KEY, model);
         Long targetServerId = Long.parseLong(System.getenv("DEBRA_DONATION_NOTIFICATION_SERVER_ID"));
-        return FutureUtils.toSingleFutureGeneric(postTargetService.sendEmbedInPostTarget(messageToSend, DebraPostTarget.DEBRA_DONATION_NOTIFICATION, targetServerId));
+        List<CompletableFuture<Message>> firstMessage = postTargetService.sendEmbedInPostTarget(messageToSend, DebraPostTarget.DEBRA_DONATION_NOTIFICATION, targetServerId);
+        List<CompletableFuture<Message>> secondMessage = postTargetService.sendEmbedInPostTarget(messageToSend, DebraPostTarget.DEBRA_DONATION_NOTIFICATION2, targetServerId);
+        firstMessage.addAll(secondMessage);
+        return FutureUtils.toSingleFutureGeneric(firstMessage);
     }
 }

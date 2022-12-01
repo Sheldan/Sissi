@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public enum DebraPostTarget implements PostTargetEnum {
-    DEBRA_DONATION_NOTIFICATION("debraDonationNotification");
+    DEBRA_DONATION_NOTIFICATION("debraDonationNotification"), DEBRA_DONATION_NOTIFICATION2("debraDonationNotification2");
 
     private String key;
 
