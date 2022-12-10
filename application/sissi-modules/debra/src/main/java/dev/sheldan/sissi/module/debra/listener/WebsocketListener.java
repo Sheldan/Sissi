@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Nullable;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import static dev.sheldan.sissi.module.debra.config.DebraFeatureConfig.DEBRA_DONATION_NOTIFICATION_DELAY_CONFIG_KEY;
@@ -40,23 +41,25 @@ public class WebsocketListener extends WebSocketListener implements AsyncStartup
 
     @Override
     public void onMessage(WebSocket webSocket, String text) {
-        log.info("Handling received message on websocket.");
-        try {
-            Long targetServerId = Long.parseLong(System.getenv(DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME));
-            Long delayMillis = configService.getLongValueOrConfigDefault(DEBRA_DONATION_NOTIFICATION_DELAY_CONFIG_KEY, targetServerId);
-            log.info("Waiting {} milli seconds to send notification.", delayMillis);
-            Thread.sleep(delayMillis);
-            log.info("Loading new donation amount and sending notification.");
-            Donation donation = donationService.parseDonationFromMessage(text);
-            donationService.sendDonationNotification(donation).thenAccept(unused -> {
-                log.info("Successfully notified about donation.");
-            }).exceptionally(throwable -> {
-                log.error("Failed to notify about donation.", throwable);
-                return null;
-            });
-        } catch (Exception exception) {
-            log.error("Failed to handle websocket message.", exception);
-        }
+        CompletableFuture.runAsync(() -> {
+            log.info("Handling received message on websocket.");
+            try {
+                Long targetServerId = Long.parseLong(System.getenv(DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME));
+                Long delayMillis = configService.getLongValueOrConfigDefault(DEBRA_DONATION_NOTIFICATION_DELAY_CONFIG_KEY, targetServerId);
+                log.info("Waiting {} milli seconds to send notification.", delayMillis);
+                Thread.sleep(delayMillis);
+                log.info("Loading new donation amount and sending notification.");
+                Donation donation = donationService.parseDonationFromMessage(text);
+                donationService.sendDonationNotification(donation).thenAccept(unused -> {
+                    log.info("Successfully notified about donation.");
+                }).exceptionally(throwable -> {
+                    log.error("Failed to notify about donation.", throwable);
+                    return null;
+                });
+            } catch (Exception exception) {
+                log.error("Failed to handle websocket message.", exception);
+            }
+        });
     }
 
     @Override
