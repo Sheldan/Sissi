@@ -26,6 +26,8 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static dev.sheldan.sissi.module.debra.config.DebraFeatureConfig.DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME;
+
 @Component
 @Slf4j
 public class DonationService {
@@ -39,7 +41,7 @@ public class DonationService {
     @Autowired
     private TemplateService templateService;
 
-    private static final String DONATION_NOTIFICATION_TEMPLATE_KEY = "debra_donation_notification";
+    private static final String DEBRA_DONATION_NOTIFICATION_TEMPLATE_KEY = "debra_donation_notification";
 
     private static final Pattern MESSAGE_PATTERN = Pattern.compile("(.*) hat (\\d{1,9},\\d{2}) Euro gespendet!<br \\/>Vielen Dank!<br \\/>Nachricht:<br \\/>(.*)");
     private static final Pattern DONATION_PAGE_AMOUNT_PARTNER = Pattern.compile("\"metric4\",\\s*\"(.*)\"");
@@ -86,8 +88,8 @@ public class DonationService {
                 .donation(donation)
                 .totalDonationAmount(fetchCurrentDonationAmount())
                 .build();
-        MessageToSend messageToSend = templateService.renderEmbedTemplate(DONATION_NOTIFICATION_TEMPLATE_KEY, model);
-        Long targetServerId = Long.parseLong(System.getenv("DEBRA_DONATION_NOTIFICATION_SERVER_ID"));
+        MessageToSend messageToSend = templateService.renderEmbedTemplate(DEBRA_DONATION_NOTIFICATION_TEMPLATE_KEY, model);
+        Long targetServerId = Long.parseLong(System.getenv(DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME));
         List<CompletableFuture<Message>> firstMessage = postTargetService.sendEmbedInPostTarget(messageToSend, DebraPostTarget.DEBRA_DONATION_NOTIFICATION, targetServerId);
         List<CompletableFuture<Message>> secondMessage = postTargetService.sendEmbedInPostTarget(messageToSend, DebraPostTarget.DEBRA_DONATION_NOTIFICATION2, targetServerId);
         firstMessage.addAll(secondMessage);

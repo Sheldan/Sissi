@@ -10,6 +10,9 @@ import java.util.List;
 
 @Component
 public class DebraFeatureConfig implements FeatureConfig {
+
+    public static final String DEBRA_DONATION_NOTIFICATION_DELAY_CONFIG_KEY = "debraDonationNotificationDelayMillis";
+    public static final String DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME = "DEBRA_DONATION_NOTIFICATION_SERVER_ID";
     @Override
     public FeatureDefinition getFeature() {
         return DebraFeatureDefinition.DEBRA;
@@ -18,5 +21,10 @@ public class DebraFeatureConfig implements FeatureConfig {
     @Override
     public List<PostTargetEnum> getRequiredPostTargets() {
         return Arrays.asList(DebraPostTarget.DEBRA_DONATION_NOTIFICATION, DebraPostTarget.DEBRA_DONATION_NOTIFICATION2);
+    }
+
+    @Override
+    public List<String> getRequiredSystemConfigKeys() {
+        return Arrays.asList(DEBRA_DONATION_NOTIFICATION_DELAY_CONFIG_KEY);
     }
 }
