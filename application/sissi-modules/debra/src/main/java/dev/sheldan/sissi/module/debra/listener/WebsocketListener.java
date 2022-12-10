@@ -65,13 +65,10 @@ public class WebsocketListener extends WebSocketListener implements AsyncStartup
     @Override
     public void onFailure(WebSocket webSocket, Throwable t, @Nullable Response response) {
         log.warn("Websocket connection failed...", t);
-        webSocket.close(1000, null);
-        webSocket.close(1000, "Connection closed");
     }
 
     @Override
     public void onClosing(WebSocket webSocket, int code, String reason) {
-        webSocket.close(1000, null);
         log.info("Closing websocket connection. It was closed with code {} and reason {}.", code, reason);
     }
 
