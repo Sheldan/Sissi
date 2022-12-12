@@ -11,5 +11,5 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "sissi.debra")
 public class DebraProperties {
     private String websocketURL;
-    private String donationsPageURL;
+    private String donationAPIUrl;
 }

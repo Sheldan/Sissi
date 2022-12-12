@@ -1,5 +1,8 @@
 package dev.sheldan.sissi.module.debra.service;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import dev.sheldan.abstracto.core.service.ConfigService;
 import dev.sheldan.abstracto.core.service.PostTargetService;
 import dev.sheldan.abstracto.core.templating.model.MessageToSend;
 import dev.sheldan.abstracto.core.templating.service.TemplateService;
@@ -7,25 +10,32 @@ import dev.sheldan.abstracto.core.utils.FutureUtils;
 import dev.sheldan.sissi.module.debra.DonationAmountNotFoundException;
 import dev.sheldan.sissi.module.debra.config.DebraPostTarget;
 import dev.sheldan.sissi.module.debra.config.DebraProperties;
-import dev.sheldan.sissi.module.debra.model.Donation;
+import dev.sheldan.sissi.module.debra.converter.DonationConverter;
+import dev.sheldan.sissi.module.debra.model.api.Donation;
+import dev.sheldan.sissi.module.debra.model.api.DonationsResponse;
+import dev.sheldan.sissi.module.debra.model.commands.DonationItemModel;
+import dev.sheldan.sissi.module.debra.model.commands.DonationsModel;
+import dev.sheldan.sissi.module.debra.model.listener.DonationResponseModel;
 import dev.sheldan.sissi.module.debra.model.listener.DonationNotificationModel;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Message;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.math.BigDecimal;
-import java.net.URL;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
+import static dev.sheldan.sissi.module.debra.config.DebraFeatureConfig.DEBRA_DONATION_API_FETCH_SIZE_KEY;
 import static dev.sheldan.sissi.module.debra.config.DebraFeatureConfig.DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME;
 
 @Component
@@ -41,19 +51,27 @@ public class DonationService {
     @Autowired
     private TemplateService templateService;
 
+    @Autowired
+    private OkHttpClient okHttpClient;
+
+    @Autowired
+    private DonationConverter donationConverter;
+
+    @Autowired
+    private ConfigService configService;
+
     private static final String DEBRA_DONATION_NOTIFICATION_TEMPLATE_KEY = "debra_donation_notification";
 
     private static final Pattern MESSAGE_PATTERN = Pattern.compile("(.*) hat (\\d{1,9},\\d{2}) Euro gespendet!<br \\/>Vielen Dank!<br \\/>Nachricht:<br \\/>(.*)");
-    private static final Pattern DONATION_PAGE_AMOUNT_PARTNER = Pattern.compile("\"metric4\",\\s*\"(.*)\"");
 
-    public Donation parseDonationFromMessage(String message) {
+    public DonationResponseModel parseDonationFromMessage(String message) {
         Matcher matcher = MESSAGE_PATTERN.matcher(message);
         if (matcher.find()) {
             String donatorName = matcher.group(1);
             String amountString = matcher.group(2);
             BigDecimal amount = new BigDecimal(amountString.replace(',', '.'));
             String donationMessage = Optional.ofNullable(matcher.group(3)).map(msg -> msg.replaceAll("(<br>)+", " ")).map(String::trim).orElse("");
-            return Donation
+            return DonationResponseModel
                     .builder()
                     .message(donationMessage)
                     .donatorName(donatorName)
@@ -64,32 +82,67 @@ public class DonationService {
         }
     }
 
-    public BigDecimal fetchCurrentDonationAmount() {
-        try (InputStream is = new URL(debraProperties.getDonationsPageURL()).openStream()) {
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            String line;
-            while ((line = br.readLine()) != null) {
-                Matcher matcher = DONATION_PAGE_AMOUNT_PARTNER.matcher(line);
-                if (matcher.find()) {
-                    return new BigDecimal(matcher.group(1).replace(',', '.'));
-                }
-            }
-            log.warn("Did not find the donation amount in the configured URL {}", debraProperties.getDonationsPageURL());
-            throw new DonationAmountNotFoundException();
-        } catch (IOException ex) {
-            log.warn("Failed to load page for parsing donation amount {}.", debraProperties.getDonationsPageURL(), ex);
-            throw new DonationAmountNotFoundException();
-        }
+    public List<DonationItemModel> getHighestDonations(DonationsResponse response, Integer maxCount) {
+        List<Donation> topDonations = response
+                .getDonations()
+                .stream()
+                .sorted(Comparator.comparing(Donation::getAmount)
+                        .reversed())
+                .collect(Collectors.toList());
+        return topDonations
+                .stream()
+                .limit(maxCount)
+                .map(donation -> donationConverter.convertDonation(donation))
+                .collect(Collectors.toList());
     }
 
-    public CompletableFuture<Void> sendDonationNotification(Donation donation) {
+    public List<DonationItemModel> getLatestDonations(DonationsResponse response, Integer maxCount) {
+        return response
+                .getDonations()
+                .stream()
+                .limit(maxCount)
+                .map(donation -> donationConverter.convertDonation(donation))
+                .collect(Collectors.toList());
+    }
+
+    public DonationsResponse fetchCurrentDonationAmount(Long serverId) throws IOException {
+        Long fetchSize = configService.getLongValueOrConfigDefault(DEBRA_DONATION_API_FETCH_SIZE_KEY, serverId);
+        Request request = new Request.Builder()
+                .url(String.format(debraProperties.getDonationAPIUrl(), fetchSize))
+                .get()
+                .build();
+        Response response = okHttpClient.newCall(request).execute();
+        if(!response.isSuccessful()) {
+            if (log.isDebugEnabled()) {
+                log.error("Failed to retrieve urban dictionary definition. Response had code {} with body {}.",
+                        response.code(), response.body());
+            }
+            throw new DonationAmountNotFoundException();
+        }
+        Gson gson = getGson();
+
+        return gson.fromJson(response.body().string(), DonationsResponse.class);
+    }
+
+    private Gson getGson() {
+        return new GsonBuilder()
+                .registerTypeAdapter(BigDecimal.class, new BigDecimalGsonAdapter())
+                .create();
+    }
+
+    private DonationsModel getDonationInfoModel(Long serverId) throws IOException {
+        return donationConverter.convertDonationResponse(fetchCurrentDonationAmount(serverId));
+    }
+
+    public CompletableFuture<Void> sendDonationNotification(DonationResponseModel donation) throws IOException {
+        Long targetServerId = Long.parseLong(System.getenv(DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME));
+        DonationsModel donationInfoModel = getDonationInfoModel(targetServerId);
         DonationNotificationModel model = DonationNotificationModel
                 .builder()
                 .donation(donation)
-                .totalDonationAmount(fetchCurrentDonationAmount())
+                .totalDonationAmount(donationInfoModel.getTotalAmount())
                 .build();
         MessageToSend messageToSend = templateService.renderEmbedTemplate(DEBRA_DONATION_NOTIFICATION_TEMPLATE_KEY, model);
-        Long targetServerId = Long.parseLong(System.getenv(DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME));
         List<CompletableFuture<Message>> firstMessage = postTargetService.sendEmbedInPostTarget(messageToSend, DebraPostTarget.DEBRA_DONATION_NOTIFICATION, targetServerId);
         List<CompletableFuture<Message>> secondMessage = postTargetService.sendEmbedInPostTarget(messageToSend, DebraPostTarget.DEBRA_DONATION_NOTIFICATION2, targetServerId);
         firstMessage.addAll(secondMessage);

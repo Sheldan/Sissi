@@ -3,7 +3,7 @@ package dev.sheldan.sissi.module.debra.listener;
 import dev.sheldan.abstracto.core.listener.AsyncStartupListener;
 import dev.sheldan.abstracto.core.service.ConfigService;
 import dev.sheldan.sissi.module.debra.config.DebraProperties;
-import dev.sheldan.sissi.module.debra.model.Donation;
+import dev.sheldan.sissi.module.debra.model.listener.DonationResponseModel;
 import dev.sheldan.sissi.module.debra.service.DonationService;
 import lombok.extern.slf4j.Slf4j;
 import okhttp3.*;
@@ -49,7 +49,7 @@ public class WebsocketListener extends WebSocketListener implements AsyncStartup
                 log.info("Waiting {} milli seconds to send notification.", delayMillis);
                 Thread.sleep(delayMillis);
                 log.info("Loading new donation amount and sending notification.");
-                Donation donation = donationService.parseDonationFromMessage(text);
+                DonationResponseModel donation = donationService.parseDonationFromMessage(text);
                 donationService.sendDonationNotification(donation).thenAccept(unused -> {
                     log.info("Successfully notified about donation.");
                 }).exceptionally(throwable -> {

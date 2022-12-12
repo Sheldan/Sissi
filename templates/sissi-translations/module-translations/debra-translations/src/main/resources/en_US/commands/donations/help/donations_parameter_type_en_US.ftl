@@ -1,0 +1,1 @@
+Type of donations you want to load, either 'top' or 'latest'. Default 'latest' for any other value

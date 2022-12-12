@@ -10,6 +10,13 @@
     <groupId>dev.sheldan.sissi.application.module</groupId>
     <artifactId>debra</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

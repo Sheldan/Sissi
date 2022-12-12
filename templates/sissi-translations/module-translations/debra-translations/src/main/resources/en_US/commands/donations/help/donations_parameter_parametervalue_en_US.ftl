@@ -1,0 +1,1 @@
+The amount of donations you want to load for the specified type. Defaults to 5, max 20.

@@ -12,6 +12,7 @@ import java.util.List;
 public class DebraFeatureConfig implements FeatureConfig {
 
     public static final String DEBRA_DONATION_NOTIFICATION_DELAY_CONFIG_KEY = "debraDonationNotificationDelayMillis";
+    public static final String DEBRA_DONATION_API_FETCH_SIZE_KEY = "debraDonationApiFetchSize";
     public static final String DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME = "DEBRA_DONATION_NOTIFICATION_SERVER_ID";
     @Override
     public FeatureDefinition getFeature() {
@@ -25,6 +26,6 @@ public class DebraFeatureConfig implements FeatureConfig {
 
     @Override
     public List<String> getRequiredSystemConfigKeys() {
-        return Arrays.asList(DEBRA_DONATION_NOTIFICATION_DELAY_CONFIG_KEY);
+        return Arrays.asList(DEBRA_DONATION_NOTIFICATION_DELAY_CONFIG_KEY, DEBRA_DONATION_API_FETCH_SIZE_KEY);
     }
 }
