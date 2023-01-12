@@ -11,4 +11,7 @@ import java.util.List;
 public class MeetupNotificationModel {
     private List<MemberDisplay> participants;
     private String notificationMessage;
+    private Long meetupMessageId;
+    private String meetupTopic;
+    private Long meetupId;
 }

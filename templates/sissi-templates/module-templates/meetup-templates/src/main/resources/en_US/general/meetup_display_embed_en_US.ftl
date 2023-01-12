@@ -20,7 +20,6 @@
             "description": "<#if cancelled>~~</#if><@safe_include "meetup_display_description"/><#if cancelled>~~</#if>"
         }
     ],
-    <#if yesId?has_content && noId?has_content && maybeId?has_content && !cancelled>
     "buttons": [
         {
             "label": "<@safe_include "meetup_message_yes_button_label"/>",
@@ -42,8 +41,14 @@
             "id": "${noId}",
             "buttonStyle": "danger"
         }
+        <#if location?? && location != "%22%22">,
+        {
+            "label": "<@safe_include "meetup_message_location_button_label"/>",
+            "url": "https://www.google.com/maps?q=${location?json_string}",
+            "buttonStyle": "link"
+        }
+        </#if>
     ],
-    </#if>
     "messageConfig": {
         "allowsRoleMention": true
     }

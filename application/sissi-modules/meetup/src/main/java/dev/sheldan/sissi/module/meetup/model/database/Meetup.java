@@ -43,6 +43,26 @@ public class Meetup {
     @Column(name = "message_id")
     private Long messageId;
 
+    @Getter
+    @Column(name = "location")
+    private String location;
+
+    @Getter
+    @Column(name = "yes_button_id")
+    private String yesButtonId;
+
+    @Getter
+    @Column(name = "maybe_button_id")
+    private String maybeButtonId;
+
+    @Getter
+    @Column(name = "no_time_button_id")
+    private String noTimeButtonId;
+
+    @Getter
+    @Column(name = "not_interested_button_id")
+    private String notInterestedButtonId;
+
     @OneToMany(
             fetch = FetchType.LAZY,
             orphanRemoval = true,

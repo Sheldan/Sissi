@@ -1,0 +1,27 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog.xsd
+    http://www.liquibase.org/xml/ns/pro dbchangelog.xsd" >
+    <changeSet author="Sheldan" id="meetup-add_info_columns">
+        <addColumn tableName="meetup">
+            <column name="location" type="VARCHAR(100)" />
+        </addColumn>
+        <addColumn tableName="meetup">
+            <column name="yes_button_id" type="VARCHAR(100)" />
+        </addColumn>
+        <addColumn tableName="meetup">
+            <column name="maybe_button_id" type="VARCHAR(100)" />
+        </addColumn>
+        <addColumn tableName="meetup">
+            <column name="no_time_button_id" type="VARCHAR(100)" />
+        </addColumn>
+        <addColumn tableName="meetup">
+            <column name="not_interested_button_id" type="VARCHAR(100)" />
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>

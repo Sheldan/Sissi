@@ -6,7 +6,15 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog.xsd
     http://www.liquibase.org/xml/ns/pro dbchangelog.xsd" >
-    <include file="1.1.0/collection.xml" relativeToChangelogFile="true"/>
-    <include file="1.2.0/collection.xml" relativeToChangelogFile="true"/>
-    <include file="1.3.18/collection.xml" relativeToChangelogFile="true"/>
+    <property name="utilityModule" value="(SELECT id FROM module WHERE name = 'utility')"/>
+    <property name="meetupFeature" value="(SELECT id FROM feature WHERE key = 'meetup')"/>
+
+    <changeSet author="Sheldan" id="meetup-change_command">
+        <insert tableName="command">
+            <column name="name" value="changeMeetup"/>
+            <column name="module_id" valueComputed="${utilityModule}"/>
+            <column name="feature_id" valueComputed="${meetupFeature}"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

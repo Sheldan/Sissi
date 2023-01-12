@@ -1,0 +1,1 @@
+Changes a property of a meetup

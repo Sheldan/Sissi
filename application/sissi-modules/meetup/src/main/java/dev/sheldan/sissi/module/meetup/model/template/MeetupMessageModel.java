@@ -15,6 +15,7 @@ public class MeetupMessageModel {
     private String topic;
     private String description;
     private Instant meetupTime;
+    private String location;
     private MemberDisplay organizer;
     private Long meetupId;
     private String yesId;

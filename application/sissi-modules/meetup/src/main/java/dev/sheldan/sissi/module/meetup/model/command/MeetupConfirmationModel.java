@@ -14,6 +14,7 @@ public class MeetupConfirmationModel {
     private MemberDisplay organizer;
     private Instant meetupTime;
     private Long meetupId;
+    private String location;
     private String topic;
     private String description;
     private Long guildId;

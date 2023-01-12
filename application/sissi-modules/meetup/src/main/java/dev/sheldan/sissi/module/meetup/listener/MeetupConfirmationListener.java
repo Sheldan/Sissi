@@ -104,6 +104,10 @@ public class MeetupConfirmationListener implements ButtonClickedListener {
         messageModel.setNoId(noButtonId);
         messageModel.setMaybeId(maybeButtonId);
         messageModel.setNoTimeId(noTimeButtonId);
+        meetup.setYesButtonId(yesButtonId);
+        meetup.setMaybeButtonId(maybeButtonId);
+        meetup.setNoTimeButtonId(noTimeButtonId);
+        meetup.setNotInterestedButtonId(noButtonId);
         messageModel.setCancelled(false);
         Long meetupId = payload.getMeetupId();
         Long serverId = payload.getGuildId();

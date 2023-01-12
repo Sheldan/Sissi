@@ -1,5 +1,6 @@
 package dev.sheldan.sissi.module.meetup.service.management;
 
+import dev.sheldan.abstracto.core.exception.AbstractoRunTimeException;
 import dev.sheldan.abstracto.core.models.ServerSpecificId;
 import dev.sheldan.abstracto.core.models.database.AChannel;
 import dev.sheldan.abstracto.core.models.database.AUserInAServer;
@@ -12,6 +13,9 @@ import dev.sheldan.sissi.module.meetup.repository.MeetupRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.List;
 
@@ -26,22 +30,28 @@ public class MeetupManagementServiceBean {
 
     public static final String MEETUP_COUNTER_KEY = "meetup";
 
-    public Meetup createMeetup(Instant timeStamp, String topic, String description, AUserInAServer organizer, AChannel meetupChannel) {
+    public Meetup createMeetup(Instant timeStamp, String topic, String description, AUserInAServer organizer, AChannel meetupChannel, String location) {
         if(timeStamp.isBefore(Instant.now())) {
             throw new MeetupPastTimeException();
         }
         Long meetupId = counterService.getNextCounterValue(organizer.getServerReference(), MEETUP_COUNTER_KEY);
-        Meetup meetup = Meetup
-                .builder()
-                .meetupTime(timeStamp)
-                .description(description)
-                .topic(topic)
-                .organizer(organizer)
-                .server(organizer.getServerReference())
-                .meetupChannel(meetupChannel)
-                .state(MeetupState.NEW)
-                .id(new ServerSpecificId(organizer.getServerReference().getId(), meetupId))
-                .build();
+        Meetup meetup = null;
+        try {
+            meetup = Meetup
+                    .builder()
+                    .meetupTime(timeStamp)
+                    .description(description)
+                    .topic(topic)
+                    .location(URLEncoder.encode(location, StandardCharsets.UTF_8.toString()))
+                    .organizer(organizer)
+                    .server(organizer.getServerReference())
+                    .meetupChannel(meetupChannel)
+                    .state(MeetupState.NEW)
+                    .id(new ServerSpecificId(organizer.getServerReference().getId(), meetupId))
+                    .build();
+        } catch (UnsupportedEncodingException e) {
+            throw new AbstractoRunTimeException(e);
+        }
         return meetupRepository.save(meetup);
     }
 

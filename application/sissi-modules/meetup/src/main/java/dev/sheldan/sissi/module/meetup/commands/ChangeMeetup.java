@@ -15,7 +15,6 @@ import dev.sheldan.sissi.module.meetup.config.MeetupFeatureDefinition;
 import dev.sheldan.sissi.module.meetup.config.MeetupSlashCommandNames;
 import dev.sheldan.sissi.module.meetup.exception.NotMeetupOrganizerException;
 import dev.sheldan.sissi.module.meetup.model.database.Meetup;
-import dev.sheldan.sissi.module.meetup.model.database.MeetupDecision;
 import dev.sheldan.sissi.module.meetup.service.MeetupServiceBean;
 import dev.sheldan.sissi.module.meetup.service.management.MeetupManagementServiceBean;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -28,7 +27,12 @@ import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Component
-public class NotifyMeetupParticipants extends AbstractConditionableCommand {
+public class ChangeMeetup extends AbstractConditionableCommand {
+
+    private static final String CHANGE_MEETUP_COMMAND = "changeMeetup";
+    private static final String MEETUP_ID_PARAMETER = "meetupId";
+    private static final String MEETUP_NEW_VALUE_PARAMETER = "newValue";
+    private static final String MEETUP_PROPERTY_PARAMETER = "property";
 
     @Autowired
     private SlashCommandParameterService slashCommandParameterService;
@@ -42,12 +46,6 @@ public class NotifyMeetupParticipants extends AbstractConditionableCommand {
     @Autowired
     private InteractionService interactionService;
 
-    private static final String MEETUP_ID_PARAMETER = "meetupId";
-    private static final String NOTIFICATION_MESSAGE_PARAMETER = "notificationMessage";
-    private static final String NOTIFICATION_MEETUP_DECISION = "decision";
-    private static final String NOTIFY_MEETUP_PARTICIPANTS_COMMAND = "notifyMeetupParticipants";
-    private static final String NOTIFY_MEETUP_PARTICIPANTS_RESPONSE = "notifyMeetupParticipants_response";
-
     @Override
     public CompletableFuture<CommandResult> executeAsync(CommandContext commandContext) {
         List<Object> parameters = commandContext.getParameters().getParameters();
@@ -56,9 +54,27 @@ public class NotifyMeetupParticipants extends AbstractConditionableCommand {
         if(!meetup.getOrganizer().getUserReference().getId().equals(commandContext.getAuthor().getIdLong())) {
             throw new NotMeetupOrganizerException();
         }
-        String notificationMessage = (String) parameters.get(1);
-        return meetupServiceBean.notifyMeetupParticipants(meetup, notificationMessage, null)
-                .thenApply(unused -> CommandResult.fromSuccess());
+        String property = (String) parameters.get(1);
+        MeetupProperty propertyEnum = MeetupProperty.valueOf(property);
+        String newValue = (String) parameters.get(2);
+        return updateMeetup(meetup, propertyEnum, newValue).thenApply(unused -> CommandResult.fromSuccess());
+    }
+
+    private CompletableFuture<Void> updateMeetup(Meetup meetup, MeetupProperty propertyEnum, String newValue) {
+        CompletableFuture<Void> future;
+        switch (propertyEnum) {
+            case TOPIC:
+                future = meetupServiceBean.changeMeetupTopic(meetup, newValue);
+                break;
+            case LOCATION:
+                future = meetupServiceBean.changeMeetupLocation(meetup, newValue);
+                break;
+            default:
+                case DESCRIPTION:
+                future = meetupServiceBean.changeMeetupDescription(meetup, newValue);
+                break;
+        }
+        return future;
     }
 
     @Override
@@ -68,13 +84,11 @@ public class NotifyMeetupParticipants extends AbstractConditionableCommand {
         if(!meetup.getOrganizer().getUserReference().getId().equals(event.getMember().getIdLong())) {
             throw new NotMeetupOrganizerException();
         }
-        MeetupDecision toNotify = null;
-        if(slashCommandParameterService.hasCommandOption(NOTIFICATION_MEETUP_DECISION, event)) {
-            toNotify = MeetupDecision.valueOf(slashCommandParameterService.getCommandOption(NOTIFICATION_MEETUP_DECISION, event, String.class));
-        }
-        String notificationMessage = slashCommandParameterService.getCommandOption(NOTIFICATION_MESSAGE_PARAMETER, event, String.class);
-        return meetupServiceBean.notifyMeetupParticipants(meetup, notificationMessage, toNotify)
-                .thenCompose(unused -> interactionService.replyEmbed(NOTIFY_MEETUP_PARTICIPANTS_RESPONSE, event))
+        String newValue = slashCommandParameterService.getCommandOption(MEETUP_NEW_VALUE_PARAMETER, event, String.class);
+        String property = slashCommandParameterService.getCommandOption(MEETUP_PROPERTY_PARAMETER, event, String.class);
+        MeetupProperty propertyEnum = MeetupProperty.valueOf(property);
+        return updateMeetup(meetup, propertyEnum, newValue)
+                .thenCompose(commandResult -> interactionService.replyEmbed("changeMeetup_response", event))
                 .thenApply(unused -> CommandResult.fromSuccess());
     }
 
@@ -87,30 +101,27 @@ public class NotifyMeetupParticipants extends AbstractConditionableCommand {
                 .type(Long.class)
                 .build();
 
-        Parameter notificationMessage = Parameter
-                .builder()
-                .templated(true)
-                .name(NOTIFICATION_MESSAGE_PARAMETER)
-                .type(String.class)
-                .remainder(true)
-                .build();
-
-        List<String> meetupDecisions = Arrays
-                .stream(MeetupDecision.values())
+        List<String> meetupProperties = Arrays
+                .stream(MeetupProperty.values())
                 .map(Enum::name)
                 .collect(Collectors.toList());
 
-        Parameter meetupDecisionChoice = Parameter
+        Parameter meetupPropertyParameter = Parameter
                 .builder()
                 .templated(true)
-                .name(NOTIFICATION_MEETUP_DECISION)
+                .name(MEETUP_PROPERTY_PARAMETER)
                 .type(String.class)
-                .optional(true)
-                .choices(meetupDecisions)
-                .slashCommandOnly(true)
+                .choices(meetupProperties)
                 .build();
 
-        List<Parameter> parameters = Arrays.asList(meetupIdParameter, notificationMessage, meetupDecisionChoice);
+        Parameter newValueParameter = Parameter
+                .builder()
+                .templated(true)
+                .name(MEETUP_NEW_VALUE_PARAMETER)
+                .type(String.class)
+                .build();
+
+        List<Parameter> parameters = Arrays.asList(meetupIdParameter, meetupPropertyParameter, newValueParameter);
         HelpInfo helpInfo = HelpInfo
                 .builder()
                 .templated(true)
@@ -120,15 +131,15 @@ public class NotifyMeetupParticipants extends AbstractConditionableCommand {
                 .builder()
                 .enabled(true)
                 .rootCommandName(MeetupSlashCommandNames.MEETUP)
-                .commandName("notify")
+                .commandName("changeMeetup")
                 .build();
 
         return CommandConfiguration.builder()
-                .name(NOTIFY_MEETUP_PARTICIPANTS_COMMAND)
+                .name(CHANGE_MEETUP_COMMAND)
                 .module(UtilityModuleDefinition.UTILITY)
                 .templated(true)
-                .slashCommandConfig(slashCommandConfig)
                 .async(true)
+                .slashCommandConfig(slashCommandConfig)
                 .supportsEmbedException(true)
                 .causesReaction(true)
                 .parameters(parameters)
@@ -139,5 +150,9 @@ public class NotifyMeetupParticipants extends AbstractConditionableCommand {
     @Override
     public FeatureDefinition getFeature() {
         return MeetupFeatureDefinition.MEETUP;
+    }
+
+    public enum MeetupProperty {
+        DESCRIPTION, TOPIC, LOCATION
     }
 }

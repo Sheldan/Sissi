@@ -1,0 +1,1 @@
+Where the meetup should be. This will be used with a Google Maps search link in the display.

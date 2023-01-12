@@ -1,5 +1,6 @@
 package dev.sheldan.sissi.module.meetup.service;
 
+import dev.sheldan.abstracto.core.exception.AbstractoRunTimeException;
 import dev.sheldan.abstracto.core.interaction.ComponentPayloadManagementService;
 import dev.sheldan.abstracto.core.interaction.ComponentPayloadService;
 import dev.sheldan.abstracto.core.models.ServerChannelMessage;
@@ -33,6 +34,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -145,6 +149,11 @@ public class MeetupServiceBean {
                 .builder()
                 .description(meetup.getDescription())
                 .topic(meetup.getTopic())
+                .location(meetup.getLocation())
+                .noTimeId(meetup.getNoTimeButtonId())
+                .yesId(meetup.getYesButtonId())
+                .maybeId(meetup.getMaybeButtonId())
+                .noId(meetup.getNotInterestedButtonId())
                 .meetupTime(meetup.getMeetupTime())
                 .meetupId(meetup.getId().getId())
                 .participants(getMemberDisplays(participating))
@@ -250,8 +259,8 @@ public class MeetupServiceBean {
         }
     }
 
-    public CompletableFuture<Void> notifyMeetupParticipants(Meetup meetup, String message) {
-        List<MeetupDecision> decisionsToBeNotified = Arrays.asList(MeetupDecision.MAYBE, MeetupDecision.YES);
+    public CompletableFuture<Void> notifyMeetupParticipants(Meetup meetup, String message, MeetupDecision toNotify) {
+        List<MeetupDecision> decisionsToBeNotified = toNotify == null ? Arrays.asList(MeetupDecision.MAYBE, MeetupDecision.YES) : Arrays.asList(toNotify);
         List<MemberDisplay> participants = meetup
                 .getParticipants()
                 .stream()
@@ -262,6 +271,9 @@ public class MeetupServiceBean {
         MeetupNotificationModel model = MeetupNotificationModel
                 .builder()
                 .notificationMessage(message)
+                .meetupId(meetup.getId().getId())
+                .meetupMessageId(meetup.getMessageId())
+                .meetupTopic(meetup.getTopic())
                 .participants(participants)
                 .build();
         MessageChannel channel = channelService.getMessageChannelFromServer(meetup.getServer().getId(), meetup.getMeetupChannel().getId());
@@ -380,6 +392,39 @@ public class MeetupServiceBean {
         MessageToSend updatedMeetupMessage = getMeetupMessage(meetupMessageModel);
         GuildMessageChannel meetupChannel = channelService.getMessageChannelFromServer(serverId, meetup.getMeetupChannel().getId());
         return channelService.editEmbedMessageInAChannel(updatedMeetupMessage.getEmbeds().get(0), meetupChannel, meetup.getMessageId())
+                .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId))
+                .exceptionally(throwable -> {
+                    log.info("Failed to update message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId, throwable);
+                    return null;
+                });
+    }
+
+    public CompletableFuture<Void> changeMeetupDescription(Meetup meetup, String newDescription) {
+        meetup.setDescription(newDescription);
+        return updateMeetupMessage(meetup);
+    }
+
+    public CompletableFuture<Void> changeMeetupLocation(Meetup meetup, String newLocation) {
+        try {
+            meetup.setLocation(URLEncoder.encode(newLocation, StandardCharsets.UTF_8.toString()));
+        } catch (UnsupportedEncodingException e) {
+            throw new AbstractoRunTimeException(e);
+        }
+        return updateMeetupMessage(meetup);
+    }
+
+    public CompletableFuture<Void> changeMeetupTopic(Meetup meetup, String newTopic) {
+        meetup.setTopic(newTopic);
+        return updateMeetupMessage(meetup);
+    }
+
+    private CompletableFuture<Void> updateMeetupMessage(Meetup meetup) {
+        Long meetupId = meetup.getId().getId();
+        Long serverId = meetup.getId().getServerId();
+        MeetupMessageModel meetupMessageModel = getMeetupMessageModel(meetup);
+        MessageToSend updatedMeetupMessage = getMeetupMessage(meetupMessageModel);
+        GuildMessageChannel meetupChannel = channelService.getMessageChannelFromServer(serverId, meetup.getMeetupChannel().getId());
+        return channelService.editMessageInAChannelFuture(updatedMeetupMessage, meetupChannel, meetup.getMessageId())
                 .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId))
                 .exceptionally(throwable -> {
                     log.info("Failed to update message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId, throwable);

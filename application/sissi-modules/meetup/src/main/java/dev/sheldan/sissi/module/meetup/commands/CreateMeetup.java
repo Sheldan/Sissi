@@ -71,6 +71,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
     private static final String MEETUP_TIME_PARAMETER = "meetupTime";
     private static final String TOPIC_PARAMETER = "topic";
     private static final String DESCRIPTION_PARAMETER = "description";
+    private static final String LOCATION_PARAMETER = "location";
     private static final String CONFIRMATION_TEMPLATE = "createMeetup_confirmation";
 
     @Override
@@ -86,7 +87,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
         }
         AUserInAServer organizer = userInServerManagementService.loadOrCreateUser(commandContext.getAuthor());
         AChannel meetupChannel = channelManagementService.loadChannel(commandContext.getChannel().getIdLong());
-        Meetup meetup = meetupManagementServiceBean.createMeetup(meetupTime, meetupTopic, description, organizer, meetupChannel);
+        Meetup meetup = meetupManagementServiceBean.createMeetup(meetupTime, meetupTopic, description, organizer, meetupChannel, null);
         String confirmationId = componentService.generateComponentId();
         String cancelId = componentService.generateComponentId();
         MeetupConfirmationModel model = MeetupConfirmationModel
@@ -95,6 +96,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
                 .guildId(commandContext.getGuild().getIdLong())
                 .description(description)
                 .topic(meetupTopic)
+                .location(meetup.getLocation())
                 .confirmationId(confirmationId)
                 .cancelId(cancelId)
                 .meetupId(meetup.getId().getId())
@@ -117,10 +119,17 @@ public class CreateMeetup extends AbstractConditionableCommand {
         } else {
             description = "";
         }
+
+        String location;
+        if(slashCommandParameterService.hasCommandOption(LOCATION_PARAMETER, event)) {
+            location = slashCommandParameterService.getCommandOption(LOCATION_PARAMETER, event, String.class);
+        } else {
+            location = null;
+        }
         Instant meetupTime = Instant.ofEpochSecond(time);
         AUserInAServer organizer = userInServerManagementService.loadOrCreateUser(event.getMember());
         AChannel meetupChannel = channelManagementService.loadChannel(event.getChannel().getIdLong());
-        Meetup meetup = meetupManagementServiceBean.createMeetup(meetupTime, topic, description, organizer, meetupChannel);
+        Meetup meetup = meetupManagementServiceBean.createMeetup(meetupTime, topic, description, organizer, meetupChannel, location);
         String confirmationId = componentService.generateComponentId();
         String cancelId = componentService.generateComponentId();
         MeetupConfirmationModel model = MeetupConfirmationModel
@@ -129,6 +138,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
                 .guildId(event.getGuild().getIdLong())
                 .description(description)
                 .topic(topic)
+                .location(meetup.getLocation())
                 .confirmationId(confirmationId)
                 .cancelId(cancelId)
                 .meetupId(meetup.getId().getId())
@@ -166,7 +176,17 @@ public class CreateMeetup extends AbstractConditionableCommand {
                 .type(String.class)
                 .build();
 
-        List<Parameter> parameters = Arrays.asList(timeParameter, topicParameter, descriptionParameter);
+        Parameter locationParameter = Parameter
+                .builder()
+                .templated(true)
+                .name(LOCATION_PARAMETER)
+                .remainder(true)
+                .optional(true)
+                .slashCommandOnly(true)
+                .type(String.class)
+                .build();
+
+        List<Parameter> parameters = Arrays.asList(timeParameter, topicParameter, descriptionParameter, locationParameter);
         HelpInfo helpInfo = HelpInfo
                 .builder()
                 .templated(true)

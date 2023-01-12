@@ -1,0 +1,1 @@
+The decision of the people to be notified
