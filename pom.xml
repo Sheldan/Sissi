@@ -21,7 +21,7 @@
         <!-- edit in release.yml as well -->
         <!-- when releasing a new bot version, update the .env as well-->
         <abstracto.version>1.4.17</abstracto.version>
-        <abstracto.templates.version>1.4.14</abstracto.templates.version>
+        <abstracto.templates.version>1.4.13</abstracto.templates.version>
     </properties>
 
     <modules>
