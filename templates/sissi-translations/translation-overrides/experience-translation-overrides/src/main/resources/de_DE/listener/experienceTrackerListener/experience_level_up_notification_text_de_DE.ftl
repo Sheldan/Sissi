@@ -1,1 +1,1 @@
-Sauber ${userMention}, host level ${currentLevel} erreicht!
+<#if currentLevel=69>Nice<#else>Sauber</#if> ${userMention}, host level ${currentLevel} erreicht!
