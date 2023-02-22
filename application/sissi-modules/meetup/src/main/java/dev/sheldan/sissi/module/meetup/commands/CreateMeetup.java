@@ -73,6 +73,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
     private static final String DESCRIPTION_PARAMETER = "description";
     private static final String LOCATION_PARAMETER = "location";
     private static final String CONFIRMATION_TEMPLATE = "createMeetup_confirmation";
+    private static final String DEFAULT_LOCATION_STRING = "\"\"";
 
     @Override
     public CompletableFuture<CommandResult> executeAsync(CommandContext commandContext) {
@@ -87,7 +88,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
         }
         AUserInAServer organizer = userInServerManagementService.loadOrCreateUser(commandContext.getAuthor());
         AChannel meetupChannel = channelManagementService.loadChannel(commandContext.getChannel().getIdLong());
-        Meetup meetup = meetupManagementServiceBean.createMeetup(meetupTime, meetupTopic, description, organizer, meetupChannel, null);
+        Meetup meetup = meetupManagementServiceBean.createMeetup(meetupTime, meetupTopic, description, organizer, meetupChannel, DEFAULT_LOCATION_STRING);
         String confirmationId = componentService.generateComponentId();
         String cancelId = componentService.generateComponentId();
         MeetupConfirmationModel model = MeetupConfirmationModel
@@ -124,7 +125,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
         if(slashCommandParameterService.hasCommandOption(LOCATION_PARAMETER, event)) {
             location = slashCommandParameterService.getCommandOption(LOCATION_PARAMETER, event, String.class);
         } else {
-            location = null;
+            location = DEFAULT_LOCATION_STRING;
         }
         Instant meetupTime = Instant.ofEpochSecond(time);
         AUserInAServer organizer = userInServerManagementService.loadOrCreateUser(event.getMember());
