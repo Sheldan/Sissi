@@ -54,6 +54,7 @@ services:
       REST_USER_NAME: ${REST_USER_NAME}
       REST_PASSWORD: ${REST_PASSWORD}
       YOUTUBE_API_KEY: ${YOUTUBE_API_KEY}
+      OPEN_WEATHER_MAP_API_KEY: ${OPEN_WEATHER_MAP_API_KEY}
     command: sh -c "while ping -c1 deployment_container &>/dev/null; do sleep 1; done; echo 'Liquibase finished!' && ./start.sh"
     ports:
       - "127.0.0.1:${DEBUG_PORT}:5005"
