@@ -130,6 +130,11 @@
             <artifactId>logging-impl</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>dev.sheldan.abstracto.modules</groupId>
+            <artifactId>statistic-impl</artifactId>
+        </dependency>
+
         <!-- sissi modules  -->
 
         <dependency>
