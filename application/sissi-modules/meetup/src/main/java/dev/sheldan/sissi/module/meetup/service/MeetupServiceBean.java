@@ -10,9 +10,12 @@ import dev.sheldan.abstracto.core.service.*;
 import dev.sheldan.abstracto.core.service.management.ServerManagementService;
 import dev.sheldan.abstracto.core.templating.model.MessageToSend;
 import dev.sheldan.abstracto.core.templating.service.TemplateService;
+import dev.sheldan.abstracto.core.utils.FileService;
 import dev.sheldan.abstracto.core.utils.FutureUtils;
 import dev.sheldan.abstracto.scheduling.model.JobParameters;
 import dev.sheldan.abstracto.scheduling.service.SchedulerService;
+import dev.sheldan.sissi.module.meetup.config.MeetupFeatureDefinition;
+import dev.sheldan.sissi.module.meetup.config.MeetupFeatureMode;
 import dev.sheldan.sissi.module.meetup.model.command.MeetupChangeTimeConfirmationModel;
 import dev.sheldan.sissi.module.meetup.model.command.MeetupConfirmationModel;
 import dev.sheldan.sissi.module.meetup.model.database.Meetup;
@@ -21,6 +24,7 @@ import dev.sheldan.sissi.module.meetup.model.database.MeetupParticipant;
 import dev.sheldan.sissi.module.meetup.model.database.MeetupState;
 import dev.sheldan.sissi.module.meetup.model.payload.MeetupChangeTimeConfirmationPayload;
 import dev.sheldan.sissi.module.meetup.model.payload.MeetupConfirmationPayload;
+import dev.sheldan.sissi.module.meetup.model.template.MeetupIcsModel;
 import dev.sheldan.sissi.module.meetup.model.template.MeetupMessageModel;
 import dev.sheldan.sissi.module.meetup.model.template.MeetupNotificationModel;
 import dev.sheldan.sissi.module.meetup.model.template.MeetupTimeChangedNotificationModel;
@@ -38,6 +42,9 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -80,6 +87,9 @@ public class MeetupServiceBean {
     private MeetupServiceBean self;
 
     @Autowired
+    private FileService fileService;
+
+    @Autowired
     private ChannelService channelService;
 
     @Autowired
@@ -92,10 +102,15 @@ public class MeetupServiceBean {
     private SchedulerService schedulerService;
 
     @Autowired
+    private FeatureModeService featureModeService;
+
+    @Autowired
     private MeetupParticipatorManagementServiceBean meetupParticipatorManagementServiceBean;
 
     @Autowired
     private MeetupComponentManagementServiceBean meetupComponentManagementServiceBean;
+    private static final String ICS_TIME_STAMP_FORMAT = "yMMdd'T'kkmmss'Z'";
+    private static final DateTimeFormatter ICS_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(ICS_TIME_STAMP_FORMAT);
 
     public void storeMeetupConfirmation(MeetupConfirmationModel model) {
         AServer server = serverManagementService.loadServer(model.getGuildId());
@@ -126,6 +141,22 @@ public class MeetupServiceBean {
         componentPayloadService.createButtonPayload(model.getCancelId(), confirmationPayload, MEETUP_CHANGE_TIME_CONFIRMATION_BUTTON, server);
     }
 
+    private MeetupIcsModel getMeetupICSModel(Meetup meetup) {
+        ZonedDateTime startTime = meetup.getMeetupTime().atZone(ZoneId.of("UTC"));
+        ZonedDateTime endTime = meetup.getMeetupTime().plus(1, ChronoUnit.HOURS).atZone(ZoneId.of("UTC"));
+        String icsFormattedStartTime = startTime.format(ICS_DATE_TIME_FORMATTER);
+        String icsFormattedEndTime = endTime.format(ICS_DATE_TIME_FORMATTER);
+        String icsFormattedMeetupCreationTime = Instant.now().atZone(ZoneId.of("UTC"))
+                .format(ICS_DATE_TIME_FORMATTER);
+        boolean attachIcsFile = featureModeService.featureModeActive(MeetupFeatureDefinition.MEETUP, meetup.getServer().getId(), MeetupFeatureMode.ATTACH_ICS_FILE);
+        return MeetupIcsModel
+                .builder()
+                .attachIcsFile(attachIcsFile)
+                .icsFormattedCreationTime(icsFormattedMeetupCreationTime)
+                .icsFormattedStartTime(icsFormattedStartTime)
+                .icsFormattedEndTime(icsFormattedEndTime)
+                .build();
+    }
 
     public MeetupMessageModel getMeetupMessageModel(Meetup meetup) {
         List<MeetupParticipant> allParticipants = meetup.getParticipants();
@@ -162,6 +193,7 @@ public class MeetupServiceBean {
                 .maybeParticipants(getMemberDisplays(maybe))
                 .cancelled(meetup.getState().equals(MeetupState.CANCELLED))
                 .organizer(MemberDisplay.fromAUserInAServer(meetup.getOrganizer()))
+                .meetupIcsModel(getMeetupICSModel(meetup))
                 .build();
     }
 
@@ -391,8 +423,9 @@ public class MeetupServiceBean {
 
         MessageToSend updatedMeetupMessage = getMeetupMessage(meetupMessageModel);
         GuildMessageChannel meetupChannel = channelService.getMessageChannelFromServer(serverId, meetup.getMeetupChannel().getId());
-        return channelService.editEmbedMessageInAChannel(updatedMeetupMessage.getEmbeds().get(0), meetupChannel, meetup.getMessageId())
+        return channelService.editMessageInAChannelFuture(updatedMeetupMessage, meetupChannel, meetup.getMessageId())
                 .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId))
+                .thenAccept(unused -> fileService.safeDeleteIgnoreException(updatedMeetupMessage.getAttachedFiles().get(0).getFile()))
                 .exceptionally(throwable -> {
                     log.info("Failed to update message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId, throwable);
                     return null;
@@ -426,6 +459,7 @@ public class MeetupServiceBean {
         GuildMessageChannel meetupChannel = channelService.getMessageChannelFromServer(serverId, meetup.getMeetupChannel().getId());
         return channelService.editMessageInAChannelFuture(updatedMeetupMessage, meetupChannel, meetup.getMessageId())
                 .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId))
+                .thenAccept(unused -> fileService.safeDeleteIgnoreException(updatedMeetupMessage.getAttachedFiles().get(0).getFile()))
                 .exceptionally(throwable -> {
                     log.info("Failed to update message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId, throwable);
                     return null;

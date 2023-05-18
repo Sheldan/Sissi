@@ -27,4 +27,5 @@ public class MeetupMessageModel {
     private List<MemberDisplay> maybeParticipants;
     private List<MemberDisplay> noTimeParticipants;
     private List<MemberDisplay> declinedParticipants;
+    private MeetupIcsModel meetupIcsModel;
 }

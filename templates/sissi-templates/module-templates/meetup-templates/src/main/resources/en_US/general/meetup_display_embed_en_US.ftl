@@ -49,6 +49,14 @@
         }
         </#if>
     ],
+    <#if meetupIcsModel.attachIcsFile>
+    "files": [
+        {
+            "fileName": "<@safe_include "meetup_ics_file_name"/>.ics",
+            "fileContent": "<@safe_include "meetup_ice_file_download"/>"
+        }
+    ],
+    </#if>
     "messageConfig": {
         "allowsRoleMention": true
     }

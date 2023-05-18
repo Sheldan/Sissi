@@ -16,6 +16,7 @@ import dev.sheldan.abstracto.core.service.MessageService;
 import dev.sheldan.abstracto.core.service.management.ChannelManagementService;
 import dev.sheldan.abstracto.core.service.management.ServerManagementService;
 import dev.sheldan.abstracto.core.templating.model.MessageToSend;
+import dev.sheldan.abstracto.core.utils.FileService;
 import dev.sheldan.abstracto.core.utils.FutureUtils;
 import dev.sheldan.sissi.module.meetup.config.MeetupFeatureDefinition;
 import dev.sheldan.sissi.module.meetup.model.database.Meetup;
@@ -76,6 +77,9 @@ public class MeetupConfirmationListener implements ButtonClickedListener {
     @Autowired
     private MeetupComponentManagementServiceBean meetupComponentManagementServiceBean;
 
+    @Autowired
+    private FileService fileService;
+
     @Override
     public ButtonClickedListenerResult execute(ButtonClickedListenerModel model) {
         MeetupConfirmationPayload payload = (MeetupConfirmationPayload) model.getDeserializedPayload();
@@ -115,6 +119,9 @@ public class MeetupConfirmationListener implements ButtonClickedListener {
         List<CompletableFuture<Message>> messageFutures = channelService.sendMessageToSendToChannel(messageToSend, model.getEvent().getMessageChannel());
         FutureUtils.toSingleFutureGeneric(messageFutures).thenAccept(unused -> {
             messageService.deleteMessage(model.getEvent().getMessage());
+            messageToSend.getAttachedFiles().forEach(attachedFile -> {
+                fileService.safeDeleteIgnoreException(attachedFile.getFile());
+            });
             Message meetupMessage = messageFutures.get(0).join();
             messageService.pinMessage(meetupMessage);
             self.persistPayloads(meetupId, serverId, yesButtonId, noButtonId, maybeButtonId, noTimeButtonId, meetupMessage);
