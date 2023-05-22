@@ -72,12 +72,8 @@ public class MeetupManagementServiceBean {
         return meetupRepository.findByState(MeetupState.CANCELLED);
     }
 
-    public List<Meetup> getFutureMeetups() {
-        return meetupRepository.findByMeetupTimeGreaterThan(Instant.now());
-    }
-
-    public List<Meetup> getIncomingMeetups() {
-        return meetupRepository.findByMeetupTimeGreaterThanAndState(Instant.now(), MeetupState.CONFIRMED);
+    public List<Meetup> getIncomingMeetups(Long serverId, Long channelId) {
+        return meetupRepository.findByMeetupTimeGreaterThanAndStateAndServer_IdAndMeetupChannel_Id(Instant.now(), MeetupState.CONFIRMED, serverId, channelId);
     }
 
     public void deleteMeetups(List<Meetup> meetups) {

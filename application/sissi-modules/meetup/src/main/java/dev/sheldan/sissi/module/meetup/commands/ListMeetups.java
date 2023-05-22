@@ -49,19 +49,19 @@ public class ListMeetups extends AbstractConditionableCommand {
 
     @Override
     public CompletableFuture<CommandResult> executeAsync(CommandContext commandContext) {
-        MessageToSend messageToSend = getMessageToSend(commandContext.getGuild().getIdLong());
+        MessageToSend messageToSend = getMessageToSend(commandContext.getGuild().getIdLong(), commandContext.getChannel().getIdLong());
         return FutureUtils.toSingleFutureGeneric(channelService.sendMessageToSendToChannel(messageToSend, commandContext.getChannel()))
                 .thenApply(unused -> CommandResult.fromIgnored());
     }
 
     @Override
     public CompletableFuture<CommandResult> executeSlash(SlashCommandInteractionEvent event) {
-        return interactionService.replyMessageToSend(getMessageToSend(event.getGuild().getIdLong()), event)
+        return interactionService.replyMessageToSend(getMessageToSend(event.getGuild().getIdLong(), event.getChannel().getIdLong()), event)
                 .thenApply(interactionHook -> CommandResult.fromSuccess());
     }
 
-    private MessageToSend getMessageToSend(Long serverId) {
-        List<Meetup> meetups = meetupManagementServiceBean.getIncomingMeetups();
+    private MessageToSend getMessageToSend(Long serverId, Long channelId) {
+        List<Meetup> meetups = meetupManagementServiceBean.getIncomingMeetups(serverId, channelId);
         List<MeetupListItemModel> listItems = meetups
                 .stream()
                 .map(MeetupListItemModel::fromMeetup)

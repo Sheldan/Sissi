@@ -12,7 +12,6 @@ import java.util.List;
 @Repository
 public interface MeetupRepository extends JpaRepository<Meetup, ServerSpecificId> {
     List<Meetup> findByMeetupTimeLessThan(Instant date);
-    List<Meetup> findByMeetupTimeGreaterThan(Instant date);
-    List<Meetup> findByMeetupTimeGreaterThanAndState(Instant date, MeetupState state);
+    List<Meetup> findByMeetupTimeGreaterThanAndStateAndServer_IdAndMeetupChannel_Id(Instant date, MeetupState state, Long serverId, Long channelId);
     List<Meetup> findByState(MeetupState state);
 }
