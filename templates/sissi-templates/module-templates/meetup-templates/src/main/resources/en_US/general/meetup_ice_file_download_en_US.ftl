@@ -8,6 +8,6 @@ DTSTART:${meetupIcsModel.icsFormattedStartTime}
 DTEND:${meetupIcsModel.icsFormattedEndTime}
 SUMMARY:${topic}
 <#if description?has_content>DESCRIPTION:${description}</#if>
-<#if location?? && location != "%22%22">LOCATION:${location}</#if>
+<#if decodedLocation?? && decodedLocation != "">LOCATION:${decodedLocation}</#if>
 END:VEVENT
 END:VCALENDAR

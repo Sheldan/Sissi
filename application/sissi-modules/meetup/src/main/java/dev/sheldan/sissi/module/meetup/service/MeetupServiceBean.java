@@ -176,11 +176,13 @@ public class MeetupServiceBean {
                 .stream()
                 .filter(meetupParticipator -> meetupParticipator.getDecision().equals(MeetupDecision.NO_TIME))
                 .collect(Collectors.toList());
+        String rawLocation = java.net.URLDecoder.decode(meetup.getLocation(), StandardCharsets.UTF_8);
         return MeetupMessageModel
                 .builder()
                 .description(meetup.getDescription())
                 .topic(meetup.getTopic())
                 .location(meetup.getLocation())
+                .decodedLocation(rawLocation)
                 .noTimeId(meetup.getNoTimeButtonId())
                 .yesId(meetup.getYesButtonId())
                 .maybeId(meetup.getMaybeButtonId())
