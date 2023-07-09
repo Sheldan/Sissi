@@ -65,6 +65,16 @@
 
                         <artifactItem>
                             <groupId>dev.sheldan.abstracto-templates.templates</groupId>
+                            <artifactId>twitch</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <destFileName>twitch.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.templates</groupId>
                             <artifactId>experience-tracking</artifactId>
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
@@ -270,6 +280,16 @@
 
                         <artifactItem>
                             <groupId>dev.sheldan.abstracto-templates.translations</groupId>
+                            <artifactId>twitch</artifactId>
+                            <version>${abstracto.templates.version}</version>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <destFileName>twitch.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto-templates.translations</groupId>
                             <artifactId>modmail</artifactId>
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
@@ -454,6 +474,17 @@
                             <overWrite>true</overWrite>
                             <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
                             <destFileName>link-embed.zip</destFileName>
+                        </artifactItem>
+
+                        <artifactItem>
+                            <groupId>dev.sheldan.abstracto.modules</groupId>
+                            <artifactId>twitch-impl</artifactId>
+                            <version>${abstracto.version}</version>
+                            <classifier>liquibase</classifier>
+                            <type>zip</type>
+                            <overWrite>true</overWrite>
+                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <destFileName>twitch.zip</destFileName>
                         </artifactItem>
 
                         <artifactItem>

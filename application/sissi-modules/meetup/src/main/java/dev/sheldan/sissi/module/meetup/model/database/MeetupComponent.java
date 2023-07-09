@@ -4,7 +4,7 @@ import dev.sheldan.abstracto.core.models.database.ComponentPayload;
 import dev.sheldan.sissi.module.meetup.model.database.embed.MeetupComponentId;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.Instant;
 
 @Builder

@@ -2,7 +2,7 @@ package dev.sheldan.sissi.module.quotes.model.database;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 
 @Builder
 @Entity
