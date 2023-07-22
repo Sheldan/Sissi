@@ -20,7 +20,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <!-- edit in release.yml as well -->
         <!-- when releasing a new bot version, update the .env as well-->
-        <abstracto.version>1.5.0</abstracto.version>
+        <abstracto.version>1.5.1</abstracto.version>
         <abstracto.templates.version>1.4.18</abstracto.templates.version>
     </properties>
 
