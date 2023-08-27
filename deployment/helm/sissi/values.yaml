@@ -5,10 +5,10 @@
 replicaCount: 1
 
 bot:
-  repository: harbor.sheldan.dev/testing
+  repository: harbor.sheldan.dev/sissi
   pullPolicy: IfNotPresent
   image: sissi
-  tag: 1.4.5
+  tag: 1.4.6
 
 templateDeployment:
   enabled: true
@@ -21,7 +21,7 @@ templateDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-template-data
-  tag: 1.4.5
+  tag: 1.4.6
 
 dbConfigDeployment:
   enabled: true
@@ -34,7 +34,7 @@ dbConfigDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-db-data
-  tag: 1.4.5
+  tag: 1.4.6
 
 dbCredentials:
   host:
