@@ -8,7 +8,7 @@ bot:
   repository: harbor.sheldan.dev/testing
   pullPolicy: IfNotPresent
   image: sissi
-  tag: 1.4.4
+  tag: 1.4.5
 
 templateDeployment:
   enabled: true
@@ -21,7 +21,7 @@ templateDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-template-data
-  tag: 1.4.4
+  tag: 1.4.5
 
 dbConfigDeployment:
   enabled: true
@@ -34,7 +34,7 @@ dbConfigDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-db-data
-  tag: 1.4.4
+  tag: 1.4.5
 
 dbCredentials:
   host:
