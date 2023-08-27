@@ -43,6 +43,6 @@ jobs:
       - name: Helm push
         working-directory: ./deployment/helm/
         run: |-
-          helm registry login -u ${{ secrets.HARBOR_USERNAME }} -p ${{ secrets.HARBOR_TOKEN }} harbor.sheldan.dev
+          helm registry login -u '${{ secrets.HARBOR_USERNAME }}' -p '${{ secrets.HARBOR_TOKEN }}' harbor.sheldan.dev
           helm package sissi
           helm push sissi*.tgz oci://harbor.sheldan.dev/sissi
