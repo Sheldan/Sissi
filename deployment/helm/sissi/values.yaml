@@ -1,0 +1,117 @@
+# Default values for sissi.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+bot:
+  repository: harbor.sheldan.dev/testing
+  pullPolicy: IfNotPresent
+  image: sissi
+  tag: 1.4.2
+
+templateDeployment:
+  enabled: true
+  repository: harbor.sheldan.dev/abstracto
+  pullPolicy: Always
+  image: abstracto-template-deployment
+  tag: 1.5.5
+
+templateDeploymentData:
+  repository: harbor.sheldan.dev/sissi
+  pullPolicy: Always
+  image: sissi-template-data
+  tag: 1.4.2
+
+dbConfigDeployment:
+  enabled: true
+  repository: harbor.sheldan.dev/abstracto
+  pullPolicy: Always
+  image: abstracto-db-deployment
+  tag: 1.5.5
+
+dbConfigDeploymentData:
+  repository: harbor.sheldan.dev/sissi
+  pullPolicy: Always
+  image: sissi-db-data
+  tag: 1.4.2
+
+dbCredentials:
+  host:
+  port:
+  userName:
+  password:
+  name:
+
+grafanaDeployment:
+  repository: harbor.sheldan.dev/grafana-tools
+  pullPolicy: Always
+  image: grafana-dashboard-deployment
+  tag: 0.0.2
+  enabled: true
+  grafana:
+    host:
+    basicAuth:
+      username:
+      password:
+
+apiKeys:
+  discord:
+    token:
+  youtube:
+    apiKey:
+  openWeatherMap:
+    apiKey:
+  twitch:
+    secret:
+    clientId:
+
+
+imagePullSecrets:
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 8080
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: "/actuator/prometheus"
+    prometheus.io/port: "8080"
+
+resources:
+  limits:
+    cpu:
+    memory:
+  requests:
+    cpu:
+    memory:
+
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

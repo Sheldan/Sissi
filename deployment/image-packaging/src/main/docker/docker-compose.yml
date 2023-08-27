@@ -5,46 +5,11 @@ services:
     build:
       context: sissi
     image: ${REGISTRY_PREFIX}sissi:${VERSION:-latest}
-  database:
+  db-data:
     build:
-      context: database
-      args:
-        POSTGRES_VERSION: ${POSTGRES_VERSION}
-    image: ${REGISTRY_PREFIX}sissi_database:${VERSION:-latest}
-  pg_admin:
+      context: db-data
+    image: ${REGISTRY_PREFIX}sissi-db-data:${VERSION:-latest}
+  template-data:
     build:
-      context: pgAdmin
-      args:
-        PG_ADMIN_VERSION: ${PG_ADMIN_VERSION}
-    image: ${REGISTRY_PREFIX}sissi_pg_admin:${VERSION:-latest}
-  deployment_container:
-    build:
-      context: deployment
-      args:
-        ABSTRACTO_REGISTRY_PREFIX: ${ABSTRACTO_REGISTRY_PREFIX}
-        ABSTRACTO_VERSION: ${ABSTRACTO_VERSION}
-    image: ${REGISTRY_PREFIX}sissi_deployment:${VERSION:-latest}
-  prometheus:
-    build:
-      context: prometheus
-      args:
-        PROMETHEUS_VERSION: ${PROMETHEUS_VERSION}
-    image: ${REGISTRY_PREFIX}sissi_prometheus:${VERSION:-latest}
-  grafana:
-    build:
-      context: grafana
-      args:
-        GRAFANA_VERSION: ${GRAFANA_VERSION}
-    image: ${REGISTRY_PREFIX}sissi_grafana:${VERSION:-latest}
-  promtail:
-    build:
-      context: promtail
-      args:
-        PROMTAIL_VERSION: ${PROMTAIL_VERSION}
-    image: ${REGISTRY_PREFIX}sissi_promtail:${VERSION:-latest}
-  loki:
-    build:
-      context: loki
-      args:
-        LOKI_VERSION: ${LOKI_VERSION}
-    image: ${REGISTRY_PREFIX}sissi_loki:${VERSION:-latest}
+      context: template-data
+    image:  ${REGISTRY_PREFIX}sissi-template-data:${VERSION:-latest}

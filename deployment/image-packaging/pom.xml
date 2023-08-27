@@ -49,7 +49,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>core.zip</destFileName>
                         </artifactItem>
 
@@ -59,7 +59,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>assignable-roles.zip</destFileName>
                         </artifactItem>
 
@@ -69,7 +69,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>twitch.zip</destFileName>
                         </artifactItem>
 
@@ -79,7 +79,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>experience-tracking.zip</destFileName>
                         </artifactItem>
 
@@ -89,7 +89,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>modmail.zip</destFileName>
                         </artifactItem>
 
@@ -99,7 +99,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>utility.zip</destFileName>
                         </artifactItem>
 
@@ -109,7 +109,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>logging.zip</destFileName>
                         </artifactItem>
 
@@ -119,7 +119,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>webservices.zip</destFileName>
                         </artifactItem>
 
@@ -129,7 +129,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>remind.zip</destFileName>
                         </artifactItem>
 
@@ -139,7 +139,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>suggestion.zip</destFileName>
                         </artifactItem>
 
@@ -149,7 +149,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>link-embed.zip</destFileName>
                         </artifactItem>
 
@@ -159,7 +159,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>starboard.zip</destFileName>
                         </artifactItem>
 
@@ -169,7 +169,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>moderation.zip</destFileName>
                         </artifactItem>
 
@@ -179,7 +179,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>entertainment.zip</destFileName>
                         </artifactItem>
 
@@ -189,7 +189,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>custom-command.zip</destFileName>
                         </artifactItem>
 
@@ -199,7 +199,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>statistic.zip</destFileName>
                         </artifactItem>
 
@@ -210,7 +210,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>quotes.zip</destFileName>
                         </artifactItem>
 
@@ -220,7 +220,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>meetup.zip</destFileName>
                         </artifactItem>
 
@@ -230,7 +230,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>debra.zip</destFileName>
                         </artifactItem>
 
@@ -242,7 +242,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>moderation-custom.zip</destFileName>
                         </artifactItem>
 
@@ -254,7 +254,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>core.zip</destFileName>
                         </artifactItem>
 
@@ -264,7 +264,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>link-embed.zip</destFileName>
                         </artifactItem>
 
@@ -274,7 +274,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>experience-tracking.zip</destFileName>
                         </artifactItem>
 
@@ -284,7 +284,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>twitch.zip</destFileName>
                         </artifactItem>
 
@@ -294,7 +294,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>modmail.zip</destFileName>
                         </artifactItem>
 
@@ -304,7 +304,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>assignable-roles.zip</destFileName>
                         </artifactItem>
 
@@ -314,7 +314,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>utility.zip</destFileName>
                         </artifactItem>
 
@@ -324,7 +324,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>webservices.zip</destFileName>
                         </artifactItem>
 
@@ -334,7 +334,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>remind.zip</destFileName>
                         </artifactItem>
 
@@ -344,7 +344,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>suggestion.zip</destFileName>
                         </artifactItem>
 
@@ -354,7 +354,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>starboard.zip</destFileName>
                         </artifactItem>
 
@@ -364,7 +364,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>moderation.zip</destFileName>
                         </artifactItem>
 
@@ -374,7 +374,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>entertainment.zip</destFileName>
                         </artifactItem>
 
@@ -384,7 +384,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>logging.zip</destFileName>
                         </artifactItem>
 
@@ -394,7 +394,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>custom-command.zip</destFileName>
                         </artifactItem>
 
@@ -404,7 +404,7 @@
                             <version>${abstracto.templates.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>statistic.zip</destFileName>
                         </artifactItem>
 
@@ -416,7 +416,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>quotes.zip</destFileName>
                         </artifactItem>
 
@@ -426,7 +426,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>meetup.zip</destFileName>
                         </artifactItem>
 
@@ -436,7 +436,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>debra.zip</destFileName>
                         </artifactItem>
 
@@ -450,7 +450,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>scheduling.zip</destFileName>
                         </artifactItem>
 
@@ -461,7 +461,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>core.zip</destFileName>
                         </artifactItem>
 
@@ -472,7 +472,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>link-embed.zip</destFileName>
                         </artifactItem>
 
@@ -483,7 +483,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>twitch.zip</destFileName>
                         </artifactItem>
 
@@ -494,7 +494,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>experience-tracking.zip</destFileName>
                         </artifactItem>
 
@@ -505,7 +505,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>logging.zip</destFileName>
                         </artifactItem>
 
@@ -516,7 +516,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>starboard.zip</destFileName>
                         </artifactItem>
 
@@ -527,7 +527,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>assignable-roles.zip</destFileName>
                         </artifactItem>
 
@@ -538,7 +538,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>utility.zip</destFileName>
                         </artifactItem>
 
@@ -549,7 +549,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>modmail.zip</destFileName>
                         </artifactItem>
 
@@ -560,7 +560,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>utility.zip</destFileName>
                         </artifactItem>
 
@@ -571,7 +571,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>webservices.zip</destFileName>
                         </artifactItem>
 
@@ -582,7 +582,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>remind.zip</destFileName>
                         </artifactItem>
 
@@ -593,7 +593,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>suggestion.zip</destFileName>
                         </artifactItem>
 
@@ -604,7 +604,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>moderation.zip</destFileName>
                         </artifactItem>
 
@@ -615,7 +615,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>entertainment.zip</destFileName>
                         </artifactItem>
 
@@ -626,7 +626,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>custom-command.zip</destFileName>
                         </artifactItem>
 
@@ -639,7 +639,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>quotes.zip</destFileName>
                         </artifactItem>
 
@@ -650,7 +650,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>meetup.zip</destFileName>
                         </artifactItem>
 
@@ -661,7 +661,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>debra.zip</destFileName>
                         </artifactItem>
 
@@ -672,7 +672,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>statistic.zip</destFileName>
                         </artifactItem>
 
@@ -685,7 +685,7 @@
                             <classifier>liquibase</classifier>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/liquibase-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                             <destFileName>moderation-custom.zip</destFileName>
                         </artifactItem>
 
@@ -695,7 +695,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>moderation-custom.zip</destFileName>
                         </artifactItem>
 
@@ -707,7 +707,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>moderation-template-overrides.zip</destFileName>
                         </artifactItem>
 
@@ -717,7 +717,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>experience-template-overrides.zip</destFileName>
                         </artifactItem>
 
@@ -727,7 +727,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/template-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                             <destFileName>logging-template-overrides.zip</destFileName>
                         </artifactItem>
 
@@ -739,7 +739,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>moderation-translation-overrides.zip</destFileName>
                         </artifactItem>
 
@@ -749,7 +749,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>experience-translation-overrides.zip</destFileName>
                         </artifactItem>
 
@@ -759,7 +759,7 @@
                             <version>${project.version}</version>
                             <type>zip</type>
                             <overWrite>true</overWrite>
-                            <outputDirectory>${file.basedir}/deployment/translation-artifacts/</outputDirectory>
+                            <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                             <destFileName>logging-translation-overrides.zip</destFileName>
                         </artifactItem>
 

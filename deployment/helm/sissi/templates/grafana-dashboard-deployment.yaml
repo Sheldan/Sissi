@@ -1,0 +1,42 @@
+{{- if $.Values.grafanaDeployment.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: grafana-dashboard-deployment-job
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-4"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+        {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+          {{- toYaml . | nindent 8 }}
+        {{- end }}
+      containers:
+        - name: template-deployment-job
+          image: "{{ $.Values.grafanaDeployment.repository }}/{{ $.Values.grafanaDeployment.image }}:{{ $.Values.grafanaDeployment.tag }}"
+          imagePullPolicy: {{ $.Values.grafanaDeployment.pullPolicy }}
+          args:
+            - "/var/userconfig"
+          volumeMounts:
+            - mountPath: "/var/userconfig"
+              name: grafana-dashboard-config
+              readOnly: true
+      volumes:
+        - name: grafana-dashboard-config
+          secret:
+            secretName: grafana-dashboard-config
+      restartPolicy: Never
+  backoffLimit: 4
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: grafana-dashboard-config
+data:
+  config.yaml: {{ (tpl (.Files.Get "configuration/grafana/config.yaml") . ) | b64enc }}
+  log-dashboard.json: {{ (tpl (.Files.Get "configuration/grafana/sissi-log-dashboard.json") . ) | b64enc }}
+  discord-dashboard.json: {{ (tpl (.Files.Get "configuration/grafana/sissi-discord-dashboard.json") . ) | b64enc }}
+{{- end }}

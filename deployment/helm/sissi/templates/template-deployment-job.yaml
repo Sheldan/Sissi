@@ -1,0 +1,69 @@
+{{- if .Values.dbConfigDeployment.enabled -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+{{- $deploymentJobName := print ((include "sissi.fullname" .) | trunc 39) "-template-deployment-job" }}
+  name: {{ $deploymentJobName | trunc 63 }}
+  annotations:
+    "helm.sh/hook": post-install
+    "helm.sh/hook-weight": "-4"
+    "helm.sh/hook-delete-policy": hook-succeeded
+spec:
+  template:
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: template-deployment-job
+          image: "{{ $.Values.templateDeployment.repository }}/{{ $.Values.templateDeployment.image }}:{{ $.Values.templateDeployment.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ $.Values.templateDeployment.pullPolicy }}
+          args:
+            - "/var/template-config/"
+          env:
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: dbPassword
+            - name: DB_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: dbHost
+            - name: DB_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: dbPort
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: dbUser
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-credentials
+                  key: dbName
+            - name: DB_SCHEME
+              value: "abstracto."
+          volumeMounts:
+            - mountPath: "/var/template-config/"
+              name: template-config-mount
+      initContainers:
+        - name: database-config-data
+          image: "{{ $.Values.templateDeploymentData.repository }}/{{ $.Values.templateDeploymentData.image }}:{{ $.Values.templateDeploymentData.tag | default .Chart.AppVersion}}"
+          imagePullPolicy: {{ $.Values.templateDeploymentData.pullPolicy }}
+          volumeMounts:
+            - mountPath: "/var/run-config"
+              name: template-config-mount
+      volumes:
+        - name: template-config-mount
+          emptyDir: {}
+      restartPolicy: Never
+  backoffLimit: 4
+{{- end }}
+
+

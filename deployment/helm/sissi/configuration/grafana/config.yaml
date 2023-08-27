@@ -1,0 +1,4 @@
+base_url: {{ $.Values.grafanaDeployment.grafana.host }}
+username: {{ $.Values.grafanaDeployment.grafana.basicAuth.username }}
+password: {{ $.Values.grafanaDeployment.grafana.basicAuth.password }}
+folder_name: Sissi

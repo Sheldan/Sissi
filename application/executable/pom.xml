@@ -14,6 +14,7 @@
     </properties>
 
     <build>
+        <finalName>sissi</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
