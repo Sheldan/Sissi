@@ -1,4 +1,4 @@
-FROM openjdk:17-alpine
+FROM amazoncorretto:17.0.8-alpine3.18
 MAINTAINER Sheldan
 VOLUME /tmp
 ADD config/* /config/
