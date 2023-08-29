@@ -5,7 +5,7 @@ metadata:
 {{- $deploymentJobName := print ((include "sissi.fullname" .) | trunc 39) "-template-deployment-job" }}
   name: {{ $deploymentJobName | trunc 63 }}
   annotations:
-    "helm.sh/hook": post-install
+    "helm.sh/hook": pre-upgrade,pre-install
     "helm.sh/hook-weight": "-4"
     "helm.sh/hook-delete-policy": hook-succeeded
 spec:
