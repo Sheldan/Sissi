@@ -8,7 +8,7 @@ bot:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: IfNotPresent
   image: sissi-bot
-  tag: 1.4.10
+  tag: 1.4.11
   livenessProbe:
     initialDelaySeconds: 60
     periodSeconds: 5
@@ -29,7 +29,7 @@ templateDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-template-data
-  tag: 1.4.10
+  tag: 1.4.11
 
 dbConfigDeployment:
   enabled: true
@@ -42,7 +42,7 @@ dbConfigDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-db-data
-  tag: 1.4.10
+  tag: 1.4.11
 
 dbCredentials:
   host:
