@@ -92,14 +92,16 @@ spec:
             httpGet:
               path: /actuator/health/liveness
               port: 8080
-            initialDelaySeconds: 60
-            periodSeconds: 3
+            initialDelaySeconds: {{ $.Values.bot.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.bot.livenessProbe.periodSeconds }}
+            failureThreshold: {{ $.Values.bot.livenessProbe.failureThreshold }}
           readinessProbe:
             httpGet:
               path: /actuator/health/readiness
               port: 8080
-            initialDelaySeconds: 60
-            periodSeconds: 3
+            initialDelaySeconds: {{ $.Values.bot.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.bot.readinessProbe.periodSeconds }}
+            failureThreshold: {{ $.Values.bot.readinessProbe.failureThreshold }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
