@@ -15,7 +15,7 @@ local_resource(
   deps=['pom.xml'])
 
 docker_build_with_restart(
-  registry + 'sissi',
+  registry + 'sissi-bot',
   './application/executable/target/jar',
   entrypoint=['java', '-noverify', '-cp', '.:./lib/*', 'dev.sheldan.sissi.executable.Application'],
   dockerfile='./application/executable/Dockerfile',
@@ -32,6 +32,6 @@ docker_build(registry + 'sissi-template-data', 'deployment/image-packaging/src/m
 
 
 k8s_yaml(helm('deployment/helm/sissi', values=
-['./../Sissi-environments/values/local/values.yaml',
-'secrets://./../Sissi-environments/values/local/values.secrets.yaml']
+['./../Sissi-environments/argocd/apps/sissi/values/local/values.yaml',
+'secrets://./../Sissi-environments/argocd/apps/sissi/values/local/values.secrets.yaml']
 ))

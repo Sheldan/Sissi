@@ -4,7 +4,7 @@ services:
   bot:
     build:
       context: sissi
-    image: ${REGISTRY_PREFIX}sissi:${VERSION:-latest}
+    image: ${REGISTRY_PREFIX}sissi-bot:${VERSION:-latest}
   db-data:
     build:
       context: db-data
