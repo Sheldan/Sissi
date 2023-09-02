@@ -53,7 +53,7 @@
               "uid": "loki"
             },
             "editorMode": "builder",
-            "expr": "{app=\"sissi\"} |= `$logFilter`",
+            "expr": "{app=\"sissi\", namespace=\"sissi\"} |= `$logFilter`",
             "maxLines": 5000,
             "queryType": "range",
             "refId": "A"
@@ -92,7 +92,7 @@
               "uid": "loki"
             },
             "editorMode": "code",
-            "expr": "{app=\"sissi\"} |= \"ERROR\"",
+            "expr": "{app=\"sissi\", namespace=\"sissi\"} |= \"ERROR\"",
             "maxLines": 5000,
             "queryType": "range",
             "refId": "A"
@@ -126,6 +126,7 @@
                 "tooltip": false,
                 "viz": false
               },
+              "insertNulls": false,
               "lineInterpolation": "linear",
               "lineWidth": 1,
               "pointSize": 5,
@@ -185,7 +186,7 @@
               "uid": "loki"
             },
             "editorMode": "code",
-            "expr": "rate({app=\"sissi\"}[$__interval])",
+            "expr": "rate({app=\"sissi\", namespace=\"sissi\"}[$__interval])",
             "queryType": "range",
             "refId": "A"
           }

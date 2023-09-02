@@ -46,6 +46,7 @@
                 "tooltip": false,
                 "viz": false
               },
+              "insertNulls": false,
               "lineInterpolation": "linear",
               "lineWidth": 1,
               "pointSize": 5,
@@ -105,7 +106,7 @@
               "uid": "prometheus"
             },
             "editorMode": "code",
-            "expr": "increase(discord_api_interactions_total[1m]) /2",
+            "expr": "increase(discord_api_interactions_total{namespace=\"sissi\"}[1m]) /2",
             "instant": false,
             "legendFormat": "{{ "{{" }} action {{ "}}" }}",
             "range": true,
@@ -139,6 +140,7 @@
                 "tooltip": false,
                 "viz": false
               },
+              "insertNulls": false,
               "lineInterpolation": "linear",
               "lineWidth": 1,
               "pointSize": 5,
@@ -198,7 +200,7 @@
               "uid": "prometheus"
             },
             "editorMode": "code",
-            "expr": "increase(command_processed_total[1m]) / 2 ",
+            "expr": "increase(command_processed_total{namespace=\"sissi\"}[1m]) / 2",
             "instant": false,
             "legendFormat": "{{ "{{" }}type{{ "}}" }}-{{ "{{" }}status{{ "}}" }}",
             "range": true,
@@ -232,6 +234,7 @@
                 "tooltip": false,
                 "viz": false
               },
+              "insertNulls": false,
               "lineInterpolation": "linear",
               "lineWidth": 1,
               "pointSize": 5,
@@ -291,7 +294,7 @@
               "uid": "prometheus"
             },
             "editorMode": "code",
-            "expr": "increase(message_total[1m]) / 2",
+            "expr": "increase(message_total{namespace=\"sissi\"}[1m]) / 2",
             "instant": false,
             "legendFormat": "{{ "{{" }} action {{ "}}" }}",
             "range": true,
@@ -325,6 +328,7 @@
                 "tooltip": false,
                 "viz": false
               },
+              "insertNulls": false,
               "lineInterpolation": "linear",
               "lineWidth": 1,
               "pointSize": 5,
@@ -384,7 +388,7 @@
               "uid": "prometheus"
             },
             "editorMode": "code",
-            "expr": "increase(okhttp_request_total[1m]) / 2",
+            "expr": "increase(okhttp_request_total{namespace=\"sissi\"}[1m]) / 2",
             "instant": false,
             "legendFormat": "{{ "{{" }} http_code {{ "}}" }}",
             "range": true,
@@ -418,6 +422,7 @@
                 "tooltip": false,
                 "viz": false
               },
+              "insertNulls": false,
               "lineInterpolation": "linear",
               "lineWidth": 1,
               "pointSize": 5,
@@ -477,7 +482,7 @@
               "uid": "prometheus"
             },
             "editorMode": "code",
-            "expr": "increase(cache_evictions_total{application=\"$application\", cache=\"messages\"}[1m]) / 2",
+            "expr": "increase(cache_evictions_total{application=\"$application\", cache=\"messages\", namespace=\"sissi\"}[1m]) / 2",
             "instant": false,
             "legendFormat": "Cache evictions",
             "range": true,
@@ -489,7 +494,7 @@
               "uid": "prometheus"
             },
             "editorMode": "code",
-            "expr": "increase(cache_gets_total{application=\"$application\", cache=\"messages\"}[1m]) / 2",
+            "expr": "increase(cache_gets_total{application=\"$application\", cache=\"messages\", namespace=\"sissi\"}[1m]) / 2",
             "hide": false,
             "instant": false,
             "legendFormat": "Cache gets {{ "{{" }} result {{ "}}" }}",
@@ -502,7 +507,7 @@
               "uid": "prometheus"
             },
             "editorMode": "code",
-            "expr": "increase(cache_puts_total{application=\"$application\", cache=\"messages\"}[1m]) / 2",
+            "expr": "increase(cache_puts_total{application=\"$application\", cache=\"messages\", namespace=\"sissi\"}[1m]) / 2",
             "hide": false,
             "instant": false,
             "legendFormat": "Cache puts",
@@ -515,7 +520,7 @@
               "uid": "prometheus"
             },
             "editorMode": "code",
-            "expr": "increase(cache_removals{application=\"$application\", cache=\"messages\"}[1m]) / 2",
+            "expr": "increase(cache_removals{application=\"$application\", cache=\"messages\", namespace=\"sissi\"}[1m]) / 2",
             "hide": false,
             "instant": false,
             "legendFormat": "Cache  removals",
@@ -550,6 +555,7 @@
                 "tooltip": false,
                 "viz": false
               },
+              "insertNulls": false,
               "lineInterpolation": "linear",
               "lineWidth": 1,
               "pointSize": 5,
@@ -609,7 +615,7 @@
               "uid": "prometheus"
             },
             "editorMode": "code",
-            "expr": "discord_gateway_ping",
+            "expr": "discord_gateway_ping{namespace=\"sissi\"}",
             "instant": false,
             "legendFormat": "Gateway ping",
             "range": true,
@@ -643,6 +649,7 @@
                 "tooltip": false,
                 "viz": false
               },
+              "insertNulls": false,
               "lineInterpolation": "linear",
               "lineWidth": 1,
               "pointSize": 5,
@@ -702,7 +709,7 @@
               "uid": "prometheus"
             },
             "editorMode": "code",
-            "expr": "increase(starboard_stars_total[1m]) / 2",
+            "expr": "increase(starboard_stars_total{namespace=\"sissi\"}[1m]) / 2",
             "instant": false,
             "legendFormat": "{{ "{{" }} action {{ "}}" }}",
             "range": true,
@@ -736,6 +743,7 @@
                 "tooltip": false,
                 "viz": false
               },
+              "insertNulls": false,
               "lineInterpolation": "linear",
               "lineWidth": 1,
               "pointSize": 5,
@@ -795,7 +803,7 @@
               "uid": "prometheus"
             },
             "editorMode": "code",
-            "expr": "increase(emote_usages_total[1m]) / 2",
+            "expr": "increase(emote_usages_total{namespace=\"sissi\"}[1m]) / 2",
             "instant": false,
             "legendFormat": "Used emotes",
             "range": true,
@@ -829,6 +837,7 @@
                 "tooltip": false,
                 "viz": false
               },
+              "insertNulls": false,
               "lineInterpolation": "linear",
               "lineWidth": 1,
               "pointSize": 5,
@@ -850,7 +859,8 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green"
+                  "color": "green",
+                  "value": null
                 },
                 {
                   "color": "red",
@@ -887,7 +897,7 @@
               "uid": "prometheus"
             },
             "editorMode": "code",
-            "expr": "increase(jda_event_total[1m]) / 2",
+            "expr": "increase(jda_event_total{namespace=\"sissi\"}[1m]) / 2",
             "instant": false,
             "legendFormat": "{{ "{{" }} event_class {{ "}}" }}",
             "range": true,
@@ -922,7 +932,7 @@
     "timezone": "",
     "title": "Sissi Discord status",
     "uid": "a7b3297d-972e-4dbd-9223-88d589817d34",
-    "version": 1,
+    "version": 2,
     "weekStart": ""
   },
   "overwrite": true

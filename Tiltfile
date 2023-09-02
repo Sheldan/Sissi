@@ -5,13 +5,13 @@ registry = 'harbor.sheldan.dev/sissi/'
 
 local_resource(
   'sissi-java-compile',
-  'mvn install && ' +
-  'rm -rf application/executable/target/jar-staging && ' +
-  'unzip -o application/executable/target/sissi-exec.jar -d application/executable/target/jar-staging && ' +
-  'rsync --delete --inplace --checksum -r application/executable/target/jar-staging/ application/executable/target/jar && ' +
-  'mkdir application/executable/target/jar/snapshots && ' +
-  'rsync --delete --inplace --checksum -r application/executable/target/jar/BOOT-INF/lib/*-SNAPSHOT.jar application/executable/target/jar/snapshots && ' +
-  'rm -f application/executable/target/jar/BOOT-INF/lib/*-SNAPSHOT.jar ',
+  ' mvn install && ' +
+  ' rm -rf application/executable/target/jar-staging && ' +
+  ' unzip -o application/executable/target/sissi-exec.jar -d application/executable/target/jar-staging && ' +
+  ' rsync --delete --inplace --checksum --exclude="*-SNAPSHOT.jar" -r application/executable/target/jar-staging/ application/executable/target/jar && ' +
+  ' rm -rf application/executable/target/jar/snapshots && ' +
+  ' mkdir application/executable/target/jar/snapshots && ' +
+  ' rsync --delete --inplace --checksum --include="*/" --include="*-SNAPSHOT.jar" --exclude="*" -r application/executable/target/jar-staging/BOOT-INF/lib/ application/executable/target/jar/snapshots',
   deps=['pom.xml'])
 
 docker_build_with_restart(
