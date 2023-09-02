@@ -8,11 +8,11 @@ local_resource(
   ' mvn install && ' +
   ' rm -rf application/executable/target/jar-staging && ' +
   ' unzip -o application/executable/target/sissi-exec.jar -d application/executable/target/jar-staging && ' +
-  ' rsync --delete --inplace --checksum --exclude="*-SNAPSHOT.jar" -r application/executable/target/jar-staging/ application/executable/target/jar && ' +
+  ' rsync --delete --delete-excluded --inplace --checksum --exclude="*-SNAPSHOT.jar" -r application/executable/target/jar-staging/ application/executable/target/jar && ' +
   ' rm -rf application/executable/target/jar/snapshots && ' +
   ' mkdir application/executable/target/jar/snapshots && ' +
-  ' rsync --delete --inplace --checksum --include="*/" --include="*-SNAPSHOT.jar" --exclude="*" -r application/executable/target/jar-staging/BOOT-INF/lib/ application/executable/target/jar/snapshots',
-  deps=['pom.xml'])
+  ' rsync --delete --delete-excluded --inplace --checksum --include="*/" --include="*-SNAPSHOT.jar" --exclude="*" -r application/executable/target/jar-staging/BOOT-INF/lib/ application/executable/target/jar/snapshots',
+  deps=['pom.xml'], auto_init=False, trigger_mode = TRIGGER_MODE_MANUAL)
 
 docker_build_with_restart(
   registry + 'sissi-bot',
@@ -35,3 +35,5 @@ k8s_yaml(helm('deployment/helm/sissi', values=
 ['./../Sissi-environments/argocd/apps/sissi/values/local/values.yaml',
 'secrets://./../Sissi-environments/argocd/apps/sissi/values/local/values.secrets.yaml']
 ))
+
+local_resource('fetch-packages', 'mvn install -f deployment/image-packaging/pom.xml', auto_init=False, trigger_mode = TRIGGER_MODE_MANUAL)

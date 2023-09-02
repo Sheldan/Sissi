@@ -214,9 +214,27 @@ public class QuoteServiceBean {
             return Optional.empty();
         }
         if(foundQuotes.size() > 1) {
-            log.info("Found multiple quotes in server {}, returning first one.", server.getId());
+            log.info("Found multiple quotes in server {}, returning random one.", server.getId());
+            int randomIndex = secureRandom.nextInt(foundQuotes.size());
+            return Optional.of(foundQuotes.get(randomIndex));
+        } else {
+            return Optional.of(foundQuotes.get(0));
         }
-        return Optional.of(foundQuotes.get(0));
+    }
+
+    public Optional<Quote> searchQuote(String query, AServer server, Member targetMember) {
+        AUserInAServer author = userInServerManagementService.loadOrCreateUser(targetMember);
+        List<Quote> foundQuotes = quoteRepository.findByTextContainingAndServerAndAuthor(query, server, author);
+        if(foundQuotes.isEmpty()) {
+            return Optional.empty();
+        }
+        if(foundQuotes.size() > 1) {
+            log.info("Found multiple quotes in server {}, returning random one.", server.getId());
+            int randomIndex = secureRandom.nextInt(foundQuotes.size());
+            return Optional.of(foundQuotes.get(randomIndex));
+        } else {
+            return Optional.of(foundQuotes.get(0));
+        }
     }
 
     public QuoteStatsModel getQuoteStats(Member member) {

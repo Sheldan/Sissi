@@ -21,6 +21,7 @@ import dev.sheldan.sissi.module.quotes.config.QuotesModuleDefinition;
 import dev.sheldan.sissi.module.quotes.exception.QuoteNotFoundException;
 import dev.sheldan.sissi.module.quotes.model.database.Quote;
 import dev.sheldan.sissi.module.quotes.service.QuoteServiceBean;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.InteractionHook;
@@ -28,7 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -38,6 +39,7 @@ public class QuoteSearch extends AbstractConditionableCommand {
 
     private static final String QUOTE_SEARCH_COMMAND = "quoteSearch";
     private static final String QUERY_PARAMETER = "query";
+    private static final String MEMBER_PARAMETER = "member";
 
     @Autowired
     private QuoteServiceBean quoteServiceBean;
@@ -80,7 +82,14 @@ public class QuoteSearch extends AbstractConditionableCommand {
         String query = slashCommandParameterService.getCommandOption(QUERY_PARAMETER, event, String.class);
         AServer server = serverManagementService.loadServer(event.getGuild().getIdLong());
 
-        Optional<Quote> possibleQuote = quoteServiceBean.searchQuote(query, server);
+        Optional<Quote> possibleQuote;
+        if(slashCommandParameterService.hasCommandOption(MEMBER_PARAMETER, event)) {
+            Member targetMember = slashCommandParameterService.getCommandOption(MEMBER_PARAMETER, event, Member.class);
+            possibleQuote = quoteServiceBean.searchQuote(query, server, targetMember);
+        } else {
+            possibleQuote = quoteServiceBean.searchQuote(query, server);
+        }
+
         Quote quoteToDisplay = possibleQuote.orElseThrow(QuoteNotFoundException::new);
         return quoteServiceBean.renderQuoteToMessageToSend(quoteToDisplay)
                 .thenCompose(messageToSend -> self.replyMessage(event, messageToSend))
@@ -100,7 +109,17 @@ public class QuoteSearch extends AbstractConditionableCommand {
                 .name(QUERY_PARAMETER)
                 .type(String.class)
                 .build();
-        List<Parameter> parameters = Collections.singletonList(searchParameter);
+
+        Parameter memberParameter = Parameter
+                .builder()
+                .templated(true)
+                .name(MEMBER_PARAMETER)
+                .slashCommandOnly(true)
+                .optional(true)
+                .type(Member.class)
+                .build();
+
+        List<Parameter> parameters = Arrays.asList(searchParameter, memberParameter);
         HelpInfo helpInfo = HelpInfo
                 .builder()
                 .templated(true)

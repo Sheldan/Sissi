@@ -12,6 +12,7 @@ import java.util.List;
 @Repository
 public interface QuoteRepository extends JpaRepository<Quote, ServerSpecificId> {
     List<Quote> findByTextContainingAndServer(String text, AServer server);
+    List<Quote> findByTextContainingAndServerAndAuthor(String text, AServer server, AUserInAServer author);
     List<Quote> findByServer(AServer server);
     List<Quote> findByAuthor(AUserInAServer author);
     Long countByAuthor(AUserInAServer author);
