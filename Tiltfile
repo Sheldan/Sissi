@@ -17,7 +17,7 @@ local_resource(
 docker_build_with_restart(
   registry + 'sissi-bot',
   './application/executable/target/jar',
-  entrypoint=['java', '-noverify', '-cp', '.:./lib/*', 'dev.sheldan.sissi.executable.Application'],
+  entrypoint=['java', '-noverify', '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005', '-cp', '.:./lib/*', 'dev.sheldan.sissi.executable.Application'],
   dockerfile='./application/executable/Dockerfile',
   live_update=[
     sync('./application/executable/target/jar/BOOT-INF/lib', '/app/lib'),
@@ -37,3 +37,4 @@ k8s_yaml(helm('deployment/helm/sissi', values=
 ))
 
 local_resource('fetch-packages', 'mvn install -f deployment/image-packaging/pom.xml', auto_init=False, trigger_mode = TRIGGER_MODE_MANUAL)
+k8s_resource('chart-sissi', port_forwards='5005:5005')
