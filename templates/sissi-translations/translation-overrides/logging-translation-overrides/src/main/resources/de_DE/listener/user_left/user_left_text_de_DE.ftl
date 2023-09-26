@@ -1,1 +1,1 @@
-Dere, pfiatdi und baba, ${userName}!
+Dere, pfiatdi und baba, ${user}!
