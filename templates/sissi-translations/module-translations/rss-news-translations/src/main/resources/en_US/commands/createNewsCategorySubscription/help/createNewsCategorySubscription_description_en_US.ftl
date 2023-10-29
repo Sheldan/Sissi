@@ -1,0 +1,1 @@
+Subscribes the news category to a category

@@ -22,6 +22,18 @@
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
+            <dependency>
+                <groupId>org.apache.jena</groupId>
+                <artifactId>apache-jena-libs</artifactId>
+                <version>${apache-jena.version}</version>
+                <scope>import</scope>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>com.apptasticsoftware</groupId>
+                <artifactId>rssreader</artifactId>
+                <version>${rssreader.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 

@@ -1,0 +1,41 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog.xsd
+    http://www.liquibase.org/xml/ns/pro dbchangelog.xsd" >
+    <changeSet author="Sheldan" id="news_feed_source_category-table">
+        <createTable tableName="news_feed_source_category">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="source_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="updated" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+        <addUniqueConstraint columnNames="name, source_id"
+                             constraintName="uc_news_feed_category"
+                             disabled="false"
+                             tableName="news_feed_source_category"/>
+        <addPrimaryKey columnNames="id" tableName="news_feed_source_category" constraintName="pk_news_feed_source_category" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="source_id" baseTableName="news_feed_source_category" constraintName="fk_news_feed_source_category_news_feed_source"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="news_feed_source" validate="true"/>
+        <sql>
+            DROP TRIGGER IF EXISTS news_feed_source_category_update_trigger ON news_feed_source_category;
+            CREATE TRIGGER news_feed_source_category_update_trigger BEFORE UPDATE ON news_feed_source_category FOR EACH ROW EXECUTE PROCEDURE update_trigger_procedure();
+        </sql>
+        <sql>
+            DROP TRIGGER IF EXISTS news_feed_source_category_insert_trigger ON news_feed_source_category;
+            CREATE TRIGGER news_feed_source_category_insert_trigger BEFORE INSERT ON news_feed_source_category FOR EACH ROW EXECUTE PROCEDURE insert_trigger_procedure();
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,53 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog.xsd
+    http://www.liquibase.org/xml/ns/pro dbchangelog.xsd" >
+    <changeSet author="Sheldan" id="news_category_channel_mapping-table">
+        <createTable tableName="news_category_channel_mapping">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="enabled" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="server_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="channel_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="updated" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+        <addUniqueConstraint columnNames="server_id, channel_id, category_id"
+                             constraintName="uc_news_category_channel_mapping"
+                             disabled="false"
+                             tableName="news_category_channel_mapping"/>
+        <addPrimaryKey columnNames="id" tableName="news_category_channel_mapping" constraintName="pk_news_category_channel_mapping" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="server_id" baseTableName="news_category_channel_mapping" constraintName="fk_news_category_channel_mapping_server"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="server" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="channel_id" baseTableName="news_category_channel_mapping" constraintName="fk_news_category_channel_mapping_channel"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="channel" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="category_id" baseTableName="news_category_channel_mapping" constraintName="fk_news_category_channel_mapping_news_category"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="news_category" validate="true"/>
+        <sql>
+            DROP TRIGGER IF EXISTS news_category_channel_mapping_update_trigger ON news_category_channel_mapping;
+            CREATE TRIGGER news_category_channel_mapping_update_trigger BEFORE UPDATE ON news_category_channel_mapping FOR EACH ROW EXECUTE PROCEDURE update_trigger_procedure();
+        </sql>
+        <sql>
+            DROP TRIGGER IF EXISTS news_category_channel_mapping_insert_trigger ON news_category_channel_mapping;
+            CREATE TRIGGER news_category_channel_mapping_insert_trigger BEFORE INSERT ON news_category_channel_mapping FOR EACH ROW EXECUTE PROCEDURE insert_trigger_procedure();
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

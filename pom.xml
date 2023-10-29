@@ -20,8 +20,10 @@
         <maven.compiler.source>17</maven.compiler.source>
         <!-- edit in release.yml as well -->
         <!-- when releasing a new bot version, update the .env as well-->
-        <abstracto.version>1.5.10</abstracto.version>
-        <abstracto.templates.version>1.4.22</abstracto.templates.version>
+        <abstracto.version>1.5.12</abstracto.version>
+        <abstracto.templates.version>1.4.23</abstracto.templates.version>
+        <apache-jena.version>4.9.0</apache-jena.version>
+        <rssreader.version>3.5.0</rssreader.version>
     </properties>
 
     <modules>

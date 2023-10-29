@@ -1,0 +1,92 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog.xsd
+    http://www.liquibase.org/xml/ns/pro dbchangelog.xsd" >
+
+    <changeSet author="Sheldan" id="news_feed_source-initial_sources">
+        <insert tableName="news_feed_source">
+            <column name="name" value="news"/>
+            <column name="url" value="https://rss.orf.at/news.xml"/>
+            <column name="feed_type" value="RFD"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="sport"/>
+            <column name="url" value="https://rss.orf.at/sport.xml"/>
+            <column name="feed_type" value="RFD"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="help"/>
+            <column name="url" value="https://rss.orf.at/help.xml"/>
+            <column name="feed_type" value="RSS"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="science"/>
+            <column name="url" value="https://rss.orf.at/science.xml"/>
+            <column name="feed_type" value="RSS"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="oe3"/>
+            <column name="url" value="https://rss.orf.at/oe3.xml"/>
+            <column name="feed_type" value="RFD"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="fm4"/>
+            <column name="url" value="https://rss.orf.at/fm4.xml"/>
+            <column name="feed_type" value="RFD"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="oesterreich"/>
+            <column name="url" value="https://rss.orf.at/oesterreich.xml"/>
+            <column name="feed_type" value="RSS"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="burgenland"/>
+            <column name="url" value="https://rss.orf.at/burgenland.xml"/>
+            <column name="feed_type" value="RSS"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="wien"/>
+            <column name="url" value="https://rss.orf.at/wien.xml"/>
+            <column name="feed_type" value="RSS"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="niederoesterreich"/>
+            <column name="url" value="https://rss.orf.at/noe.xml"/>
+            <column name="feed_type" value="RSS"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="oberoesterreich"/>
+            <column name="url" value="https://rss.orf.at/ooe.xml"/>
+            <column name="feed_type" value="RSS"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="salzburg"/>
+            <column name="url" value="https://rss.orf.at/salzburg.xml"/>
+            <column name="feed_type" value="RSS"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="steiermark"/>
+            <column name="url" value="https://rss.orf.at/steiermark.xml"/>
+            <column name="feed_type" value="RSS"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="kaernten"/>
+            <column name="url" value="https://rss.orf.at/kaernten.xml"/>
+            <column name="feed_type" value="RSS"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="tirol"/>
+            <column name="url" value="https://rss.orf.at/tirol.xml"/>
+            <column name="feed_type" value="RSS"/>
+        </insert>
+        <insert tableName="news_feed_source">
+            <column name="name" value="vorarlberg"/>
+            <column name="url" value="https://rss.orf.at/vorarlberg.xml"/>
+            <column name="feed_type" value="RSS"/>
+        </insert>
+    </changeSet>
+</databaseChangeLog>

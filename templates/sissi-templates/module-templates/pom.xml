@@ -13,6 +13,7 @@
         <module>quotes-templates</module>
         <module>meetup-templates</module>
         <module>debra-templates</module>
+        <module>rss-news-templates</module>
     </modules>
 
 </project>

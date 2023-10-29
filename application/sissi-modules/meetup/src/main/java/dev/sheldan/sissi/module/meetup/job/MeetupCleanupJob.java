@@ -16,7 +16,6 @@ import org.springframework.stereotype.Component;
 @PersistJobDataAfterExecution
 public class MeetupCleanupJob extends QuartzJobBean {
 
-
     @Autowired
     private MeetupServiceBean meetupServiceBean;
 

@@ -1,0 +1,1 @@
+News category channel mapping already exists.

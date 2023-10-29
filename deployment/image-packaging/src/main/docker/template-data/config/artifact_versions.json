@@ -1,14 +1,14 @@
 {
   "template_artifacts": [
     "core","starboard", "link-embed", "moderation", "entertainment", "custom-command", "utility", "webservices", "remind", "suggestion", "modmail", "assignable-roles", "experience-tracking", "logging", "statistic", "twitch",
-    "quotes", "meetup", "debra",
+    "quotes", "meetup", "debra", "rss-news",
     "moderation-custom",
     "moderation-template-overrides", "experience-template-overrides", "logging-template-overrides"
   ],
   "translation_artifacts": [
     "core",
     "starboard", "link-embed", "moderation", "entertainment", "custom-command", "utility", "webservices", "suggestion", "remind", "modmail", "assignable-roles", "experience-tracking", "logging", "statistic", "twitch",
-    "quotes", "meetup", "debra",
+    "quotes", "meetup", "debra", "rss-news",
     "moderation-custom",
     "moderation-translation-overrides", "experience-translation-overrides", "logging-translation-overrides"
   ]

@@ -1,0 +1,2 @@
+Newsfeed `${feedName}`:
+Categories ${categories}

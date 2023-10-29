@@ -1,0 +1,1 @@
+Deleted server news category mapping.

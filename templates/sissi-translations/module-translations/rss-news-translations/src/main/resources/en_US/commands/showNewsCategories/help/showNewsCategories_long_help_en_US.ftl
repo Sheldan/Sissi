@@ -1,0 +1,1 @@
+Shows the news category configuration including subscriptions and channel mappings

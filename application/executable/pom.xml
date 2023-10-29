@@ -8,11 +8,6 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>executable</artifactId>
 
-    <properties>
-        <maven.compiler.source>8</maven.compiler.source>
-        <maven.compiler.target>8</maven.compiler.target>
-    </properties>
-
     <build>
         <finalName>sissi</finalName>
         <plugins>
@@ -152,6 +147,12 @@
         <dependency>
             <groupId>dev.sheldan.sissi.application.module</groupId>
             <artifactId>meetup</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.sheldan.sissi.application.module</groupId>
+            <artifactId>rss-news</artifactId>
             <version>${project.version}</version>
         </dependency>
 

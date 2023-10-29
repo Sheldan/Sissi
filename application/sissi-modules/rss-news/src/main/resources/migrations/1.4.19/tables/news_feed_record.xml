@@ -1,0 +1,42 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+                   xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog.xsd
+    http://www.liquibase.org/xml/ns/pro dbchangelog.xsd" >
+    <changeSet author="Sheldan" id="news_feed_record-table">
+        <createTable tableName="news_feed_record">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="url" type="VARCHAR(128)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="source_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="TIMESTAMP WITHOUT TIME ZONE"/>
+            <column name="updated" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+        <addUniqueConstraint columnNames="url, source_id"
+                             constraintName="uc_news_feed_record"
+                             disabled="false"
+                             tableName="news_feed_record"/>
+        <addPrimaryKey columnNames="id" tableName="news_feed_record" constraintName="pk_news_feed_record" validate="true"/>
+        <addForeignKeyConstraint baseColumnNames="source_id" baseTableName="news_feed_record" constraintName="fk_news_feed_record_source"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="news_feed_source" validate="true"/>
+        <sql>
+            DROP TRIGGER IF EXISTS news_feed_record_update_trigger ON news_feed_record;
+            CREATE TRIGGER news_feed_record_update_trigger BEFORE UPDATE ON news_feed_record FOR EACH ROW EXECUTE PROCEDURE update_trigger_procedure();
+        </sql>
+        <sql>
+            DROP TRIGGER IF EXISTS news_feed_record_insert_trigger ON news_feed_record;
+            CREATE TRIGGER news_feed_record_insert_trigger BEFORE INSERT ON news_feed_record FOR EACH ROW EXECUTE PROCEDURE insert_trigger_procedure();
+        </sql>
+    </changeSet>
+
+
+</databaseChangeLog>

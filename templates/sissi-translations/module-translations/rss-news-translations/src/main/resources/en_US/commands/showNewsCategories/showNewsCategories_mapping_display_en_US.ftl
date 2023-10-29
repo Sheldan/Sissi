@@ -1,0 +1,1 @@
+Channel ${channelDisplay.channelMention} ${statusIndicator}

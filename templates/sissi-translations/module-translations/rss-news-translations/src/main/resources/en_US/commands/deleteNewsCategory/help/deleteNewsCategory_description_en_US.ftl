@@ -1,0 +1,1 @@
+Deletes a news category

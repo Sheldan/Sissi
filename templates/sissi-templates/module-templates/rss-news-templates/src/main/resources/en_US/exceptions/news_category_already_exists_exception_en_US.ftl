@@ -1,0 +1,1 @@
+<#include "news_category_already_exists_exception_text">

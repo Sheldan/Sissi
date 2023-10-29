@@ -1,0 +1,1 @@
+The category to remove the channel from
