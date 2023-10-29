@@ -1,5 +1,5 @@
 {
-    "additionalMessage": "<@safe_include "createServerNewsCategory_response_text"/>",
+    "additionalMessage": "<@safe_include "createNewsCategory_response_text"/>",
     "messageConfig": {
         "ephemeral": true
     }
