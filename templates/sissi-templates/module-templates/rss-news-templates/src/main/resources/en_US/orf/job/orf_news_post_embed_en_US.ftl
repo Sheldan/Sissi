@@ -9,7 +9,7 @@
                 "title": "${title}",
                 "url": "${url}"
             },
-            "description": "${url}<#if description?has_content>\n-${description}</#if>",
+            "description": "${url}<#if description?has_content>\n${description}</#if>",
             "footer": {
                 "text": "${category}"
             }

@@ -1,5 +1,5 @@
 {
-    "additionalMessage": "<@safe_include "deleteServerNewsCategory_response_text"/>",
+    "additionalMessage": "<@safe_include "deleteNewsCategory_response_text"/>",
     "messageConfig": {
         "ephemeral": true
     }

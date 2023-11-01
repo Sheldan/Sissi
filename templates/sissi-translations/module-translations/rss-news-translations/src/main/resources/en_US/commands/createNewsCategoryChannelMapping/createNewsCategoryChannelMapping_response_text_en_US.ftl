@@ -1,1 +1,1 @@
-Created server news category mapping.
+Created server news category channel mapping.
