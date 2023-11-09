@@ -25,7 +25,7 @@
     "buttons": [
         {
             "label": "<@safe_include "debra_donation_notification_link_button_label"/>",
-            "url": "http://tiny.cc/schmetterling2022",
+            "url": "http://tiny.cc/schmetterling2023",
             "buttonStyle": "link",
             "metaConfig": {
                 "persistCallback": false

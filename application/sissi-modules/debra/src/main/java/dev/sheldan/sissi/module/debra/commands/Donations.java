@@ -113,20 +113,16 @@ public class Donations extends AbstractConditionableCommand {
 
     private MessageToSend getDonationMessageToSend(Long serverId, Integer top, Integer latest) {
         DonationsModel donationModel;
-        try {
-            DonationsResponse donationResponse = donationService.fetchCurrentDonationAmount(serverId);
-            donationModel = donationConverter.convertDonationResponse(donationResponse);
-            if(top != null) {
-                donationModel.setDonations(donationService.getHighestDonations(donationResponse, top));
-                donationModel.setType(DonationsModel.DonationType.TOP);
-            } else if(latest != null) {
-                donationModel.setType(DonationsModel.DonationType.LATEST);
-                donationModel.setDonations(donationService.getLatestDonations(donationResponse, latest));
-            } else {
-                donationModel.setDonations(new ArrayList<>());
-            }
-        } catch (IOException e) {
-            throw new AbstractoRunTimeException("Failed to load donation amount.", e);
+        DonationsResponse donationResponse = donationService.fetchCurrentDonationAmount(serverId);
+        donationModel = donationConverter.convertDonationResponse(donationResponse);
+        if(top != null) {
+            donationModel.setDonations(donationService.getHighestDonations(donationResponse, top));
+            donationModel.setType(DonationsModel.DonationType.TOP);
+        } else if(latest != null) {
+            donationModel.setType(DonationsModel.DonationType.LATEST);
+            donationModel.setDonations(donationService.getLatestDonations(donationResponse, latest));
+        } else {
+            donationModel.setDonations(new ArrayList<>());
         }
         return templateService.renderEmbedTemplate(DONATIONS_RESPONSE_TEMPLATE_KEY, donationModel);
     }

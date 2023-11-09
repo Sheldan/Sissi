@@ -5,6 +5,10 @@ services:
     build:
       context: sissi
     image: ${REGISTRY_PREFIX}sissi-bot:${VERSION:-latest}
+  rest-api:
+    build:
+      context: rest-api
+    image: ${REGISTRY_PREFIX}sissi-rest-api:${VERSION:-latest}
   db-data:
     build:
       context: db-data

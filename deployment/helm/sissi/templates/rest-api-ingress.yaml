@@ -1,0 +1,45 @@
+{{- if .Values.restApi.enabled -}}
+{{- $servicePort := .Values.restApi.service.port -}}
+{{- $serviceName := .Values.restApi.service.name -}}
+{{- $ingressPath := .Values.restApi.ingress.path -}}
+{{- $ingressPathType := .Values.restApi.ingress.pathType -}}
+{{- $extraPaths := .Values.restApi.ingress.extraPaths -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-rest-api
+  labels:
+    {{- with .Values.restApi.ingress.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+  {{- with .Values.restApi.ingress.annotations }}
+  annotations:
+    {{- range $key, $value := . }}
+    {{ $key }}: {{ tpl $value $ | quote }}
+    {{- end }}
+  {{- end }}
+spec:
+  ingressClassName: nginx
+  {{- with .Values.restApi.ingress.tls }}
+  tls:
+    {{- tpl (toYaml .) $ | nindent 4 }}
+  {{- end }}
+  rules:
+  {{- if .Values.restApi.ingress.hosts  }}
+  {{- range .Values.restApi.ingress.hosts }}
+    - host: {{ tpl . $ }}
+      http:
+        paths:
+          {{- with $extraPaths }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+          - path: {{ $ingressPath }}
+            pathType: {{ $ingressPathType }}
+            backend:
+              service:
+                name: {{ $serviceName }}
+                port:
+                  number: {{ $servicePort }}
+  {{- end }}
+  {{- end -}}
+{{- end }}

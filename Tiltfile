@@ -28,6 +28,7 @@ docker_build_with_restart(
 )
 
 docker_build(registry + 'sissi-db-data', 'deployment/image-packaging/src/main/docker/db-data/')
+docker_build(registry + 'sissi-rest-api', 'deployment/image-packaging/src/main/docker/rest-api/')
 docker_build(registry + 'sissi-template-data', 'deployment/image-packaging/src/main/docker/template-data/')
 
 

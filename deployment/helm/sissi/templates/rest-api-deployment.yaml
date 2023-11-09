@@ -1,0 +1,70 @@
+{{- if .Values.restApi.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sissi.fullname" . }}-rest-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rest-api
+  template:
+    metadata:
+      {{- with .Values.restApi.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app: rest-api
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "sissi.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.restApi.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.restApi.securityContext | nindent 12 }}
+          image: "{{ .Values.restApi.repository }}/{{ .Values.restApi.image }}:{{ .Values.restApi.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.restApi.pullPolicy }}
+          env:
+            - name: SISSI_HOST
+              value: "{{ include "sissi.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local"
+            - name: SISSI_PORT
+              value: "{{ .Values.service.port }}"
+          ports:
+            - name: {{ .Values.restApi.service.name }}
+              containerPort: {{ .Values.restApi.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.restApi.service.port }}
+            initialDelaySeconds: {{ $.Values.restApi.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.restApi.livenessProbe.periodSeconds }}
+            failureThreshold: {{ $.Values.restApi.livenessProbe.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.restApi.service.port }}
+            initialDelaySeconds: {{ $.Values.restApi.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.restApi.readinessProbe.periodSeconds }}
+            failureThreshold: {{ $.Values.restApi.readinessProbe.failureThreshold }}
+          resources:
+            {{- toYaml .Values.restApi.resources | nindent 12 }}
+      {{- with .Values.restApi.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.restApi.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.restApi.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

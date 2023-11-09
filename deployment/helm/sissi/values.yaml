@@ -20,6 +20,49 @@ bot:
   propertyConfig:
     hikariPoolSize: 10
 
+restApi:
+  enabled: true
+  repository: harbor.sheldan.dev/sissi
+  pullPolicy: IfNotPresent
+  image: sissi-rest-api
+  tag: 1.4.20
+  podAnnotations: {}
+  podSecurityContext: {}
+  securityContext: {}
+  livenessProbe:
+    initialDelaySeconds: 2
+    periodSeconds: 5
+    failureThreshold: 3
+  readinessProbe:
+    initialDelaySeconds: 2
+    periodSeconds: 5
+    failureThreshold: 3
+  service:
+    port: 8080
+    targetPort: 80
+    name: rest-api
+  resources:
+    limits:
+      cpu:
+      memory:
+    requests:
+      cpu:
+      memory:
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+  ingress:
+    enabled: false
+    annotations: {}
+    labels: {}
+    path: /
+
+    pathType: Prefix
+
+    hosts:
+    extraPaths: []
+    tls: []
+
 templateDeployment:
   enabled: true
   repository: harbor.sheldan.dev/abstracto

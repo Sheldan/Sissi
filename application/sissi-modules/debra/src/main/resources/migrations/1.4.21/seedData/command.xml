@@ -6,6 +6,15 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog dbchangelog.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext dbchangelog.xsd
     http://www.liquibase.org/xml/ns/pro dbchangelog.xsd" >
-    <include file="1.3.6/collection.xml" relativeToChangelogFile="true"/>
-    <include file="1.4.21/collection.xml" relativeToChangelogFile="true"/>
+    <property name="utilityModule" value="(SELECT id FROM module WHERE name = 'utility')"/>
+    <property name="debraFeature" value="(SELECT id FROM feature WHERE key = 'debra')"/>
+
+    <changeSet author="Sheldan" id="debraInfoButton-command">
+        <insert tableName="command">
+            <column name="name" value="debraInfoButton"/>
+            <column name="module_id" valueComputed="${utilityModule}"/>
+            <column name="feature_id" valueComputed="${debraFeature}"/>
+        </insert>
+    </changeSet>
+
 </databaseChangeLog>

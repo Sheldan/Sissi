@@ -1,0 +1,12 @@
+{{- if .Values.restApi.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.restApi.service.name }}
+spec:
+  selector:
+    app: rest-api
+  ports:
+    - port: {{ .Values.restApi.service.targetPort }}
+      targetPort: {{ .Values.restApi.service.port }}
+{{- end }}
