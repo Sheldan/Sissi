@@ -17,6 +17,8 @@ bot:
     initialDelaySeconds: 60
     periodSeconds: 5
     failureThreshold: 3
+  propertyConfig:
+    hikariPoolSize: 10
 
 templateDeployment:
   enabled: true
