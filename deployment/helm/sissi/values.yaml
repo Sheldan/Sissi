@@ -25,7 +25,7 @@ restApi:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: IfNotPresent
   image: sissi-rest-api
-  tag: 1.4.20
+  tag: 1.4.22
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
