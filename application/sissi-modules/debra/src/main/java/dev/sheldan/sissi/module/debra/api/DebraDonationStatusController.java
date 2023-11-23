@@ -1,15 +1,12 @@
 package dev.sheldan.sissi.module.debra.api;
 
 import dev.sheldan.sissi.module.debra.model.api.*;
-import dev.sheldan.sissi.module.debra.model.commands.DonationItemModel;
-import dev.sheldan.sissi.module.debra.model.commands.DonationsModel;
 import dev.sheldan.sissi.module.debra.service.DonationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static dev.sheldan.sissi.module.debra.config.DebraFeatureConfig.DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME;

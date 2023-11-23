@@ -134,7 +134,7 @@ public class DonationService {
                 .collect(Collectors.toList());
     }
 
-    @Cacheable(value = "donation-cache", cacheManager = "donationCacheManager")
+    @Cacheable(value = "donation-cache")
     public DonationsResponse getCachedDonationAmount(Long serverId) {
         return fetchCurrentDonationAmount(serverId);
     }

@@ -1,33 +1,33 @@
 package dev.sheldan.sissi.module.debra.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.ehcache.config.builders.CacheManagerBuilder;
-import org.ehcache.jsr107.EhcacheCachingProvider;
+import org.ehcache.jsr107.Eh107Configuration;
 import org.ehcache.xml.XmlConfiguration;
-import org.springframework.cache.jcache.JCacheCacheManager;
+import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.cache.CacheManager;
-import javax.cache.Caching;
 import java.net.URL;
 
 @Configuration
+@Slf4j
+@EnableCaching
 public class CacheConfig {
 
-    @Bean("donationCacheManager")
-    public JCacheCacheManager jCacheCacheManager() {
-        return new JCacheCacheManager(getDonationCacheManager());
-    }
-
     @Bean
-    public CacheManager getDonationCacheManager() {
+    public JCacheManagerCustomizer cacheManagerCustomizer() {
         URL myUrl = getClass().getResource("/donation-cache-config.xml");
         XmlConfiguration xmlConfig = new XmlConfiguration(myUrl);
         org.ehcache.CacheManager myCacheManager = CacheManagerBuilder.newCacheManager(xmlConfig);
-        EhcacheCachingProvider provider = (EhcacheCachingProvider) Caching.getCachingProvider("org.ehcache.jsr107.EhcacheCachingProvider");
-
-        return  provider.getCacheManager(provider.getDefaultURI(), myCacheManager.getRuntimeConfiguration());
+        return cm -> {
+            myCacheManager.getRuntimeConfiguration().getCacheConfigurations().entrySet().forEach(cacheConfiguration -> {
+                javax.cache.configuration.Configuration<?, ?> jConfiguration = Eh107Configuration.fromEhcacheCacheConfiguration(cacheConfiguration.getValue());
+                log.info("Creating custom cache: " + cacheConfiguration.getKey());
+                cm.createCache(cacheConfiguration.getKey(), jConfiguration);
+            });
+        };
     }
-
-
 }
+
