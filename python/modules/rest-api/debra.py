@@ -123,7 +123,7 @@ def total_donations_image():
     img = Image.new('RGBA', (parameters.canvas_width, parameters.canvas_height), (255, 0, 0, 0))
     d1 = ImageDraw.Draw(img)
     font = ImageFont.truetype(f'{parameters.font_name}.ttf', parameters.font_size)
-    d1.text((0, 0), f"Aktuell {campaign_info['collected']}/{campaign_info['target']}€", fill=parameters.color, font=font)
+    d1.text((0, 0), f"{campaign_info['collected']}/{campaign_info['target']}€", fill=parameters.color, font=font)
     return serve_pil_image(img)
 
 
