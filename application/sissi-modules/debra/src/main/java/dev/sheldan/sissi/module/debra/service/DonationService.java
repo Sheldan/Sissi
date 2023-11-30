@@ -148,10 +148,8 @@ public class DonationService {
                     .build();
             Response response = okHttpClient.newCall(request).execute();
             if(!response.isSuccessful()) {
-                if (log.isDebugEnabled()) {
-                    log.error("Failed to retrieve donation response. Response had code {} with body {}.",
-                            response.code(), response.body());
-                }
+                log.error("Failed to retrieve donation response. Response had code {} with body {} and headers {}.",
+                        response.code(), response.body().string(), response.headers());
                 throw new DonationAmountNotFoundException();
             }
             Gson gson = getGson();
