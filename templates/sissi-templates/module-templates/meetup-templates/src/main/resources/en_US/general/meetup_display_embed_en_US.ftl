@@ -8,7 +8,7 @@
             "title": {
                 "title": "${topic?json_string} - <@safe_include "meetup_message_id_display"/>"
             },
-            <#assign time><@format_instant_date_time instant=meetupTime/></#assign>
+            <#assign time><@format_instant_long_date_time instant=meetupTime/></#assign>
             <#assign timeRelative><@format_instant_relative instant=meetupTime/></#assign>
             <#assign organizerText>${organizer.memberMention}</#assign>
             <#assign meetupId=meetupId/>

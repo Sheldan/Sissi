@@ -6,7 +6,7 @@
             "title": {
                 "title": "${topic?json_string}"
             },
-            "description": "<@format_instant_date_time instant=meetupTime/>
+            "description": "<@format_instant_long_date_time instant=meetupTime/>
 ${description?json_string}"
         }
     ],
