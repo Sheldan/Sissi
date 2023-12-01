@@ -135,7 +135,7 @@ public class DonationService {
     }
 
     @Cacheable(value = "donation-cache")
-    public DonationsResponse getCachedDonationAmount(Long serverId) {
+    public synchronized DonationsResponse getCachedDonationAmount(Long serverId) {
         return fetchCurrentDonationAmount(serverId);
     }
 
