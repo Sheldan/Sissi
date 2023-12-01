@@ -4,6 +4,7 @@ import requests
 import os
 import json
 import logging
+import uuid
 from __main__ import app
 from utils import serve_pil_image
 
@@ -68,6 +69,7 @@ class DonationImageGenerationParameters:
             self.validated = False
             self.validation_message = f'Blue must be between {DonationImageGenerationConstants.color_range[0]} and {DonationImageGenerationConstants.color_range[1]} inclusively'
             self.validation_value = self.color[2]
+
 
 @app.route('/debra/latestDonations')
 def latest_donations():
@@ -150,19 +152,25 @@ def highest_donation_image():
 @app.route('/debra/image/highestDonations/html')
 def highest_donations_image_html_wrapper():
     refresh_interval = int(request.args.get('refreshInterval', 30, type=int))
-    return render_template('image_refresh_wrapper.html', imagePath=f'/debra/image/highestDonations?{request.query_string.decode()}', refreshInterval=refresh_interval)
+    random_bit = str(uuid.uuid4())
+    parameters_query = request.query_string.decode()
+    return render_template('image_refresh_wrapper.html', imagePath=f'/debra/image/highestDonations?{parameters_query}&{random_bit}', refreshInterval=refresh_interval)
 
 
 @app.route('/debra/image/latestDonations/html')
 def latest_donations_image_html_wrapper():
     refresh_interval = int(request.args.get('refreshInterval', 30, type=int))
-    return render_template('image_refresh_wrapper.html', imagePath=f'/debra/image/latestDonations?{request.query_string.decode()}', refreshInterval=refresh_interval)
+    random_bit = str(uuid.uuid4())
+    parameters_query = request.query_string.decode()
+    return render_template('image_refresh_wrapper.html', imagePath=f'/debra/image/latestDonations?{parameters_query}&{random_bit}', refreshInterval=refresh_interval)
 
 
 @app.route('/debra/image/info/html')
 def total_donations_image_html_wrapper():
     refresh_interval = int(request.args.get('refreshInterval', 30, type=int))
-    return render_template('image_refresh_wrapper.html', imagePath=f'/debra/image/info?{request.query_string.decode()}', refreshInterval=refresh_interval)
+    random_bit = str(uuid.uuid4())
+    parameters_query = request.query_string.decode()
+    return render_template('image_refresh_wrapper.html', imagePath=f'/debra/image/info?{parameters_query}&{random_bit}', refreshInterval=refresh_interval)
 
 
 def rendering_donation_image(donation_stats, parameters):
