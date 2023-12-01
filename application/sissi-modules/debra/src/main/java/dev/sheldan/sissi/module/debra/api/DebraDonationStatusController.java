@@ -21,7 +21,7 @@ public class DebraDonationStatusController {
     @GetMapping(value = "/latestDonations", produces = "application/json")
     public DonationStats getLatestDonations() {
         Long serverId = Long.parseLong(System.getenv(DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME));
-        DonationsResponse donationResponse = donationService.getCachedDonationAmount(serverId);
+        DonationsResponse donationResponse = donationService.getSynchronizedCachedDonationAmount(serverId);
         List<DonationInfo> donations = donationService.getLatestDonations(donationResponse, Integer.MAX_VALUE)
                 .stream()
                 .map(DonationInfo::fromDonationItemModel)
@@ -36,7 +36,7 @@ public class DebraDonationStatusController {
     @GetMapping(value = "/highestDonations", produces = "application/json")
     public DonationStats getHighestDonations() {
         Long serverId = Long.parseLong(System.getenv(DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME));
-        DonationsResponse donationResponse = donationService.getCachedDonationAmount(serverId);
+        DonationsResponse donationResponse = donationService.getSynchronizedCachedDonationAmount(serverId);
         List<DonationInfo> donations = donationService.getHighestDonations(donationResponse, Integer.MAX_VALUE)
                 .stream()
                 .map(DonationInfo::fromDonationItemModel)
@@ -51,7 +51,7 @@ public class DebraDonationStatusController {
     @GetMapping(value = "/campaignInfo", produces = "application/json")
     public CampaignInfo getCampaignInfo() {
         Long serverId = Long.parseLong(System.getenv(DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME));
-        DonationsResponse donationResponse = donationService.getCachedDonationAmount(serverId);
+        DonationsResponse donationResponse = donationService.getSynchronizedCachedDonationAmount(serverId);
 
         Description pageObject = donationResponse.getPage();
         return CampaignInfo
