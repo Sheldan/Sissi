@@ -8,6 +8,7 @@
     { "zip": "statistic", "file": "statistic-changeLog.xml"},
     { "zip": "starboard", "file": "starboard-changeLog.xml"},
     { "zip": "quotes", "file": "quotes-changeLog.xml"},
+    { "zip": "giveaway", "file": "giveaway-changeLog.xml"},
     { "zip": "meetup", "file": "meetup-changeLog.xml"},
     { "zip": "rss-news", "file": "rssNews-changeLog.xml"},
     { "zip": "debra", "file": "debra-changeLog.xml"},

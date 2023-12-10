@@ -136,6 +136,11 @@
             <artifactId>statistic-impl</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>dev.sheldan.abstracto.modules</groupId>
+            <artifactId>giveaway-impl</artifactId>
+        </dependency>
+
         <!-- sissi modules  -->
 
         <dependency>
