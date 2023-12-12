@@ -1,4 +1,4 @@
-package dev.sheldan.sissi.module.debra;
+package dev.sheldan.sissi.module.debra.exception;
 
 import dev.sheldan.abstracto.core.exception.AbstractoTemplatableException;
 

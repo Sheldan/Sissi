@@ -13,7 +13,7 @@ import dev.sheldan.abstracto.core.service.management.ServerManagementService;
 import dev.sheldan.abstracto.core.templating.model.MessageToSend;
 import dev.sheldan.abstracto.core.templating.service.TemplateService;
 import dev.sheldan.abstracto.core.utils.FutureUtils;
-import dev.sheldan.sissi.module.debra.DonationAmountNotFoundException;
+import dev.sheldan.sissi.module.debra.exception.DonationAmountNotFoundException;
 import dev.sheldan.sissi.module.debra.config.DebraPostTarget;
 import dev.sheldan.sissi.module.debra.config.DebraProperties;
 import dev.sheldan.sissi.module.debra.converter.DonationConverter;

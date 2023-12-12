@@ -1,0 +1,1 @@
+The amount of minutes per euro donation. Default: ${defaultValue}

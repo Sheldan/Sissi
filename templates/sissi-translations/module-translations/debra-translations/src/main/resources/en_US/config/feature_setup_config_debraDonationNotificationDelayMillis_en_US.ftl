@@ -1,0 +1,1 @@
+The amount of time (in milliseconds) after which the donation notification should be sent. Default: ${defaultValue}

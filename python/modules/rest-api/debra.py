@@ -7,12 +7,16 @@ import logging
 import uuid
 from __main__ import app
 from utils import serve_pil_image
+from datetime import timezone, datetime
+import pytz
+
 
 sissi_host = os.getenv('SISSI_HOST')
 sissi_port = os.getenv('SISSI_PORT')
 latest_donations_url = f'http://{sissi_host}:{sissi_port}/debra/latestDonations'
 highest_donations_url = f'http://{sissi_host}:{sissi_port}/debra/highestDonations'
 campaign_info_url = f'http://{sissi_host}:{sissi_port}/debra/campaignInfo'
+endless_stream_info_url = f'http://{sissi_host}:{sissi_port}/stream/endlessStream'
 
 
 class DonationImageGenerationParameters:
@@ -127,6 +131,60 @@ def total_donations_image():
     font = ImageFont.truetype(f'{parameters.font_name}.ttf', parameters.font_size)
     d1.text((0, 0), f"{campaign_info['collected']}/{campaign_info['target']}€", fill=parameters.color, font=font)
     return serve_pil_image(img)
+
+
+@app.route('/debra/image/endlessStream/end')
+def endless_stream_image():
+    stream_id = int(request.args.get('streamId', type=int))
+    endless_stream_info = json.loads(requests.get(f'{endless_stream_info_url}/{stream_id}').text)
+    logging.info(f'rendering endless stream end image')
+    parameters = parse_image_parameters()
+    if not parameters.validated:
+        return parameters.validation_message, 400
+    img = Image.new('RGBA', (parameters.canvas_width, parameters.canvas_height), (255, 0, 0, 0))
+    d1 = ImageDraw.Draw(img)
+    font = ImageFont.truetype(f'{parameters.font_name}.ttf', parameters.font_size)
+    end_time = datetime.strptime(endless_stream_info['endDate'], "%Y-%m-%dT%H:%M:%S%z")
+    tz = pytz.timezone('Europe/Vienna')
+    end_time_formatted = end_time.astimezone(tz).strftime('%d.%m %H:%M')
+    d1.text((0, 0), f"{end_time_formatted}", fill=parameters.color, font=font)
+    return serve_pil_image(img)
+
+
+@app.route('/debra/image/endlessStream/end/html')
+def endless_stream_html():
+    refresh_interval = int(request.args.get('refreshInterval', 30, type=int))
+    random_bit = str(uuid.uuid4())
+    parameters_query = request.query_string.decode()
+    return render_template('image_refresh_wrapper.html', imagePath=f'/debra/image/endlessStream/end?{parameters_query}&{random_bit}', refreshInterval=refresh_interval)
+
+
+@app.route('/debra/image/endlessStream/remaining')
+def endless_stream_remaining():
+    stream_id = int(request.args.get('streamId', type=int))
+    endless_stream_info = json.loads(requests.get(f'{endless_stream_info_url}/{stream_id}').text)
+    logging.info(f'rendering endless stream remaining image')
+    parameters = parse_image_parameters()
+    if not parameters.validated:
+        return parameters.validation_message, 400
+    img = Image.new('RGBA', (parameters.canvas_width, parameters.canvas_height), (255, 0, 0, 0))
+    d1 = ImageDraw.Draw(img)
+    font = ImageFont.truetype(f'{parameters.font_name}.ttf', parameters.font_size)
+    end_time = datetime.strptime(endless_stream_info['endDate'], "%Y-%m-%dT%H:%M:%S%z").replace(tzinfo=pytz.utc)
+    current_time = datetime.now(timezone.utc)
+    remaining_time = end_time - current_time
+    total_seconds = remaining_time.total_seconds()
+    remaining_time_formatted = f'{int(total_seconds // 3600):02d}:{int((total_seconds % 3600) // 60):02d}:{int(total_seconds % 60):02d}'
+    d1.text((0, 0), f"{remaining_time_formatted}", fill=parameters.color, font=font)
+    return serve_pil_image(img)
+
+
+@app.route('/debra/image/endlessStream/remaining/html')
+def endless_stream_remaining_html():
+    refresh_interval = int(request.args.get('refreshInterval', 30, type=int))
+    random_bit = str(uuid.uuid4())
+    parameters_query = request.query_string.decode()
+    return render_template('image_refresh_wrapper.html', imagePath=f'/debra/image/endlessStream/remaining?{parameters_query}&{random_bit}', refreshInterval=refresh_interval)
 
 
 @app.route('/debra/image/latestDonations')
