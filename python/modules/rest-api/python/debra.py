@@ -6,7 +6,7 @@ import json
 import logging
 import uuid
 from __main__ import app
-from utils import serve_pil_image
+from utils import flask_utils
 from datetime import timezone, datetime
 import pytz
 
@@ -130,7 +130,7 @@ def total_donations_image():
     d1 = ImageDraw.Draw(img)
     font = ImageFont.truetype(f'{parameters.font_name}.ttf', parameters.font_size)
     d1.text((0, 0), f"{campaign_info['collected']}/{campaign_info['target']}€", fill=parameters.color, font=font)
-    return serve_pil_image(img)
+    return flask_utils.serve_pil_image(img)
 
 
 @app.route('/debra/image/endlessStream/end')
@@ -148,7 +148,7 @@ def endless_stream_image():
     tz = pytz.timezone('Europe/Vienna')
     end_time_formatted = end_time.astimezone(tz).strftime('%d.%m %H:%M')
     d1.text((0, 0), f"{end_time_formatted}", fill=parameters.color, font=font)
-    return serve_pil_image(img)
+    return flask_utils.serve_pil_image(img)
 
 
 @app.route('/debra/image/endlessStream/end/html')
@@ -176,7 +176,7 @@ def endless_stream_remaining():
     total_seconds = remaining_time.total_seconds()
     remaining_time_formatted = f'{int(total_seconds // 3600):02d}:{int((total_seconds % 3600) // 60):02d}:{int(total_seconds % 60):02d}'
     d1.text((0, 0), f"{remaining_time_formatted}", fill=parameters.color, font=font)
-    return serve_pil_image(img)
+    return flask_utils.serve_pil_image(img)
 
 
 @app.route('/debra/image/endlessStream/remaining/html')
@@ -242,7 +242,7 @@ def rendering_donation_image(donation_stats, parameters):
         name = donation['firstName'] if not donation['anonymous'] else 'anonym'
         d1.text((0, height * it), f"{donation['donationAmount']}€ von {name}", fill=parameters.color, font=font)
         it += 1
-    return serve_pil_image(img)
+    return flask_utils.serve_pil_image(img)
 
 
 def parse_image_parameters() -> DonationImageGenerationParameters:
