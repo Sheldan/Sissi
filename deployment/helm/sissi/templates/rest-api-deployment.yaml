@@ -25,7 +25,7 @@ spec:
       securityContext:
         {{- toYaml .Values.restApi.podSecurityContext | nindent 8 }}
       containers:
-        - name: {{ .Chart.Name }}
+        - name: {{ .Chart.Name }}-rest-api
           securityContext:
             {{- toYaml .Values.restApi.securityContext | nindent 12 }}
           image: "{{ .Values.restApi.repository }}/{{ .Values.restApi.image }}:{{ .Values.restApi.tag | default .Chart.AppVersion }}"
