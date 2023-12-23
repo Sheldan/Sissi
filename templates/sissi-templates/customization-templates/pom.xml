@@ -11,6 +11,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>moderation-customization-templates</module>
+        <module>image-generation-customization-templates</module>
     </modules>
 
 

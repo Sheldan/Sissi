@@ -141,6 +141,11 @@
             <artifactId>giveaway-impl</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>dev.sheldan.abstracto.modules</groupId>
+            <artifactId>image-generation-impl</artifactId>
+        </dependency>
+
         <!-- sissi modules  -->
 
         <dependency>
@@ -172,6 +177,12 @@
         <dependency>
             <groupId>dev.sheldan.sissi.application.module.custom</groupId>
             <artifactId>moderation-custom</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>dev.sheldan.sissi.application.module.custom</groupId>
+            <artifactId>image-generation-custom</artifactId>
             <version>${project.version}</version>
         </dependency>
 

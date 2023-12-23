@@ -1,0 +1,40 @@
+version: "3.7"
+
+services:
+  bot-packaging:
+    build:
+      context: deployment/image-packaging/src/main/docker/sissi
+    image: ${REGISTRY_PREFIX}sissi-bot:${VERSION:-latest}
+  debra-rest-api:
+    build:
+      context: python/modules/debra-rest-api
+      dockerfile: docker/Dockerfile
+    image: ${REGISTRY_PREFIX}sissi-debra-rest-api:${VERSION:-latest}
+  image-gen-api:
+    build:
+      context: python/modules/image-gen-api
+      dockerfile: docker/Dockerfile
+    image: ${REGISTRY_PREFIX}sissi-image-gen-api:${VERSION:-latest}
+  rest-api-packaging:
+    build:
+      context: deployment/image-packaging/src/main/docker/rest-api
+      args:
+        SISSI_REGISTRY_PREFIX: ${REGISTRY_PREFIX}
+    image: ${REGISTRY_PREFIX}sissi-rest-api:${VERSION:-latest}
+  private-rest-api-packaging:
+    build:
+      context: deployment/image-packaging/src/main/docker/private-rest-api
+      args:
+        REGISTRY_PREFIX: ${ABSTRACTO_PREFIX}
+        SISSI_REGISTRY_PREFIX: ${REGISTRY_PREFIX}
+        ABSTRACTO_VERSION: ${ABSTRACTO_VERSION}
+        VERSION: ${VERSION}
+    image: ${REGISTRY_PREFIX}sissi-private-rest-api:${VERSION:-latest}
+  db-data:
+    build:
+      context: deployment/image-packaging/src/main/docker/db-data
+    image: ${REGISTRY_PREFIX}sissi-db-data:${VERSION:-latest}
+  template-data:
+    build:
+      context: deployment/image-packaging/src/main/docker/template-data
+    image:  ${REGISTRY_PREFIX}sissi-template-data:${VERSION:-latest}

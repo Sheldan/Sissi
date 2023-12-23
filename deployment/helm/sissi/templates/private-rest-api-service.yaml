@@ -1,0 +1,12 @@
+{{- if .Values.privateRestApi.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.privateRestApi.service.name }}
+spec:
+  selector:
+    app: private-rest-api
+  ports:
+    - port: {{ .Values.privateRestApi.service.targetPort }}
+      targetPort: {{ .Values.privateRestApi.service.port }}
+{{- end }}

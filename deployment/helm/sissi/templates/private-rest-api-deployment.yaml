@@ -1,0 +1,70 @@
+{{- if .Values.privateRestApi.enabled -}}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "sissi.fullname" . }}-private-rest-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: private-rest-api
+  template:
+    metadata:
+      {{- with .Values.privateRestApi.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        app: private-rest-api
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "sissi.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.privateRestApi.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}-private-rest-api
+          securityContext:
+            {{- toYaml .Values.privateRestApi.securityContext | nindent 12 }}
+          image: "{{ .Values.privateRestApi.repository }}/{{ .Values.privateRestApi.image }}:{{ .Values.privateRestApi.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.privateRestApi.pullPolicy }}
+          env:
+            - name: SISSI_HOST
+              value: "{{ include "sissi.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local"
+            - name: SISSI_PORT
+              value: "{{ .Values.service.port }}"
+          ports:
+            - name: {{ .Values.privateRestApi.service.name }}
+              containerPort: {{ .Values.privateRestApi.service.port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.privateRestApi.service.port }}
+            initialDelaySeconds: {{ $.Values.privateRestApi.livenessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.privateRestApi.livenessProbe.periodSeconds }}
+            failureThreshold: {{ $.Values.privateRestApi.livenessProbe.failureThreshold }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: {{ .Values.privateRestApi.service.port }}
+            initialDelaySeconds: {{ $.Values.privateRestApi.readinessProbe.initialDelaySeconds }}
+            periodSeconds: {{ $.Values.privateRestApi.readinessProbe.periodSeconds }}
+            failureThreshold: {{ $.Values.privateRestApi.readinessProbe.failureThreshold }}
+          resources:
+            {{- toYaml .Values.privateRestApi.resources | nindent 12 }}
+      {{- with .Values.privateRestApi.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.privateRestApi.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.privateRestApi.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+{{- end }}

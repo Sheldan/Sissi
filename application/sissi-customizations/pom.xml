@@ -13,6 +13,7 @@
 
     <modules>
         <module>moderation-custom</module>
+        <module>image-generation-custom</module>
     </modules>
 
 

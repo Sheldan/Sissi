@@ -193,6 +193,16 @@
 
                                 <artifactItem>
                                     <groupId>dev.sheldan.abstracto-templates.templates</groupId>
+                                    <artifactId>image-generation</artifactId>
+                                    <version>${abstracto.templates.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
+                                    <destFileName>image-generation.zip</destFileName>
+                                </artifactItem>
+
+                                <artifactItem>
+                                    <groupId>dev.sheldan.abstracto-templates.templates</groupId>
                                     <artifactId>statistic</artifactId>
                                     <version>${abstracto.templates.version}</version>
                                     <type>zip</type>
@@ -262,6 +272,16 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
                                     <destFileName>moderation-custom.zip</destFileName>
+                                </artifactItem>
+
+                                <artifactItem>
+                                    <groupId>dev.sheldan.sissi.templates</groupId>
+                                    <artifactId>image-generation-customization-templates</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
+                                    <destFileName>image-generation-custom.zip</destFileName>
                                 </artifactItem>
 
                                 <!-- abstracto translation artefacts -->
@@ -414,6 +434,16 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                                     <destFileName>custom-command.zip</destFileName>
+                                </artifactItem>
+
+                                <artifactItem>
+                                    <groupId>dev.sheldan.abstracto-templates.translations</groupId>
+                                    <artifactId>image-generation</artifactId>
+                                    <version>${abstracto.templates.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
+                                    <destFileName>image-generation.zip</destFileName>
                                 </artifactItem>
 
                                 <artifactItem>
@@ -668,6 +698,17 @@
                                     <destFileName>custom-command.zip</destFileName>
                                 </artifactItem>
 
+                                <artifactItem>
+                                    <groupId>dev.sheldan.abstracto.modules</groupId>
+                                    <artifactId>image-generation-impl</artifactId>
+                                    <version>${abstracto.version}</version>
+                                    <classifier>liquibase</classifier>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
+                                    <destFileName>image-generation.zip</destFileName>
+                                </artifactItem>
+
                                 <!-- sissi liquibase artifacts -->
 
                                 <artifactItem>
@@ -828,43 +869,6 @@
                     </execution>
                 </executions>
          
-            </plugin>
-            <plugin>
-                <artifactId>maven-resources-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-resources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>src/main/docker/rest-api/python/custom</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>../../python/modules/rest-api/python</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-resources-resources</id>
-                        <phase>validate</phase>
-                        <goals>
-                            <goal>copy-resources</goal>
-                        </goals>
-                        <configuration>
-                            <outputDirectory>src/main/docker/rest-api/python/resources</outputDirectory>
-                            <resources>
-                                <resource>
-                                    <directory>../../python/modules/rest-api/resources</directory>
-                                    <filtering>false</filtering>
-                                </resource>
-                            </resources>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
     </build>

@@ -29,7 +29,12 @@ docker_build_with_restart(
 )
 
 docker_build(registry + 'sissi-db-data', 'deployment/image-packaging/src/main/docker/db-data/')
-docker_build(registry + 'sissi-rest-api', 'deployment/image-packaging/src/main/docker/rest-api/', build_args={'REGISTRY_PREFIX': abstracto_registry})
+docker_build(registry + 'sissi-debra-rest-api', 'python/modules/debra-rest-api/', dockerfile='python/modules/debra-rest-api/docker/Dockerfile')
+update_settings(suppress_unused_image_warnings=[registry + "sissi-debra-rest-api"]) # only used in docker image building
+docker_build(registry + 'sissi-image-gen-api', 'python/modules/image-gen-api/', dockerfile='python/modules/image-gen-api/docker/Dockerfile')
+update_settings(suppress_unused_image_warnings=[registry + "sissi-image-gen-api"]) # only used in docker image building
+docker_build(registry + 'sissi-rest-api', 'deployment/image-packaging/src/main/docker/rest-api/', build_args={'REGISTRY_PREFIX': abstracto_registry, 'SISSI_REGISTRY_PREFIX': registry})
+docker_build(registry + 'sissi-private-rest-api', 'deployment/image-packaging/src/main/docker/private-rest-api/', build_args={'REGISTRY_PREFIX': abstracto_registry, 'SISSI_REGISTRY_PREFIX': registry})
 docker_build(registry + 'sissi-template-data', 'deployment/image-packaging/src/main/docker/template-data/')
 
 

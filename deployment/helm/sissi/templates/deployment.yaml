@@ -84,6 +84,10 @@ spec:
                 secretKeyRef:
                   name: api-keys
                   key: twitchSecret
+            - name: PRIVATE_REST_API_HOST
+              value: "{{ .Values.privateRestApi.service.name }}.{{ .Release.Namespace }}.svc.cluster.local"
+            - name: PRIVATE_REST_API_PORT
+              value: "{{ .Values.privateRestApi.service.targetPort }}"
             {{- range $key, $value := .Values.bot.propertyConfig }}
             - name: {{ $key | quote }}
               value: {{ $value | quote}}

@@ -1,5 +1,9 @@
 ARG REGISTRY_PREFIX
+ARG SISSI_REGISTRY_PREFIX
+ARG VERSION
+ARG ABSTRACTO_VERSION
+FROM ${SISSI_REGISTRY_PREFIX}sissi-debra-rest-api:${VERSION:-latest} AS debra-api
+
 
 FROM ${REGISTRY_PREFIX}abstracto-rest-api:${ABSTRACTO_VERSION:-latest}
-ADD python/resources /python/resources
-ADD python/custom /python/custom
+COPY --from=debra-api /python /python

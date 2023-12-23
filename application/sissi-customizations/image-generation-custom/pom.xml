@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>dev.sheldan.sissi.application.module.custom</groupId>
+        <artifactId>sissi-customizations</artifactId>
+        <version>1.4.30-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>image-generation-custom</artifactId>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>dev.sheldan.abstracto.modules</groupId>
+            <artifactId>image-generation-int</artifactId>
+            <version>${abstracto.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>dev.sheldan.abstracto.core</groupId>
+            <artifactId>core-int</artifactId>
+            <version>${abstracto.version}</version>
+        </dependency>
+    </dependencies>
+</project>
