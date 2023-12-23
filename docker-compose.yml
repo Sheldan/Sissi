@@ -20,6 +20,9 @@ services:
       context: deployment/image-packaging/src/main/docker/rest-api
       args:
         SISSI_REGISTRY_PREFIX: ${REGISTRY_PREFIX}
+        REGISTRY_PREFIX: ${ABSTRACTO_PREFIX}
+        VERSION: ${VERSION}
+        ABSTRACTO_VERSION: ${ABSTRACTO_VERSION}
     image: ${REGISTRY_PREFIX}sissi-rest-api:${VERSION:-latest}
   private-rest-api-packaging:
     build:
