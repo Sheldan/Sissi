@@ -49,7 +49,7 @@ public class OrangeSunDogeCommandAlternative implements CommandAlternative {
     private static final String DOGE_ORANGE_SUN_RESPONSE_TEMPLATE_KEY = "doge_orangeSun_response";
 
     @Override
-    public boolean shouldExecute(UnParsedCommandParameter parameter, Guild guild) {
+    public boolean shouldExecute(UnParsedCommandParameter parameter, Guild guild, Message message) {
         return parameter.getParameters().isEmpty() && featureFlagService.isFeatureEnabled(imageGenerationFeatureConfig, guild.getIdLong());
     }
 
