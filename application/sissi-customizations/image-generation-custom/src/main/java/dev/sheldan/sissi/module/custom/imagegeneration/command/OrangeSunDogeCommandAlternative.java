@@ -50,7 +50,9 @@ public class OrangeSunDogeCommandAlternative implements CommandAlternative {
 
     @Override
     public boolean shouldExecute(UnParsedCommandParameter parameter, Guild guild, Message message) {
-        return parameter.getParameters().isEmpty() && featureFlagService.isFeatureEnabled(imageGenerationFeatureConfig, guild.getIdLong());
+        String contentStripped = message.getContentRaw();
+        String[] parameters = contentStripped.split(" ");
+        return parameters.length == 1 && featureFlagService.isFeatureEnabled(imageGenerationFeatureConfig, guild.getIdLong());
     }
 
     @Override
