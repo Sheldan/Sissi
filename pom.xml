@@ -13,7 +13,7 @@
     <groupId>dev.sheldan.sissi</groupId>
     <artifactId>sissi</artifactId>
     <name>Sissi</name>
-    <version>1.4.34</version>
+    <version>1.4.35-SNAPSHOT</version>
 
     <properties>
         <maven.compiler.target>17</maven.compiler.target>
@@ -57,7 +57,7 @@
     <scm>
         <url>https://maven.pkg.github.com/Sheldan/Sissi</url>
         <developerConnection>scm:git:git@github.com:Sheldan/Sissi.git</developerConnection>
-        <tag>sissi-1.4.34</tag>
+        <tag>HEAD</tag>
     </scm>
 
 </project>
