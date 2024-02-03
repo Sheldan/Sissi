@@ -1,14 +1,9 @@
-# Default values for sissi.
-# This is a YAML-formatted file.
-# Declare variables to be passed into your templates.
-
 replicaCount: 1
-
 bot:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-bot
-  tag: 1.4.38
+  tag: 1.4.42
   livenessProbe:
     initialDelaySeconds: 60
     periodSeconds: 5
@@ -19,13 +14,12 @@ bot:
     failureThreshold: 3
   propertyConfig:
     hikariPoolSize: 10
-
 restApi:
   enabled: true
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-rest-api
-  tag: 1.4.38
+  tag: 1.4.42
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
@@ -43,11 +37,11 @@ restApi:
     name: rest-api
   resources:
     limits:
-      cpu:
-      memory:
+      cpu: null
+      memory: null
     requests:
-      cpu:
-      memory:
+      cpu: null
+      memory: null
   nodeSelector: {}
   tolerations: []
   affinity: {}
@@ -56,19 +50,16 @@ restApi:
     annotations: {}
     labels: {}
     path: /
-
     pathType: Prefix
-
-    hosts:
+    hosts: null
     extraPaths: []
     tls: []
-
 privateRestApi:
   enabled: true
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-private-rest-api
-  tag: 1.4.38
+  tag: 1.4.42
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
@@ -83,51 +74,45 @@ privateRestApi:
   service:
     port: 8080
     targetPort: 80
-    name: private-restapi # must be less than 16 chars
+    name: private-restapi
   resources:
     limits:
-      cpu:
-      memory:
+      cpu: null
+      memory: null
     requests:
-      cpu:
-      memory:
+      cpu: null
+      memory: null
   nodeSelector: {}
   tolerations: []
   affinity: {}
-
 templateDeployment:
   enabled: true
   repository: harbor.sheldan.dev/abstracto
   pullPolicy: Always
   image: abstracto-template-deployment
   tag: 1.5.23
-
 templateDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-template-data
-  tag: 1.4.38
-
+  tag: 1.4.42
 dbConfigDeployment:
   enabled: true
   repository: harbor.sheldan.dev/abstracto
   pullPolicy: Always
   image: abstracto-db-deployment
   tag: 1.5.23
-
 dbConfigDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-db-data
-  tag: 1.4.38
-
+  tag: 1.4.42
 dbCredentials:
-  host:
-  port:
-  userName:
-  password:
-  name:
-
+  host: null
+  port: null
+  userName: null
+  password: null
+  name: null
 grafanaDeployment:
   repository: harbor.sheldan.dev/grafana-tools
   pullPolicy: Always
@@ -135,68 +120,44 @@ grafanaDeployment:
   tag: 0.0.2
   enabled: true
   grafana:
-    host:
+    host: null
     basicAuth:
-      username:
-      password:
-
+      username: null
+      password: null
 apiKeys:
   discord:
-    token:
+    token: null
   youtube:
-    apiKey:
+    apiKey: null
   openWeatherMap:
-    apiKey:
+    apiKey: null
   twitch:
-    secret:
-    clientId:
-
-
-imagePullSecrets:
-nameOverride: ""
-fullnameOverride: ""
-
+    secret: null
+    clientId: null
+imagePullSecrets: null
+nameOverride: ''
+fullnameOverride: ''
 serviceAccount:
-  # Specifies whether a service account should be created
   create: true
-  # Annotations to add to the service account
   annotations: {}
-  # The name of the service account to use.
-  # If not set and create is true, a name is generated using the fullname template
-  name: ""
-
+  name: ''
 podAnnotations: {}
-
 podSecurityContext: {}
-  # fsGroup: 2000
-
 securityContext: {}
-  # capabilities:
-  #   drop:
-  #   - ALL
-  # readOnlyRootFilesystem: true
-  # runAsNonRoot: true
-  # runAsUser: 1000
-
 service:
   type: ClusterIP
   port: 8080
   annotations:
-    prometheus.io/scrape: "true"
-    prometheus.io/path: "/actuator/prometheus"
-    prometheus.io/port: "8080"
-
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: /actuator/prometheus
+    prometheus.io/port: '8080'
 resources:
   limits:
-    cpu:
-    memory:
+    cpu: null
+    memory: null
   requests:
-    cpu:
-    memory:
-
-
+    cpu: null
+    memory: null
 nodeSelector: {}
-
 tolerations: []
-
 affinity: {}
