@@ -41,6 +41,19 @@ jobs:
           propertyPath: 'version'
           value: ${{ env.version }}
           commitChange: false
+      - name: Update value files version
+        uses: fjogeleit/yaml-update-action@v0.13.2
+        with:
+          valueFile: 'deployment/helm/sissi/values.yaml'
+          commitChange: false
+          changes: |
+            {
+              "bot.tag": "${{ env.version }}",
+              "restApi.tag": "${{ env.version }}"
+              "privateRestApi.tag": "${{ env.version }}"
+              "templateDeploymentData.tag": "${{ env.version }}"
+              "dbConfigDeploymentData.tag": "${{ env.version }}"
+            }
       - name: Update .env version
         run:
           sed -i '3s/.*/VERSION=${{ env.version }}/' .env
