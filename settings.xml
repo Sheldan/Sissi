@@ -16,8 +16,15 @@
                     <url>https://repo1.maven.org/maven2</url>
                 </repository>
                 <repository>
-                    <id>github</id>
-                    <url>https://maven.pkg.github.com/Sheldan/*</url>
+                    <id>github-abstracto</id>
+                    <url>https://maven.pkg.github.com/Sheldan/abstracto*</url>
+                    <snapshots>
+                        <enabled>true</enabled>
+                    </snapshots>
+                </repository>
+                <repository>
+                    <id>github-sissi</id>
+                    <url>https://maven.pkg.github.com/Sheldan/Sissi*</url>
                     <snapshots>
                         <enabled>true</enabled>
                     </snapshots>
@@ -28,9 +35,20 @@
 
     <servers>
         <server>
-            <id>github</id>
+            <id>github-abstracto</id>
             <username>${env.abstractoUser}</username>
             <password>${env.abstractoToken}</password>
+        </server>
+        <server>
+            <id>github-sissi</id>
+            <configuration>
+                <httpHeaders>
+                    <property>
+                        <name>Authorization</name>
+                        <value>Bearer ${env.GITHUB_TOKEN}</value>
+                    </property>
+                </httpHeaders>
+            </configuration>
         </server>
     </servers>
 </settings>
