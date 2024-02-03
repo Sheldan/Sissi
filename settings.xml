@@ -29,8 +29,8 @@
     <servers>
         <server>
             <id>github</id>
-            <username>${env.user}</username>
-            <password>${env.token}</password>
+            <username>${env.abstractoUser}</username>
+            <password>${env.abstractoToken}</password>
         </server>
     </servers>
 </settings>
