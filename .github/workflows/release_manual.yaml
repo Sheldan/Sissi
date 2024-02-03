@@ -20,6 +20,8 @@ jobs:
         env:
           JAVA_HOME: /usr/lib/jvm/java-17-openjdk/
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          user: Sheldan
+          token: ${{ secrets.ABSTRACTO_PAT }}
         with:
           git-release-bot-name: "release-bot"
           git-release-bot-email: "release-bot@sheldan.dev"
