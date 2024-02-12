@@ -1,7 +1,7 @@
 {
   "template_artifacts": [
     "core","starboard", "link-embed", "moderation", "entertainment", "custom-command", "utility", "webservices", "remind",
-    "suggestion", "modmail", "assignable-roles", "experience-tracking", "logging", "statistic", "twitch", "giveaway",
+    "suggestion", "modmail", "assignable-roles", "experience-tracking", "logging", "statistic", "twitch", "giveaway", "sticky-roles",
     "image-generation",
     "quotes", "meetup", "debra", "rss-news",
     "moderation-custom", "image-generation-custom",
@@ -10,7 +10,7 @@
   "translation_artifacts": [
     "core",
     "starboard", "link-embed", "moderation", "entertainment", "custom-command", "utility", "webservices",
-    "suggestion", "remind", "modmail", "assignable-roles", "experience-tracking", "logging", "statistic", "twitch", "giveaway",
+    "suggestion", "remind", "modmail", "assignable-roles", "experience-tracking", "logging", "statistic", "twitch", "giveaway", "sticky-roles",
     "image-generation",
     "quotes", "meetup", "debra", "rss-news",
     "moderation-custom",

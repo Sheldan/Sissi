@@ -171,6 +171,17 @@
                                     <destFileName>moderation.zip</destFileName>
                                 </artifactItem>
 
+
+                                <artifactItem>
+                                    <groupId>dev.sheldan.abstracto-templates.templates</groupId>
+                                    <artifactId>sticky-roles</artifactId>
+                                    <version>${abstracto.templates.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
+                                    <destFileName>sticky-roles.zip</destFileName>
+                                </artifactItem>
+
                                 <artifactItem>
                                     <groupId>dev.sheldan.abstracto-templates.templates</groupId>
                                     <artifactId>entertainment</artifactId>
@@ -314,6 +325,16 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
                                     <destFileName>experience-tracking.zip</destFileName>
+                                </artifactItem>
+
+                                <artifactItem>
+                                    <groupId>dev.sheldan.abstracto-templates.translations</groupId>
+                                    <artifactId>sticky-roles</artifactId>
+                                    <version>${abstracto.templates.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
+                                    <destFileName>sticky-roles.zip</destFileName>
                                 </artifactItem>
 
                                 <artifactItem>
@@ -575,6 +596,17 @@
                                     <overWrite>true</overWrite>
                                     <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
                                     <destFileName>logging.zip</destFileName>
+                                </artifactItem>
+
+                                <artifactItem>
+                                    <groupId>dev.sheldan.abstracto.modules</groupId>
+                                    <artifactId>sticky-roles-impl</artifactId>
+                                    <version>${abstracto.version}</version>
+                                    <classifier>liquibase</classifier>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${file.basedir}/db-data/liquibase-artifacts/</outputDirectory>
+                                    <destFileName>sticky-roles.zip</destFileName>
                                 </artifactItem>
 
                                 <artifactItem>

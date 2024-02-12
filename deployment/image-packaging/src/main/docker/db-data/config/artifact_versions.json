@@ -21,6 +21,7 @@
     { "zip": "remind", "file": "remind-changeLog.xml"},
     { "zip": "suggestion", "file": "suggestion-changeLog.xml"},
     { "zip": "modmail", "file": "modMail-changeLog.xml"},
+    { "zip": "sticky-roles", "file": "stickyRoles-changeLog.xml"},
     { "zip": "twitch", "file": "twitch-changeLog.xml"},
     { "zip": "assignable-roles", "file": "assignableRoles-changeLog.xml"},
     { "zip": "moderation-custom", "file": "moderation-custom-changeLog.xml"}
