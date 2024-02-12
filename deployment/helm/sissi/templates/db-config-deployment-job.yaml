@@ -17,7 +17,7 @@ spec:
       {{- end }}
       containers:
         - name: db-config-deployment-job
-          image: "{{ $.Values.dbConfigDeployment.repository }}/{{ $.Values.dbConfigDeployment.image }}:{{ $.Values.dbConfigDeployment.tag | default .Chart.AppVersion}}"
+          image: "{{ $.Values.dbConfigDeployment.repository }}/{{ $.Values.dbConfigDeployment.image }}:{{ $.Values.dbConfigDeployment.tag | default .Chart.Version }}"
           imagePullPolicy: {{ $.Values.dbConfigDeployment.pullPolicy }}
           args:
             - "/var/db-config/"
@@ -48,7 +48,7 @@ spec:
                   name: db-credentials
                   key: dbName
             - name: DB_SCHEME
-              value: "abstracto"
+              value: {{ .Values.dbCredentials.schema }}
           volumeMounts:
             - mountPath: "/var/db-config/"
               name: database-config-mount

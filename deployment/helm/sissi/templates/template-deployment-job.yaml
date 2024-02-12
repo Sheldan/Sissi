@@ -17,7 +17,7 @@ spec:
       {{- end }}
       containers:
         - name: template-deployment-job
-          image: "{{ $.Values.templateDeployment.repository }}/{{ $.Values.templateDeployment.image }}:{{ $.Values.templateDeployment.tag | default .Chart.AppVersion }}"
+          image: "{{ $.Values.templateDeployment.repository }}/{{ $.Values.templateDeployment.image }}:{{ $.Values.templateDeployment.tag | default .Chart.Version }}"
           imagePullPolicy: {{ $.Values.templateDeployment.pullPolicy }}
           args:
             - "/var/template-config/"
@@ -48,7 +48,7 @@ spec:
                   name: db-credentials
                   key: dbName
             - name: DB_SCHEME
-              value: "abstracto."
+              value: "{{ .Values.dbCredentials.schema }}."
           volumeMounts:
             - mountPath: "/var/template-config/"
               name: template-config-mount

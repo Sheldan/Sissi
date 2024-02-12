@@ -38,7 +38,8 @@ docker_build(registry + 'sissi-private-rest-api', 'deployment/image-packaging/sr
 docker_build(registry + 'sissi-template-data', 'deployment/image-packaging/src/main/docker/template-data/')
 
 
-k8s_yaml(helm('deployment/helm/sissi', values=
+local('cd tilt/sissi-dev && helm dep up')
+k8s_yaml(helm('tilt/sissi-dev', values=
 ['./../Sissi-environments/argocd/apps/sissi/values/local/values.yaml',
 'secrets://./../Sissi-environments/argocd/apps/sissi/values/local/values.secrets.yaml']
 ))

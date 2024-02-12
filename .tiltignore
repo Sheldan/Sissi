@@ -1,0 +1,3 @@
+*.tgz
+tilt/sissi-dev/tmpcharts/
+tilt/sissi-dev/charts/*.tgz

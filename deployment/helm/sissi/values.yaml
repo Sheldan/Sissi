@@ -113,6 +113,7 @@ dbCredentials:
   userName: null
   password: null
   name: null
+  schema: abstracto
 grafanaDeployment:
   repository: harbor.sheldan.dev/grafana-tools
   pullPolicy: Always
