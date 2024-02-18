@@ -1,4 +1,4 @@
-FROM alpine:3.18.0
+FROM alpine:3.19.1
 MAINTAINER Sheldan
 ADD config /var/template-config/
 ADD template-artifacts /var/template-config/templates

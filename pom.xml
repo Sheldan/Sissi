@@ -18,8 +18,8 @@
     <properties>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
-        <abstracto.version>1.5.25-SNAPSHOT</abstracto.version>
-        <abstracto.templates.version>1.4.33-SNAPSHOT</abstracto.templates.version>
+        <abstracto.version>1.5.25</abstracto.version>
+        <abstracto.templates.version>1.4.33</abstracto.templates.version>
         <apache-jena.version>4.9.0</apache-jena.version>
         <rssreader.version>3.5.0</rssreader.version>
     </properties>
@@ -46,6 +46,13 @@
         <repository>
             <id>github-sissi</id>
             <url>https://maven.pkg.github.com/Sheldan/Sissi*</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>github</id>
+            <url>https://maven.pkg.github.com/Sheldan/*</url>
             <snapshots>
                 <enabled>true</enabled>
             </snapshots>
