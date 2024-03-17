@@ -17,7 +17,7 @@
             <#elseif reportedMessage.attachments?size = 0 && reportedMessage.embeds?size gt 0 && reportedMessage.embeds[0].cachedImageInfo??>
                 ,"imageUrl": "${reportedMessage.embeds[0].cachedImageInfo.proxyUrl}"
             </#if>
-<#if singularMessage>,
+<#if singularMessage>
             ,"fields": [
                 {
                     "name": "<@safe_include "reactionReport_notification_embed_report_counter_field_title"/>",
@@ -36,5 +36,15 @@
                 "persistCallback": false
             }
         }
+        <#if moderationActionComponents?size gt 0>,</#if>
+        <#list moderationActionComponents as moderactionAction>
+        {
+            "label": "<@safe_include "moderation_action_${moderactionAction.action}_button_label"/>",
+            "id": "${moderactionAction.componentId}",
+            "buttonStyle": "danger",
+            "metaConfig": {
+                "persistCallback": false
+            }
+        }<#sep>,</#list>
     ]
 }

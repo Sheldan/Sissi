@@ -18,7 +18,7 @@ local_resource(
 docker_build_with_restart(
   registry + 'sissi-bot',
   './application/executable/target/jar',
-  entrypoint=['java', '-noverify', '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005', '-cp', '.:./lib/*', 'dev.sheldan.sissi.executable.Application'],
+  entrypoint=['java', '-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5005', '-cp', '.:./lib/*', 'dev.sheldan.sissi.executable.Application'],
   dockerfile='./application/executable/Dockerfile',
   live_update=[
     sync('./application/executable/target/jar/BOOT-INF/lib', '/app/lib'),
