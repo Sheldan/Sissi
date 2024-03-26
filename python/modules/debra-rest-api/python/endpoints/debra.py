@@ -11,12 +11,12 @@ from datetime import timezone, datetime
 import pytz
 
 
-sissi_host = os.getenv('SISSI_HOST')
-sissi_port = os.getenv('SISSI_PORT')
-latest_donations_url = f'http://{sissi_host}:{sissi_port}/debra/latestDonations'
-highest_donations_url = f'http://{sissi_host}:{sissi_port}/debra/highestDonations'
-campaign_info_url = f'http://{sissi_host}:{sissi_port}/debra/campaignInfo'
-endless_stream_info_url = f'http://{sissi_host}:{sissi_port}/stream/endlessStream'
+backend_host = os.getenv('BACKEND_HOST')
+backend_port = os.getenv('BACKEND_PORT')
+latest_donations_url = f'http://{backend_host}:{backend_port}/debra/latestDonations'
+highest_donations_url = f'http://{backend_host}:{backend_port}/debra/highestDonations'
+campaign_info_url = f'http://{backend_host}:{backend_port}/debra/campaignInfo'
+endless_stream_info_url = f'http://{backend_host}:{backend_port}/stream/endlessStream'
 
 
 class DonationImageGenerationParameters:

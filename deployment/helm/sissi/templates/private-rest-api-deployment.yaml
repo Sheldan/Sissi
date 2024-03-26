@@ -31,9 +31,9 @@ spec:
           image: "{{ .Values.privateRestApi.repository }}/{{ .Values.privateRestApi.image }}:{{ .Values.privateRestApi.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.privateRestApi.pullPolicy }}
           env:
-            - name: SISSI_HOST
+            - name: BACKEND_HOST
               value: "{{ include "sissi.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local"
-            - name: SISSI_PORT
+            - name: BACKEND_PORT
               value: "{{ .Values.service.port }}"
           ports:
             - name: {{ .Values.privateRestApi.service.name }}

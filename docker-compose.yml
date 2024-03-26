@@ -24,6 +24,8 @@ services:
         VERSION: ${VERSION}
         ABSTRACTO_VERSION: ${ABSTRACTO_VERSION}
     image: ${REGISTRY_PREFIX}sissi-rest-api:${VERSION:-latest}
+    depends_on:
+      - debra-rest-api
   private-rest-api-packaging:
     build:
       context: deployment/image-packaging/src/main/docker/private-rest-api
@@ -33,6 +35,8 @@ services:
         ABSTRACTO_VERSION: ${ABSTRACTO_VERSION}
         VERSION: ${VERSION}
     image: ${REGISTRY_PREFIX}sissi-private-rest-api:${VERSION:-latest}
+    depends_on:
+      - image-gen-api
   db-data:
     build:
       context: deployment/image-packaging/src/main/docker/db-data
