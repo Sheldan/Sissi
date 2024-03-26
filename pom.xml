@@ -18,7 +18,7 @@
     <properties>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
-        <abstracto.version>1.5.29</abstracto.version>
+        <abstracto.version>1.5.31</abstracto.version>
         <abstracto.templates.version>1.4.35</abstracto.templates.version>
         <apache-jena.version>4.9.0</apache-jena.version>
         <rssreader.version>3.5.0</rssreader.version>
