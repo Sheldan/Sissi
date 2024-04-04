@@ -90,8 +90,8 @@ spec:
               value: "{{ .Values.privateRestApi.service.name }}.{{ .Release.Namespace }}.svc.cluster.local"
             - name: PRIVATE_REST_API_PORT
               value: "{{ .Values.privateRestApi.service.targetPort }}"
-            - name: FRONTEND_HOST
-              value: "{{ .Values.bot.host }}"
+            - name: FRONTEND_BASE
+              value: "https://{{ .Values.bot.host }}"
             {{- range $key, $value := .Values.bot.propertyConfig }}
             - name: {{ $key | quote }}
               value: {{ $value | quote}}
