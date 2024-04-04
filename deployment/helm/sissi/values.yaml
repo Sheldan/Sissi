@@ -14,6 +14,7 @@ bot:
     failureThreshold: 3
   propertyConfig:
     hikariPoolSize: 10
+  host:
 restApi:
   enabled: true
   repository: harbor.sheldan.dev/sissi
