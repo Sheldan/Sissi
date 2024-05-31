@@ -44,4 +44,4 @@ services:
   template-data:
     build:
       context: deployment/image-packaging/src/main/docker/template-data
-    image:  ${REGISTRY_PREFIX}sissi-template-data:${VERSION:-latest}
+    image: ${REGISTRY_PREFIX}sissi-template-data:${VERSION:-latest}

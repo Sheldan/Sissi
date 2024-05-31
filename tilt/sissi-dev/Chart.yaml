@@ -8,4 +8,4 @@ dependencies:
     version: ">= 0.0.1"
   - name: postgresql
     repository: oci://registry-1.docker.io/bitnamicharts
-    version: 12.12.10 # 13.x.x uses postgresql 16.x
+    version: 15.3.2

@@ -55,11 +55,12 @@
             <artifactId>metrics-impl</artifactId>
         </dependency>
 
-        <!-- modules containing commands -->
         <dependency>
             <groupId>dev.sheldan.abstracto.scheduling</groupId>
             <artifactId>scheduling-impl</artifactId>
         </dependency>
+
+        <!-- modules containing commands -->
 
         <dependency>
             <groupId>dev.sheldan.abstracto.modules</groupId>
