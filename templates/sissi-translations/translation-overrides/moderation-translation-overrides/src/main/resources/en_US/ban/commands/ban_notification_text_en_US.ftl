@@ -1,2 +1,4 @@
 You were banned from the server ${serverName} for `${reason}`.
-If you want to appeal, visit https://docs.google.com/forms/d/e/1FAIpQLSegsjW3OaHGZH_VZL6susvVPksLQ2jDWd3vzze6x9LyF4zdfg/viewform.
+If you want to appeal, join the server https://discord.gg/rXpBHEGXpE and then message this bot, this opens up a modmail.
+Joining the server is necessary in order to make communication to the bot possible.
+If the appeal is denied, you will be banned from the above mentioned server.
