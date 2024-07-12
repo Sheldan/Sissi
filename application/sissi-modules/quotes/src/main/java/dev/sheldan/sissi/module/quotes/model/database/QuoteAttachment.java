@@ -1,5 +1,6 @@
 package dev.sheldan.sissi.module.quotes.model.database;
 
+import dev.sheldan.abstracto.core.models.database.AServer;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -16,7 +17,7 @@ public class QuoteAttachment {
 
     @Id
     @Getter
-    @Setter
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false)
     private Long id;
 
@@ -25,8 +26,7 @@ public class QuoteAttachment {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(
             {
-                    @JoinColumn(updatable = false, insertable = false, name = "quote_id", referencedColumnName = "id"),
-                    @JoinColumn(updatable = false, insertable = false, name = "server_id", referencedColumnName = "server_id")
+                    @JoinColumn(updatable = false, name = "quote_id", referencedColumnName = "id")
             })
     private Quote quote;
 
@@ -34,6 +34,10 @@ public class QuoteAttachment {
     @Setter
     @Column(name = "url", nullable = false)
     private String url;
+
+    @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
+    @JoinColumn(name = "server_id", nullable = false)
+    private AServer server;
 
     @Getter
     @Setter

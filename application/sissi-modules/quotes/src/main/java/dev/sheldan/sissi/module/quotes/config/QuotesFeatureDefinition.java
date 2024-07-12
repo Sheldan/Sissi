@@ -5,7 +5,7 @@ import lombok.Getter;
 
 @Getter
 public enum QuotesFeatureDefinition implements FeatureDefinition {
-    QUOTES("quotes");
+    QUOTES("quotes"), STARBOARD_QUOTE_SYNC("starboardQuoteSync");
 
     private String key;
 

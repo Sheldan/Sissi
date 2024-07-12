@@ -21,12 +21,12 @@ import java.util.List;
 @EqualsAndHashCode
 public class Quote {
 
-    @EmbeddedId
-    @Getter
-    private ServerSpecificId id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false)
+    private Long id;
 
     @ManyToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
-    @MapsId("serverId")
     @JoinColumn(name = "server_id", nullable = false)
     private AServer server;
 
@@ -58,9 +58,9 @@ public class Quote {
     @Column(name = "text")
     private String text;
 
-    @Column(name = "created")
+    @Column(name = "created", insertable = false, updatable = false)
     private Instant created;
 
-    @Column(name = "updated")
+    @Column(name = "updated", insertable = false, updatable = false)
     private Instant updated;
 }

@@ -10,6 +10,14 @@
     <groupId>dev.sheldan.sissi.application.module</groupId>
     <artifactId>quotes</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>dev.sheldan.abstracto.modules</groupId>
+            <artifactId>starboard-int</artifactId>
+            <version>${abstracto.version}</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

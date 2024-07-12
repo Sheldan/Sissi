@@ -1,7 +1,7 @@
 package dev.sheldan.sissi.module.quotes.service;
 
 import dev.sheldan.abstracto.core.models.ServerChannelMessage;
-import dev.sheldan.abstracto.core.models.ServerSpecificId;
+import dev.sheldan.abstracto.core.models.ServerUser;
 import dev.sheldan.abstracto.core.models.database.AServer;
 import dev.sheldan.abstracto.core.models.database.AUserInAServer;
 import dev.sheldan.abstracto.core.service.ChannelService;
@@ -16,11 +16,12 @@ import dev.sheldan.sissi.module.quotes.model.command.QuoteResponseModel;
 import dev.sheldan.sissi.module.quotes.model.command.QuoteStatsModel;
 import dev.sheldan.sissi.module.quotes.model.database.Quote;
 import dev.sheldan.sissi.module.quotes.model.database.QuoteAttachment;
-import dev.sheldan.sissi.module.quotes.repository.QuoteRepository;
+import dev.sheldan.sissi.module.quotes.service.management.QuoteManagementService;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import org.apache.commons.lang3.tuple.Pair;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -34,9 +35,6 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class QuoteServiceBean {
-
-    @Autowired
-    private QuoteRepository quoteRepository;
 
     @Autowired
     private MemberService memberService;
@@ -56,11 +54,14 @@ public class QuoteServiceBean {
     @Autowired
     private ChannelService channelService;
 
+    @Autowired
+    private QuoteManagementService quoteManagementService;
+
     private static final String QUOTE_RESPONSE_TEMPLATE_KEY = "quote_response";
 
     public Optional<Quote> getRandomQuoteForMember(AUserInAServer aUserInAServer) {
         // not nice, but good enough for now
-        List<Quote> allQuotes = quoteRepository.findByAuthor(aUserInAServer);
+        List<Quote> allQuotes = quoteManagementService.getFromAuthor(aUserInAServer);
         if(allQuotes.isEmpty()) {
             return Optional.empty();
         }
@@ -69,7 +70,7 @@ public class QuoteServiceBean {
 
     public Optional<Quote> getRandomQuote(AServer server) {
         // not nice, but good enough for now
-        List<Quote> allQuotes = quoteRepository.findByServer(server);
+        List<Quote> allQuotes = quoteManagementService.getFromServer(server);
         if(allQuotes.isEmpty()) {
             return Optional.empty();
         }
@@ -79,7 +80,7 @@ public class QuoteServiceBean {
     public void deleteQuote(Long quoteId, AServer server) {
         Optional<Quote> existingQuote = getQuote(quoteId, server);
         if(existingQuote.isPresent()) {
-            quoteRepository.delete(existingQuote.get());
+            quoteManagementService.deleteQuote(existingQuote.get());
             log.info("Deleting quote with id {} in server {}.", quoteId, server.getId());
         } else {
             throw new QuoteNotFoundException();
@@ -87,9 +88,8 @@ public class QuoteServiceBean {
     }
 
     public Optional<Quote> getQuote(Long quoteId, AServer server) {
-        ServerSpecificId id = new ServerSpecificId(server.getId(), quoteId);
         log.info("Loading quote with id {} in server {}.", quoteId, server.getId());
-        return quoteRepository.findById(id);
+        return quoteManagementService.getQuote(quoteId);
     }
 
     public CompletableFuture<MessageToSend> renderQuoteToMessageToSend(Quote quote) {
@@ -118,7 +118,7 @@ public class QuoteServiceBean {
                 .builder()
                 .quoteContent(quote.getText())
                 .imageAttachmentURLs(imageAttachments)
-                .quoteId(quote.getId().getId())
+                .quoteId(quote.getId())
                 .fileAttachmentURLs(fileAttachments)
                 .creationDate(quote.getCreated())
                 .quotedMessage(quotedMessage);
@@ -209,7 +209,7 @@ public class QuoteServiceBean {
     }
 
     public Optional<Quote> searchQuote(String query, AServer server) {
-        List<Quote> foundQuotes = quoteRepository.findByTextContainingAndServer(query, server);
+        List<Quote> foundQuotes = quoteManagementService.getQuotesWithTextInServer(query, server);
         if(foundQuotes.isEmpty()) {
             return Optional.empty();
         }
@@ -224,7 +224,7 @@ public class QuoteServiceBean {
 
     public Optional<Quote> searchQuote(String query, AServer server, Member targetMember) {
         AUserInAServer author = userInServerManagementService.loadOrCreateUser(targetMember);
-        List<Quote> foundQuotes = quoteRepository.findByTextContainingAndServerAndAuthor(query, server, author);
+        List<Quote> foundQuotes = quoteManagementService.getQuotesWithTextInServerFromAuthor(query, server, author);
         if(foundQuotes.isEmpty()) {
             return Optional.empty();
         }
@@ -242,8 +242,8 @@ public class QuoteServiceBean {
         return getQuoteStats(user, member);
     }
     public QuoteStatsModel getQuoteStats(AUserInAServer user, Member member) {
-        Long authored = quoteRepository.countByAuthor(user);
-        Long added = quoteRepository.countByAdder(user);
+        Long authored = quoteManagementService.getAmountOfQuotesOfAuthor(user);
+        Long added = quoteManagementService.getAmountOfQuotesOfAdder(user);
         return QuoteStatsModel
                 .builder()
                 .quoteCount(added)
@@ -252,5 +252,22 @@ public class QuoteServiceBean {
                 .userId(user.getUserReference().getId())
                 .serverId(user.getServerReference().getId())
                 .build();
+    }
+
+    public Quote createQuote(ServerUser authorUser, ServerUser adderUser, Message quoteMessage) {
+        AUserInAServer author = userInServerManagementService.loadOrCreateUser(authorUser);
+        AUserInAServer adder = userInServerManagementService.loadOrCreateUser(adderUser);
+        List<Pair<String, Boolean>> attachments = quoteMessage
+                .getAttachments()
+                .stream()
+                .map(attachment -> Pair.of(attachment.getProxyUrl(), attachment.isImage()))
+                .toList();
+        return quoteManagementService.createQuote(author, adder, quoteMessage.getContentDisplay(), ServerChannelMessage.fromMessage(quoteMessage), attachments);
+    }
+
+    public void deleteByMessageId(Long messageId) {
+        Quote quote = quoteManagementService.findByMessage(messageId).orElseThrow(QuoteNotFoundException::new);
+        log.info("Deleting quote {} in server {}.", quote.getId(), quote.getServer().getId());
+        quoteManagementService.deleteQuote(quote);
     }
 }
