@@ -2,7 +2,10 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.26.xsd"  >
-    <include file="1.0.2/collection.xml" relativeToChangelogFile="true"/>
-    <include file="1.4.56/collection.xml" relativeToChangelogFile="true"/>
-    <include file="1.4.57/collection.xml" relativeToChangelogFile="true"/>
+    <changeSet author="Sheldan" id="quote_attachment-longer_attachment_url">
+        <modifyDataType columnName="url"
+                         newDataType="VARCHAR(4096)"
+                         tableName="quote_attachment"/>
+    </changeSet>
+
 </databaseChangeLog>

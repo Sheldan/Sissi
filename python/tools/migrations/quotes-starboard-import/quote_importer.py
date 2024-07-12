@@ -4,6 +4,7 @@ def import_quotes(posts, con):
     for post in posts:
         if 'content' not in post:
             print(f"Skipping {post['message_id']} because no content, did it fail?")
+            continue
         print(f"Inserting {post['message_id']}")
         statement = text("""INSERT INTO quote(author_user_in_server_id, adder_user_in_server_id, source_channel_id, 
                                                         server_id, message_id, text, created) 
