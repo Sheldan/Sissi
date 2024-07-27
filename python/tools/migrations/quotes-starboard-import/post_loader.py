@@ -12,7 +12,7 @@ def enrich_posts(posts):
         print(f"Loading post {post['message_id']}")
         url = f"https://discord.com/api/v10/channels/{post['channel_id']}/messages/{post['message_id']}"
         message = requests.get(url, headers={'Authorization': token})
-        time.sleep(0.5)
+        time.sleep(1)
         if message.status_code == 200:
             message_obj = json.loads(message.content)
             post['content'] = message_obj['content']

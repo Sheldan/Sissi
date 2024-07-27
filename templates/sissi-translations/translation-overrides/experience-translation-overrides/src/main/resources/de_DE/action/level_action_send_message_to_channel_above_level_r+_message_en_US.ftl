@@ -1,0 +1,1 @@
+<#assign member=memberDisplay.memberMention> Willkommen, ${member}!
