@@ -1,1 +1,1 @@
-Short description of the meetup
+Short description of the meetup. Please add the city if applicable.
