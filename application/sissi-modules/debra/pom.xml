@@ -3,7 +3,7 @@
     <parent>
         <groupId>dev.sheldan.sissi.application</groupId>
         <artifactId>sissi-modules</artifactId>
-        <version>1.4.59-SNAPSHOT</version>
+        <version>1.4.59</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
