@@ -1,0 +1,1 @@
+Shows the current weekly texts, and whether they have been handled

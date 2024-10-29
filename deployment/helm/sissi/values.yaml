@@ -15,6 +15,8 @@ bot:
   propertyConfig:
     hikariPoolSize: 10
   host: null
+  config:
+    weeklyTextServerId: null
 restApi:
   enabled: true
   repository: harbor.sheldan.dev/sissi

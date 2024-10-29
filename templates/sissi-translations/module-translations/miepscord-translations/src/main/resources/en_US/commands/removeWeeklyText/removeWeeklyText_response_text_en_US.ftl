@@ -1,0 +1,1 @@
+If a weekly text exited, it has been removed.

@@ -1,0 +1,1 @@
+Whether to show all entries (default false)

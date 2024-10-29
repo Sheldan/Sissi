@@ -1,0 +1,1 @@
+Shows the weekly texts

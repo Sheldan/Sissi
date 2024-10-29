@@ -166,6 +166,13 @@
             <version>${project.version}</version>
         </dependency>
 
+
+        <dependency>
+            <groupId>dev.sheldan.sissi.application.module</groupId>
+            <artifactId>miepscord</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>dev.sheldan.sissi.application.module</groupId>
             <artifactId>rss-news</artifactId>

@@ -28,6 +28,7 @@
         <module>application</module>
         <module>templates</module>
         <module>deployment</module>
+        <module>application/sissi-modules/miepscord</module>
     </modules>
 
     <repositories>

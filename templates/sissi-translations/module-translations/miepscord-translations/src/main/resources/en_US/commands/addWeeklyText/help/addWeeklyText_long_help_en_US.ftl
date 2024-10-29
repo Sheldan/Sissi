@@ -1,0 +1,1 @@
+Adds a new text to the list of weekly texts to be evaluated at some point.

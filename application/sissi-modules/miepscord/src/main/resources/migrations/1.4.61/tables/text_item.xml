@@ -1,0 +1,38 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.26.xsd" >
+
+    <changeSet author="Sheldan" id="text_item-table">
+        <createTable tableName="text_item">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="pk_text_item"/>
+            </column>
+            <column name="text" type="VARCHAR">
+                <constraints nullable="false"/>
+            </column>
+            <column name="done" type="BOOLEAN">
+                <constraints nullable="false"/>
+            </column>
+            <column name="creator_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created" type="TIMESTAMP WITHOUT TIME ZONE">
+                <constraints nullable="true"/>
+            </column>
+            <column name="updated" type="TIMESTAMP WITHOUT TIME ZONE"/>
+        </createTable>
+        <addForeignKeyConstraint baseColumnNames="creator_id" baseTableName="text_item" constraintName="fk_text_item_creator"
+                                 deferrable="false" initiallyDeferred="false" onDelete="NO ACTION" onUpdate="NO ACTION"
+                                 referencedColumnNames="user_in_server_id" referencedTableName="user_in_server" validate="true"/>
+        <sql>
+            DROP TRIGGER IF EXISTS text_item_update_trigger ON text_item;
+            CREATE TRIGGER repost_check_channel_group_update_trigger BEFORE UPDATE ON text_item FOR EACH ROW EXECUTE PROCEDURE update_trigger_procedure();
+        </sql>
+        <sql>
+            DROP TRIGGER IF EXISTS text_item_insert_trigger ON text_item;
+            CREATE TRIGGER repost_check_channel_group_insert_trigger BEFORE INSERT ON text_item FOR EACH ROW EXECUTE PROCEDURE insert_trigger_procedure();
+        </sql>
+    </changeSet>
+
+</databaseChangeLog>

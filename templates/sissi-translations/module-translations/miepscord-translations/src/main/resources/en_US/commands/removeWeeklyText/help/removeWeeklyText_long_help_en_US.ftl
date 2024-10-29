@@ -1,0 +1,1 @@
+Deletes one individual weekly text. If no text with the ID is found, nothing happens.

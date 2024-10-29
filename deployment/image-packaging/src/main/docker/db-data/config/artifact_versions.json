@@ -13,6 +13,7 @@
     { "zip": "meetup", "file": "meetup-changeLog.xml"},
     { "zip": "rss-news", "file": "rssNews-changeLog.xml"},
     { "zip": "debra", "file": "debra-changeLog.xml"},
+    { "zip": "miepscord", "file": "miepscord-changeLog.xml"},
     { "zip": "moderation", "file": "moderation-changeLog.xml"},
     { "zip": "entertainment", "file": "entertainment-changeLog.xml"},
     { "zip": "custom-command", "file": "custom-command-changeLog.xml"},

@@ -61,6 +61,8 @@ spec:
               value: {{ .Values.dbCredentials.schema }}
             - name: DEBRA_DONATION_NOTIFICATION_SERVER_ID
               value: "297910194841583616"
+            - name: WEEKLY_TEXT_SERVER_ID
+              value: "{{ .Values.bot.config.weeklyTextServerId }}"
             - name: TOKEN
               valueFrom:
                 secretKeyRef:

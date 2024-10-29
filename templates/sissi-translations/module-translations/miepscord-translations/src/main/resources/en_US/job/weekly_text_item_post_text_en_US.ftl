@@ -1,0 +1,1 @@
+${rolePing} ${text}

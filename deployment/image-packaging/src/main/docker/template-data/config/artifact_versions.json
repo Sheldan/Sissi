@@ -3,7 +3,7 @@
     "core","starboard", "link-embed", "moderation", "entertainment", "custom-command", "utility", "webservices", "remind",
     "suggestion", "modmail", "assignable-roles", "experience-tracking", "logging", "statistic", "twitch", "giveaway", "sticky-roles",
     "image-generation",
-    "quotes", "meetup", "debra", "rss-news",
+    "quotes", "meetup", "debra", "rss-news", "miepscord",
     "moderation-custom", "image-generation-custom",
     "moderation-template-overrides", "experience-template-overrides", "logging-template-overrides"
   ],
@@ -12,7 +12,7 @@
     "starboard", "link-embed", "moderation", "entertainment", "custom-command", "utility", "webservices",
     "suggestion", "remind", "modmail", "assignable-roles", "experience-tracking", "logging", "statistic", "twitch", "giveaway", "sticky-roles",
     "image-generation",
-    "quotes", "meetup", "debra", "rss-news",
+    "quotes", "meetup", "debra", "rss-news", "miepscord",
     "moderation-custom",
     "moderation-translation-overrides", "experience-translation-overrides", "logging-translation-overrides"
   ]

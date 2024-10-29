@@ -13,6 +13,7 @@
     <modules>
         <module>sissi-templates</module>
         <module>sissi-translations</module>
+        <module>sissi-templates/module-templates/miepscord-templates</module>
     </modules>
 
 
