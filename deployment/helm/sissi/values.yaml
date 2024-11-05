@@ -3,7 +3,7 @@ bot:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-bot
-  tag: 1.4.61
+  tag: 1.4.62
   livenessProbe:
     initialDelaySeconds: 60
     periodSeconds: 5
@@ -22,7 +22,7 @@ restApi:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-rest-api
-  tag: 1.4.61
+  tag: 1.4.62
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
@@ -62,7 +62,7 @@ privateRestApi:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-private-rest-api
-  tag: 1.4.61
+  tag: 1.4.62
   podAnnotations: {}
   podSecurityContext: {}
   securityContext: {}
@@ -98,7 +98,7 @@ templateDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-template-data
-  tag: 1.4.61
+  tag: 1.4.62
 dbConfigDeployment:
   enabled: true
   repository: harbor.sheldan.dev/abstracto
@@ -109,7 +109,7 @@ dbConfigDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
   image: sissi-db-data
-  tag: 1.4.61
+  tag: 1.4.62
 dbCredentials:
   host: null
   port: null
