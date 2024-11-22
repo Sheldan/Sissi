@@ -53,7 +53,7 @@ public class QuoteStats extends AbstractConditionableCommand {
             targetMember = (Member) parameters.get(0);
         }
         QuoteStatsModel model = quoteServiceBean.getQuoteStats(targetMember);
-        return FutureUtils.toSingleFutureGeneric(channelService.sendEmbedTemplateInMessageChannelList(QUOTE_STATS_RESPONSE_TEMPLATE_KEY, model, commandContext.getChannel()))
+        return FutureUtils.toSingleFutureGeneric(channelService.sendEmbedTemplateInMessageChannel(QUOTE_STATS_RESPONSE_TEMPLATE_KEY, model, commandContext.getChannel()))
                 .thenApply(unused -> CommandResult.fromSuccess());
     }
 
