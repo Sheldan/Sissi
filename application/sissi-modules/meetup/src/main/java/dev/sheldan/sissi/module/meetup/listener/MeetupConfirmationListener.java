@@ -115,7 +115,7 @@ public class MeetupConfirmationListener implements ButtonClickedListener {
         messageModel.setCancelled(false);
         Long meetupId = payload.getMeetupId();
         Long serverId = payload.getGuildId();
-        MessageToSend messageToSend = meetupServiceBean.getMeetupMessage(messageModel);
+        MessageToSend messageToSend = meetupServiceBean.getMeetupMessage(messageModel, model.getServerId());
         List<CompletableFuture<Message>> messageFutures = channelService.sendMessageToSendToChannel(messageToSend, model.getEvent().getMessageChannel());
         FutureUtils.toSingleFutureGeneric(messageFutures).thenAccept(unused -> {
             messageService.deleteMessage(model.getEvent().getMessage());

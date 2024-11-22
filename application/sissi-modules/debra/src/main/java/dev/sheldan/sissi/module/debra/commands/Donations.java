@@ -124,7 +124,7 @@ public class Donations extends AbstractConditionableCommand {
         } else {
             donationModel.setDonations(new ArrayList<>());
         }
-        return templateService.renderEmbedTemplate(DONATIONS_RESPONSE_TEMPLATE_KEY, donationModel);
+        return templateService.renderEmbedTemplate(DONATIONS_RESPONSE_TEMPLATE_KEY, donationModel, serverId);
     }
 
     @Override

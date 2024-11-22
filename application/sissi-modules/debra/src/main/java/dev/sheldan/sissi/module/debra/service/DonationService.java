@@ -182,7 +182,7 @@ public class DonationService {
                 .donation(donation)
                 .totalDonationAmount(donationInfoModel.getTotalAmount())
                 .build();
-        MessageToSend messageToSend = templateService.renderEmbedTemplate(DEBRA_DONATION_NOTIFICATION_TEMPLATE_KEY, model);
+        MessageToSend messageToSend = templateService.renderEmbedTemplate(DEBRA_DONATION_NOTIFICATION_TEMPLATE_KEY, model, targetServerId);
         List<CompletableFuture<Message>> firstMessage = postTargetService.sendEmbedInPostTarget(messageToSend, DebraPostTarget.DEBRA_DONATION_NOTIFICATION, targetServerId);
         List<CompletableFuture<Message>> secondMessage = postTargetService.sendEmbedInPostTarget(messageToSend, DebraPostTarget.DEBRA_DONATION_NOTIFICATION2, targetServerId);
         firstMessage.addAll(secondMessage);

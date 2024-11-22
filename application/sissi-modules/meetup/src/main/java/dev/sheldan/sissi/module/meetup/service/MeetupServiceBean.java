@@ -206,8 +206,8 @@ public class MeetupServiceBean {
                 .collect(Collectors.toList());
     }
 
-    public MessageToSend getMeetupMessage(MeetupMessageModel model) {
-        return templateService.renderEmbedTemplate(MEETUP_DISPLAY_TEMPLATE, model);
+    public MessageToSend getMeetupMessage(MeetupMessageModel model, Long serverId) {
+        return templateService.renderEmbedTemplate(MEETUP_DISPLAY_TEMPLATE, model, serverId);
     }
 
     public CompletableFuture<Void> cancelMeetup(Meetup meetup) {
@@ -221,7 +221,7 @@ public class MeetupServiceBean {
                 .map(meetupComponent -> meetupComponent.getId().getComponentId())
                 .collect(Collectors.toList());
         model.setCancelled(true);
-        MessageToSend meetupMessage = getMeetupMessage(model);
+        MessageToSend meetupMessage = getMeetupMessage(model, serverId);
         return messageService.editMessageInChannel(channel, meetupMessage, meetup.getMessageId())
                 .thenAccept(unused -> self.notifyParticipants(meetupId, serverId))
                 .thenAccept(unused -> self.cleanupMeetup(meetupId, serverId, componentPayloads));
@@ -231,7 +231,7 @@ public class MeetupServiceBean {
     public void notifyParticipants(Long meetupId, Long serverId) {
         Meetup meetup = meetupManagementServiceBean.getMeetup(meetupId, serverId);
         MeetupMessageModel model = getMeetupMessageModel(meetup);
-        MessageToSend messageToSend = templateService.renderEmbedTemplate(MEETUP_CANCELLATION_TEMPLATE, model);
+        MessageToSend messageToSend = templateService.renderEmbedTemplate(MEETUP_CANCELLATION_TEMPLATE, model, serverId);
         meetup
                 .getParticipants()
                 .stream()
@@ -319,7 +319,7 @@ public class MeetupServiceBean {
     public void remindParticipants(Long meetupId, Long serverId) {
         Meetup meetup = meetupManagementServiceBean.getMeetup(meetupId, serverId);
         MeetupMessageModel model = getMeetupMessageModel(meetup);
-        MessageToSend messageToSend = templateService.renderEmbedTemplate(MEETUP_REMINDER_TEMPLATE, model);
+        MessageToSend messageToSend = templateService.renderEmbedTemplate(MEETUP_REMINDER_TEMPLATE, model, serverId);
         meetup
                 .getParticipants()
                 .stream()
@@ -423,7 +423,7 @@ public class MeetupServiceBean {
         meetupMessageModel.setMaybeParticipants(new ArrayList<>());
         meetupMessageModel.setNoTimeParticipants(new ArrayList<>());
 
-        MessageToSend updatedMeetupMessage = getMeetupMessage(meetupMessageModel);
+        MessageToSend updatedMeetupMessage = getMeetupMessage(meetupMessageModel, serverId);
         GuildMessageChannel meetupChannel = channelService.getMessageChannelFromServer(serverId, meetup.getMeetupChannel().getId());
         return channelService.editMessageInAChannelFuture(updatedMeetupMessage, meetupChannel, meetup.getMessageId())
                 .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId))
@@ -457,7 +457,7 @@ public class MeetupServiceBean {
         Long meetupId = meetup.getId().getId();
         Long serverId = meetup.getId().getServerId();
         MeetupMessageModel meetupMessageModel = getMeetupMessageModel(meetup);
-        MessageToSend updatedMeetupMessage = getMeetupMessage(meetupMessageModel);
+        MessageToSend updatedMeetupMessage = getMeetupMessage(meetupMessageModel, serverId);
         GuildMessageChannel meetupChannel = channelService.getMessageChannelFromServer(serverId, meetup.getMeetupChannel().getId());
         return channelService.editMessageInAChannelFuture(updatedMeetupMessage, meetupChannel, meetup.getMessageId())
                 .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId))

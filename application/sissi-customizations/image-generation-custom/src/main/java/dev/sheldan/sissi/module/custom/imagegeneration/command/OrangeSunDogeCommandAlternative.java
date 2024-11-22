@@ -61,7 +61,7 @@ public class OrangeSunDogeCommandAlternative implements CommandAlternative {
         List<String> parameters = Arrays.asList(contentStripped.split(" "));
         String inputText = commandRegistry.getCommandName(parameters.get(0), message.getGuild().getIdLong());
         File triggeredGifFile = imageGenerationService.getOrangeSunDogeImage(inputText);
-        MessageToSend messageToSend = templateService.renderEmbedTemplate(DOGE_ORANGE_SUN_RESPONSE_TEMPLATE_KEY, new Object());
+        MessageToSend messageToSend = templateService.renderEmbedTemplate(DOGE_ORANGE_SUN_RESPONSE_TEMPLATE_KEY, new Object(), message.getGuildIdLong());
         // template support does not support binary files
         AttachedFile file = AttachedFile
                 .builder()
