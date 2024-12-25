@@ -917,6 +917,16 @@
                                     <destFileName>logging-translation-overrides.zip</destFileName>
                                 </artifactItem>
 
+                                <artifactItem>
+                                    <groupId>dev.sheldan.sissi.templates.translations.overrides</groupId>
+                                    <artifactId>giveaway-translation-overrides</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${file.basedir}/template-data/translation-artifacts/</outputDirectory>
+                                    <destFileName>giveaway-translation-overrides.zip</destFileName>
+                                </artifactItem>
+
                             </artifactItems>
                         </configuration>
                     </execution>

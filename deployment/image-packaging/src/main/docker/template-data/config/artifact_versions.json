@@ -14,7 +14,7 @@
     "image-generation",
     "quotes", "meetup", "debra", "rss-news", "miepscord",
     "moderation-custom",
-    "moderation-translation-overrides", "experience-translation-overrides", "logging-translation-overrides"
+    "moderation-translation-overrides", "experience-translation-overrides", "logging-translation-overrides", "giveaway-translation-overrides"
   ]
 }
 

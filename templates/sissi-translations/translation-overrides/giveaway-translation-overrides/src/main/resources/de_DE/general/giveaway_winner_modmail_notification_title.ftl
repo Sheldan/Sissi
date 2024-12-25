@@ -1,0 +1,1 @@
+🎉 Glückwunsch! Du hast ${title} gewonnen. 🎉
