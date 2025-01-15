@@ -8,3 +8,4 @@ data:
   twitchClientId: {{ $.Values.apiKeys.twitch.clientId | b64enc }}
   twitchSecret: {{ $.Values.apiKeys.twitch.secret | b64enc }}
   openWeatherMapApiKey: {{ $.Values.apiKeys.openWeatherMap.apiKey | b64enc }}
+  freeCurrencyApiApiKey: {{ $.Values.apiKeys.freeCurrencyApi.apiKey | b64enc }}

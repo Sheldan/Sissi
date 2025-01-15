@@ -78,6 +78,11 @@ spec:
                 secretKeyRef:
                   name: api-keys
                   key: openWeatherMapApiKey
+            - name: FREE_CURRENCY_API_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: api-keys
+                  key: freeCurrencyApiApiKey
             - name: TWITCH_CLIENT_ID
               valueFrom:
                 secretKeyRef:

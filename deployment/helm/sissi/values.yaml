@@ -93,7 +93,7 @@ templateDeployment:
   repository: harbor.sheldan.dev/abstracto
   pullPolicy: Always
   image: abstracto-template-deployment
-  tag: 1.5.56
+  tag: 1.5.57
 templateDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
@@ -104,7 +104,7 @@ dbConfigDeployment:
   repository: harbor.sheldan.dev/abstracto
   pullPolicy: Always
   image: abstracto-db-deployment
-  tag: 1.5.56
+  tag: 1.5.57
 dbConfigDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
@@ -138,6 +138,8 @@ apiKeys:
   twitch:
     secret: null
     clientId: null
+  freeCurrencyApi:
+    apiKey: null
 imagePullSecrets: null
 nameOverride: ''
 fullnameOverride: ''
