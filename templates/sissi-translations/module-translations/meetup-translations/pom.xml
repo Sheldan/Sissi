@@ -3,7 +3,7 @@
     <parent>
         <groupId>dev.sheldan.sissi.templates.translations</groupId>
         <artifactId>module-translations</artifactId>
-        <version>1.4.73</version>
+        <version>1.4.74-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
