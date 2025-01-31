@@ -38,7 +38,7 @@ jobs:
           maven-args: "-Dmaven.javadoc.skip=true -s settings.xml -DskipTests"
           access-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Login to Harbor
-        uses: docker/login-action@v2
+        uses: docker/login-action@v3
         with:
           registry: harbor.sheldan.dev
           username: ${{ secrets.HARBOR_USERNAME }}
