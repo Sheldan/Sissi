@@ -8,6 +8,7 @@ import dev.sheldan.abstracto.core.command.execution.CommandResult;
 import dev.sheldan.abstracto.core.config.FeatureDefinition;
 import dev.sheldan.abstracto.core.interaction.InteractionService;
 import dev.sheldan.abstracto.core.interaction.slash.SlashCommandConfig;
+import dev.sheldan.abstracto.core.interaction.slash.SlashCommandPrivilegeLevels;
 import dev.sheldan.sissi.module.rssnews.config.RssNewsFeatureDefinition;
 import dev.sheldan.sissi.module.rssnews.config.RssNewsSlashCommandNames;
 import dev.sheldan.sissi.module.rssnews.model.template.NewsCategoryInfo;
@@ -54,6 +55,7 @@ public class ShowNewsCategories extends AbstractConditionableCommand {
                 .builder()
                 .enabled(true)
                 .rootCommandName(RssNewsSlashCommandNames.RSS_NEWS)
+                .defaultPrivilege(SlashCommandPrivilegeLevels.INVITER)
                 .groupName("category")
                 .commandName("show")
                 .build();

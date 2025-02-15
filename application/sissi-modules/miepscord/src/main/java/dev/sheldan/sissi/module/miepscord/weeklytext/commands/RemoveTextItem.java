@@ -9,6 +9,7 @@ import dev.sheldan.abstracto.core.command.execution.CommandResult;
 import dev.sheldan.abstracto.core.config.FeatureDefinition;
 import dev.sheldan.abstracto.core.interaction.InteractionService;
 import dev.sheldan.abstracto.core.interaction.slash.SlashCommandConfig;
+import dev.sheldan.abstracto.core.interaction.slash.SlashCommandPrivilegeLevels;
 import dev.sheldan.abstracto.core.interaction.slash.parameter.SlashCommandParameterService;
 import dev.sheldan.sissi.module.miepscord.MiepscordFeatureDefinition;
 import dev.sheldan.sissi.module.miepscord.MiepscordSlashCommandNames;
@@ -66,6 +67,7 @@ public class RemoveTextItem extends AbstractConditionableCommand {
                 .builder()
                 .enabled(true)
                 .rootCommandName(MiepscordSlashCommandNames.MIEPSCORD_ROOT_NAME_CONFIG)
+                .defaultPrivilege(SlashCommandPrivilegeLevels.INVITER)
                 .groupName("weeklytexts")
                 .commandName("remove")
                 .build();

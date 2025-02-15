@@ -9,6 +9,7 @@ import dev.sheldan.abstracto.core.command.execution.CommandResult;
 import dev.sheldan.abstracto.core.config.FeatureDefinition;
 import dev.sheldan.abstracto.core.interaction.InteractionService;
 import dev.sheldan.abstracto.core.interaction.slash.SlashCommandConfig;
+import dev.sheldan.abstracto.core.interaction.slash.SlashCommandPrivilegeLevels;
 import dev.sheldan.abstracto.core.interaction.slash.parameter.SlashCommandParameterService;
 import dev.sheldan.sissi.module.debra.config.DebraFeatureDefinition;
 import dev.sheldan.sissi.module.debra.config.DebraSlashCommandNames;
@@ -58,6 +59,7 @@ public class DebraInfoButton extends AbstractConditionableCommand {
                 .enabled(true)
                 .rootCommandName(DebraSlashCommandNames.DEBRA_INTERNAL)
                 .commandName("debrainfobutton")
+                .defaultPrivilege(SlashCommandPrivilegeLevels.ADMIN)
                 .build();
 
         Parameter targetChannelParameter = Parameter

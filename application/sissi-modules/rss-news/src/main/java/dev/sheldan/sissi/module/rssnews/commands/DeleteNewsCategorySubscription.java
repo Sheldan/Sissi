@@ -9,6 +9,7 @@ import dev.sheldan.abstracto.core.command.execution.CommandResult;
 import dev.sheldan.abstracto.core.config.FeatureDefinition;
 import dev.sheldan.abstracto.core.interaction.InteractionService;
 import dev.sheldan.abstracto.core.interaction.slash.SlashCommandConfig;
+import dev.sheldan.abstracto.core.interaction.slash.SlashCommandPrivilegeLevels;
 import dev.sheldan.abstracto.core.interaction.slash.parameter.SlashCommandAutoCompleteService;
 import dev.sheldan.abstracto.core.interaction.slash.parameter.SlashCommandParameterService;
 import dev.sheldan.sissi.module.rssnews.config.RssNewsFeatureDefinition;
@@ -127,6 +128,7 @@ public class DeleteNewsCategorySubscription extends AbstractConditionableCommand
                 .builder()
                 .enabled(true)
                 .rootCommandName(RssNewsSlashCommandNames.RSS_NEWS)
+                .defaultPrivilege(SlashCommandPrivilegeLevels.INVITER)
                 .groupName("categorysubscription")
                 .commandName("delete")
                 .build();

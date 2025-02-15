@@ -11,6 +11,7 @@ import dev.sheldan.abstracto.core.config.FeatureDefinition;
 import dev.sheldan.abstracto.core.interaction.ComponentService;
 import dev.sheldan.abstracto.core.interaction.InteractionService;
 import dev.sheldan.abstracto.core.interaction.slash.SlashCommandConfig;
+import dev.sheldan.abstracto.core.interaction.slash.SlashCommandPrivilegeLevels;
 import dev.sheldan.abstracto.core.interaction.slash.parameter.SlashCommandParameterService;
 import dev.sheldan.abstracto.core.service.ChannelService;
 import dev.sheldan.abstracto.core.templating.model.MessageToSend;
@@ -150,6 +151,7 @@ public class ChangeMeetupTime extends AbstractConditionableCommand {
                 .builder()
                 .enabled(true)
                 .rootCommandName(MeetupSlashCommandNames.MEETUP)
+                .defaultPrivilege(SlashCommandPrivilegeLevels.ADMIN)
                 .commandName("changeTime")
                 .build();
 

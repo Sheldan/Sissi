@@ -12,6 +12,7 @@ import dev.sheldan.abstracto.core.config.FeatureDefinition;
 import dev.sheldan.abstracto.core.interaction.ComponentService;
 import dev.sheldan.abstracto.core.interaction.InteractionService;
 import dev.sheldan.abstracto.core.interaction.slash.SlashCommandConfig;
+import dev.sheldan.abstracto.core.interaction.slash.SlashCommandPrivilegeLevels;
 import dev.sheldan.abstracto.core.interaction.slash.parameter.SlashCommandParameterService;
 import dev.sheldan.abstracto.core.models.database.AChannel;
 import dev.sheldan.abstracto.core.models.database.AUserInAServer;
@@ -198,6 +199,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
                 .builder()
                 .enabled(true)
                 .rootCommandName(MeetupSlashCommandNames.MEETUP)
+                .defaultPrivilege(SlashCommandPrivilegeLevels.ADMIN)
                 .commandName("create")
                 .build();
 
