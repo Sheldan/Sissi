@@ -117,9 +117,12 @@ The detailed list of what information is stored and processed is the following:
 * The meta data of meetups: text, location, creator and the decision of each user interacting with the meetup. This information will be deleted a few days after a meetup has passed/is cancelled.
 
 ### Twitch
-* The ID/name of streamers to follow accompanied with their discord ID
+* The ID/**name** of streamers to follow accompanied with their discord ID
 * The start/end dates of their streams
     * The individual sections of streams identified by title and game for updating the message
+
+### Custom commands
+* the **names** given to custom commands and the configured **response text**
 
 ## Grafana dashboard
 
