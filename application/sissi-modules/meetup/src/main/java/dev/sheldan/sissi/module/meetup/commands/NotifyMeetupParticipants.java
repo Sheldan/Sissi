@@ -23,6 +23,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -50,31 +51,21 @@ public class NotifyMeetupParticipants extends AbstractConditionableCommand {
     private static final String NOTIFY_MEETUP_PARTICIPANTS_RESPONSE = "notifyMeetupParticipants_response";
 
     @Override
-    public CompletableFuture<CommandResult> executeAsync(CommandContext commandContext) {
-        List<Object> parameters = commandContext.getParameters().getParameters();
-        Long meetupId = (Long) parameters.get(0);
-        Meetup meetup = meetupManagementServiceBean.getMeetup(meetupId, commandContext.getGuild().getIdLong());
-        if(!meetup.getOrganizer().getUserReference().getId().equals(commandContext.getAuthor().getIdLong())) {
-            throw new NotMeetupOrganizerException();
-        }
-        String notificationMessage = (String) parameters.get(1);
-        return meetupServiceBean.notifyMeetupParticipants(meetup, notificationMessage, null)
-                .thenApply(unused -> CommandResult.fromSuccess());
-    }
-
-    @Override
     public CompletableFuture<CommandResult> executeSlash(SlashCommandInteractionEvent event) {
         Long meetupId = slashCommandParameterService.getCommandOption(MEETUP_ID_PARAMETER, event, Integer.class).longValue();
         Meetup meetup = meetupManagementServiceBean.getMeetup(meetupId, event.getGuild().getIdLong());
         if(!meetup.getOrganizer().getUserReference().getId().equals(event.getMember().getIdLong())) {
             throw new NotMeetupOrganizerException();
         }
-        MeetupDecision toNotify = null;
-        if(slashCommandParameterService.hasCommandOption(NOTIFICATION_MEETUP_DECISION, event)) {
-            toNotify = MeetupDecision.valueOf(slashCommandParameterService.getCommandOption(NOTIFICATION_MEETUP_DECISION, event, String.class));
+        List<MeetupDecision> decisionsToNotify = new ArrayList<>();
+        for (int i = 0; i < MeetupDecision.values().length; i++) {
+            if(slashCommandParameterService.hasCommandOption(NOTIFICATION_MEETUP_DECISION + "_" + i, event)) {
+                String choice = slashCommandParameterService.getCommandOption(NOTIFICATION_MEETUP_DECISION + "_" + i, event, String.class);
+                decisionsToNotify.add(MeetupDecision.valueOf(choice));
+            }
         }
         String notificationMessage = slashCommandParameterService.getCommandOption(NOTIFICATION_MESSAGE_PARAMETER, event, String.class);
-        return meetupServiceBean.notifyMeetupParticipants(meetup, notificationMessage, toNotify)
+        return meetupServiceBean.notifyMeetupParticipants(meetup, notificationMessage, decisionsToNotify)
                 .thenCompose(unused -> interactionService.replyEmbed(NOTIFY_MEETUP_PARTICIPANTS_RESPONSE, event))
                 .thenApply(unused -> CommandResult.fromSuccess());
     }
@@ -106,6 +97,8 @@ public class NotifyMeetupParticipants extends AbstractConditionableCommand {
                 .templated(true)
                 .name(NOTIFICATION_MEETUP_DECISION)
                 .type(String.class)
+                .listSize(MeetupDecision.values().length)
+                .isListParam(true)
                 .optional(true)
                 .choices(meetupDecisions)
                 .slashCommandOnly(true)
@@ -131,6 +124,7 @@ public class NotifyMeetupParticipants extends AbstractConditionableCommand {
                 .templated(true)
                 .slashCommandConfig(slashCommandConfig)
                 .async(true)
+                .slashCommandOnly(true)
                 .supportsEmbedException(true)
                 .causesReaction(true)
                 .parameters(parameters)

@@ -293,8 +293,8 @@ public class MeetupServiceBean {
         }
     }
 
-    public CompletableFuture<Void> notifyMeetupParticipants(Meetup meetup, String message, MeetupDecision toNotify) {
-        List<MeetupDecision> decisionsToBeNotified = toNotify == null ? Arrays.asList(MeetupDecision.MAYBE, MeetupDecision.YES) : Arrays.asList(toNotify);
+    public CompletableFuture<Void> notifyMeetupParticipants(Meetup meetup, String message, List<MeetupDecision> toNotify) {
+        List<MeetupDecision> decisionsToBeNotified = toNotify == null || toNotify.isEmpty() ? Arrays.asList(MeetupDecision.MAYBE, MeetupDecision.YES) : toNotify;
         List<MemberDisplay> participants = meetup
                 .getParticipants()
                 .stream()
