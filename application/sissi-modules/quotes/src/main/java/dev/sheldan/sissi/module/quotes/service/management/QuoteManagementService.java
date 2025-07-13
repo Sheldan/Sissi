@@ -45,7 +45,7 @@ public class QuoteManagementService {
                         .url(stringBooleanPair.getLeft())
                         .quote(quote)
                         .server(adder.getServerReference())
-                        .isImage(stringBooleanPair.getRight())
+                        .isMedia(stringBooleanPair.getRight())
                         .build())
                 .toList();
 

@@ -41,8 +41,8 @@ public class QuoteAttachment {
 
     @Getter
     @Setter
-    @Column(name = "is_image", nullable = false)
+    @Column(name = "is_media", nullable = false)
     @Builder.Default
-    private Boolean isImage = false;
+    private Boolean isMedia = false;
 
 }

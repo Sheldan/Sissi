@@ -4,6 +4,8 @@ import dev.sheldan.abstracto.core.models.ServerChannelMessage;
 import dev.sheldan.abstracto.core.models.ServerUser;
 import dev.sheldan.abstracto.core.models.database.AServer;
 import dev.sheldan.abstracto.core.models.database.AUserInAServer;
+import dev.sheldan.abstracto.core.models.template.display.MemberDisplay;
+import dev.sheldan.abstracto.core.models.template.display.UserDisplay;
 import dev.sheldan.abstracto.core.service.ChannelService;
 import dev.sheldan.abstracto.core.service.MemberService;
 import dev.sheldan.abstracto.core.service.UserService;
@@ -103,21 +105,21 @@ public class QuoteServiceBean {
         List<String> imageAttachments = quote
                 .getAttachments()
                 .stream()
-                .filter(QuoteAttachment::getIsImage)
+                .filter(QuoteAttachment::getIsMedia)
                 .map(QuoteAttachment::getUrl)
                 .collect(Collectors.toList());
 
         List<String> fileAttachments = quote
                 .getAttachments()
                 .stream()
-                .filter(quoteAttachment -> !quoteAttachment.getIsImage())
+                .filter(quoteAttachment -> !quoteAttachment.getIsMedia())
                 .map(QuoteAttachment::getUrl)
                 .collect(Collectors.toList());
 
         QuoteResponseModel.QuoteResponseModelBuilder modelBuilder = QuoteResponseModel
                 .builder()
                 .quoteContent(quote.getText())
-                .imageAttachmentURLs(imageAttachments)
+                .mediaAttachmentURLs(imageAttachments)
                 .quoteId(quote.getId())
                 .fileAttachmentURLs(fileAttachments)
                 .creationDate(quote.getCreated())
@@ -166,42 +168,14 @@ public class QuoteServiceBean {
                             .filter(user -> user.getIdLong() == quoteAdderUserId)
                             .findFirst()
                             .orElse(null);
-                    String adderAvatar = Optional
-                            .ofNullable(adderMember)
-                            .map(member -> member.getUser().getAvatarUrl())
-                            .orElse(Optional
-                                    .ofNullable(adderUser)
-                                    .map(User::getAvatarUrl)
-                                    .orElse(null));
-                    String authorAvatar = Optional
-                            .ofNullable(authorMember)
-                            .map(member -> member.getUser().getAvatarUrl())
-                            .orElse(Optional
-                                    .ofNullable(authorUser)
-                                    .map(User::getAvatarUrl)
-                                    .orElse(null));
-                    String adderName = Optional
-                            .ofNullable(adderMember)
-                            .map(Member::getEffectiveName)
-                            .orElse(Optional
-                                    .ofNullable(adderUser)
-                                    .map(User::getName)
-                                    .orElse(null));
-                    String authorName = Optional
-                            .ofNullable(authorMember)
-                            .map(Member::getEffectiveName)
-                            .orElse(Optional
-                                    .ofNullable(authorUser)
-                                    .map(User::getName)
-                                    .orElse(null));
                     String channelName = sourceChannel
                             .map(Channel::getName)
                             .orElse(null);
                     QuoteResponseModel model = modelBuilder
-                            .adderAvatarURL(adderAvatar)
-                            .authorAvatarURL(authorAvatar)
-                            .adderName(adderName)
-                            .authorName(authorName)
+                            .authorMemberDisplay(authorMember != null ? MemberDisplay.fromMember(authorMember) : null)
+                            .authorUserDisplay(authorUser != null ? UserDisplay.fromUser(authorUser) : UserDisplay.fromServerUser(ServerUser.fromId(serverId, quotedUserId)))
+                            .adderMemberDisplay(adderMember != null ?  MemberDisplay.fromMember(adderMember) : null)
+                            .adderUserDisplay(adderUser != null ? UserDisplay.fromUser(adderUser) : UserDisplay.fromServerUser(ServerUser.fromId(serverId, quoteAdderUserId)))
                             .sourceChannelName(channelName)
                             .build();
                     return templateService.renderEmbedTemplate(QUOTE_RESPONSE_TEMPLATE_KEY, model, serverId);
@@ -260,7 +234,7 @@ public class QuoteServiceBean {
         List<Pair<String, Boolean>> attachments = quoteMessage
                 .getAttachments()
                 .stream()
-                .map(attachment -> Pair.of(attachment.getProxyUrl(), attachment.isImage()))
+                .map(attachment -> Pair.of(attachment.getProxyUrl(), attachment.isImage() || attachment.isVideo()))
                 .toList();
         return quoteManagementService.createQuote(author, adder, quoteMessage.getContentDisplay(), ServerChannelMessage.fromMessage(quoteMessage), attachments);
     }

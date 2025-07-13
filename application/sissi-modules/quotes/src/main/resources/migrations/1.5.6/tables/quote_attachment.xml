@@ -2,8 +2,11 @@
 <databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog https://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.26.xsd"  >
-    <include file="1.0.2/collection.xml" relativeToChangelogFile="true"/>
-    <include file="1.4.56/collection.xml" relativeToChangelogFile="true"/>
-    <include file="1.4.57/collection.xml" relativeToChangelogFile="true"/>
-    <include file="1.5.6/collection.xml" relativeToChangelogFile="true"/>
+    <changeSet author="Sheldan" id="quote_attachment-rename-media-column">
+        <renameColumn
+                tableName="quote_attachment"
+                newColumnName="is_media"
+                oldColumnName="is_image" />
+    </changeSet>
+
 </databaseChangeLog>

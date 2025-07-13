@@ -1,6 +1,8 @@
 package dev.sheldan.sissi.module.quotes.model.command;
 
 import dev.sheldan.abstracto.core.models.ServerChannelMessage;
+import dev.sheldan.abstracto.core.models.template.display.MemberDisplay;
+import dev.sheldan.abstracto.core.models.template.display.UserDisplay;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -11,14 +13,14 @@ import java.util.List;
 @Builder
 public class QuoteResponseModel {
     private Long quoteId;
-    private String authorAvatarURL;
-    private String authorName;
+    private UserDisplay authorUserDisplay;
+    private MemberDisplay authorMemberDisplay;
     private ServerChannelMessage quotedMessage;
     private String quoteContent;
-    private List<String> imageAttachmentURLs;
+    private List<String> mediaAttachmentURLs;
     private List<String> fileAttachmentURLs;
-    private String adderAvatarURL;
-    private String adderName;
+    private UserDisplay adderUserDisplay;
+    private MemberDisplay adderMemberDisplay;
     private Instant creationDate;
     private String sourceChannelName;
 }

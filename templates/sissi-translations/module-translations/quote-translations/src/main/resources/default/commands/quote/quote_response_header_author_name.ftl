@@ -1,1 +1,1 @@
-${authorName} in ${channelName}
+${authorName} in ${channelName} added by ${adderUserName} at ${creationDate}

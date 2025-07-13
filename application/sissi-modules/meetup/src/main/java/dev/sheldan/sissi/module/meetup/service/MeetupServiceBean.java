@@ -372,7 +372,7 @@ public class MeetupServiceBean {
         List<Long> userIdsToNotify = participants
                 .stream()
                 .map(meetupParticipator -> meetupParticipator.getParticipator().getUserReference().getId())
-                .collect(Collectors.toList());
+                .toList();
 
         Long serverId = meetup.getServer().getId();
 
@@ -415,7 +415,7 @@ public class MeetupServiceBean {
         List<Long> userInServerIds = participants
                 .stream()
                 .map(meetupParticipant -> meetupParticipant.getParticipator().getUserInServerId())
-                .collect(Collectors.toList());
+                .toList();
         meetup
                 .getParticipants().removeIf(meetupParticipant -> userInServerIds.contains(meetupParticipant.getParticipator().getUserInServerId()));
         MeetupMessageModel meetupMessageModel = getMeetupMessageModel(meetup);

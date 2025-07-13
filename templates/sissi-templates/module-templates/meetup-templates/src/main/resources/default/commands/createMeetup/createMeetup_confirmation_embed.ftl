@@ -1,33 +1,30 @@
 <#include "format_instant">
 {
-    "embeds": [
+    "components": [
         {
-            <#include "abstracto_color">,
-            "title": {
-                "title": "${topic?json_string}"
-            },
-            "description": "<@format_instant_long_date_time instant=meetupTime/>
-${description?json_string}"
-            <#if location?? && location != "%22%22">,
-            "fields": [
-                {
-                    "name": "<@safe_include "createMeetup_confirmation_location_field_title"/>",
-                    "value": "https://www.google.com/maps?q=${location?json_string}"
-                }
-            ]
-            </#if>
-        }
-    ],
-    "buttons": [
-        {
-            "label": "<@safe_include "createMeetup_confirm_button_label"/>",
-            "id": "${confirmationId}",
-            "buttonStyle": "success"
+            <#assign hasLocation=location?? && location != "%22%22">
+            "type": "textDisplay",
+            "content": "<#include "createMeetup_meetup_information">"
         },
         {
-            "label": "<@safe_include "createMeetup_cancel_button_label"/>",
-            "id": "${cancelId}",
-            "buttonStyle": "danger"
+            "type": "actionRow",
+            "actionRowItems": [
+                {
+                    "label": "<@safe_include "createMeetup_confirm_button_label"/>",
+                    "id": "${confirmationId}",
+                    "buttonStyle": "success",
+                    "type": "button"
+                },
+                {
+                    "label": "<@safe_include "createMeetup_cancel_button_label"/>",
+                    "id": "${cancelId}",
+                    "buttonStyle": "danger",
+                    "type": "button"
+                }
+            ]
         }
-    ]
+    ],
+    "messageConfig": {
+        "useComponentsV2": true
+    }
 }

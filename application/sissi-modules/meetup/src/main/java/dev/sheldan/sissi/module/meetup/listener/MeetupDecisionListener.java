@@ -60,7 +60,7 @@ public class MeetupDecisionListener implements ButtonClickedListener {
         MeetupMessageModel meetupMessageModel = meetupServiceBean.getMeetupMessageModel(meetup);
         addParticipationToModel(meetupMessageModel, userInAServer, payload.getMeetupDecision());
         MessageToSend messageToSend = meetupServiceBean.getMeetupMessage(meetupMessageModel, model.getServerId());
-        channelService.editEmbedMessageInAChannel(messageToSend.getEmbeds().get(0), model.getEvent().getChannel(), meetup.getMessageId())
+        channelService.editMessageInAChannelFuture(messageToSend, model.getEvent().getChannel(), meetup.getMessageId())
                 .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetup.getId().getId(), meetup.getMeetupChannel().getId(), meetup.getServer().getId()))
                 .exceptionally(throwable -> {
                     log.info("Failed to update message of meetup {} in channel {} in server {}.", meetup.getId().getId(), meetup.getMeetupChannel().getId(), meetup.getServer().getId(), throwable);
