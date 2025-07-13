@@ -4,7 +4,7 @@
     <parent>
         <artifactId>customization-templates</artifactId>
         <groupId>dev.sheldan.sissi.templates</groupId>
-        <version>1.5.7</version>
+        <version>1.5.8-SNAPSHOT</version>
     </parent>
 
     <artifactId>image-generation-customization-templates</artifactId>
