@@ -13,6 +13,7 @@
         <module>moderation-template-overrides</module>
         <module>experience-template-overrides</module>
         <module>logging-template-overrides</module>
+        <module>starboard-template-overrides</module>
     </modules>
 
 </project>

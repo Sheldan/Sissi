@@ -2,12 +2,29 @@
 {
     "components": [
         {
+            <#assign userFound=authorUserDisplay?has_content>
             <#assign authorName><#if authorMemberDisplay?has_content>${authorMemberDisplay.name}<#elseif authorUserDisplay?has_content>${authorUserDisplay.name}<#else><@safe_include "quote_response_default_author_name"/></#if></#assign>
-            <#assign adderUserName><#if adderMemberDisplay?has_content>${adderMemberDisplay.name}<#elseif adderUserDisplay?has_content>${adderMemberDisplay.name}<#else><@safe_include "quote_response_default_adder_name"/></#if></#assign>
+            <#assign adderUserName><#if adderMemberDisplay?has_content>${adderMemberDisplay.name}<#elseif adderUserDisplay?has_content>${adderUserDisplay.name}<#else><@safe_include "quote_response_default_adder_name"/></#if></#assign>
             <#assign channelName><@default_template_if_null sourceChannelName "quote_response_default_channel_name"/></#assign>
             <#assign creationDate><@format_instant_date_time instant=creationDate/></#assign>
-            "type": "textDisplay",
-            "content": "<@safe_include "quote_response_header_author_name"/>"
+            <#if userFound>
+                <#assign authorAvatar><#if userFound>${authorUserDisplay.avatarUrl}</#if></#assign>
+                "type": "section",
+                "components": [
+                    {
+                        "type": "textDisplay",
+                        "content": "<@safe_include "quote_response_header_author_name"/>"
+                    }
+                ],
+                "accessory": {
+                    "type": "thumbnail",
+                    "url": "${authorAvatar}"
+                }
+            <#else>
+                "type": "textDisplay",
+                "content": "<@safe_include "quote_response_header_author_name"/>"
+            </#if>
+
         },
         {
             "type": "section",
@@ -34,7 +51,7 @@
                 <#assign hasContent=true>
                 {
                     "type": "textDisplay",
-                    <#assign quoteDescription=quoteContent>
+                    <#assign quoteDescription=quoteContent?json_string>
                     "content": "${quoteDescription}"
                 }
             </#if>

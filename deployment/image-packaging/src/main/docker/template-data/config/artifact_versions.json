@@ -5,7 +5,7 @@
     "image-generation",
     "quotes", "meetup", "debra", "rss-news", "miepscord",
     "moderation-custom", "image-generation-custom",
-    "moderation-template-overrides", "experience-template-overrides", "logging-template-overrides"
+    "moderation-template-overrides", "experience-template-overrides", "logging-template-overrides", "starboard-template-overrides"
   ],
   "translation_artifacts": [
     "core",

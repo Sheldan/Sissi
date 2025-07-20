@@ -885,6 +885,16 @@
                                     <destFileName>logging-template-overrides.zip</destFileName>
                                 </artifactItem>
 
+                                <artifactItem>
+                                    <groupId>dev.sheldan.sissi.templates</groupId>
+                                    <artifactId>starboard-template-overrides</artifactId>
+                                    <version>${project.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>${file.basedir}/template-data/template-artifacts/</outputDirectory>
+                                    <destFileName>starboard-template-overrides.zip</destFileName>
+                                </artifactItem>
+
                                 <!-- overrides translations -->
 
                                 <artifactItem>
