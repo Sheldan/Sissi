@@ -1,0 +1,1 @@
+The duration to be muted for.
