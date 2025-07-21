@@ -50,16 +50,13 @@ public class OrangeSunDogeCommandAlternative implements CommandAlternative {
 
     @Override
     public boolean shouldExecute(UnParsedCommandParameter parameter, Guild guild, Message message) {
-        String contentStripped = message.getContentRaw();
-        String[] parameters = contentStripped.split(" ");
-        return parameters.length == 1 && featureFlagService.isFeatureEnabled(imageGenerationFeatureConfig, guild.getIdLong());
+        return featureFlagService.isFeatureEnabled(imageGenerationFeatureConfig, guild.getIdLong());
     }
 
     @Override
     public void execute(UnParsedCommandParameter parameter, Message message) {
         String contentStripped = message.getContentRaw();
-        List<String> parameters = Arrays.asList(contentStripped.split(" "));
-        String inputText = commandRegistry.getCommandName(parameters.get(0), message.getGuild().getIdLong());
+        String inputText = commandRegistry.getCommandName(contentStripped, message.getGuild().getIdLong());
         File triggeredGifFile = imageGenerationService.getOrangeSunDogeImage(inputText);
         MessageToSend messageToSend = templateService.renderEmbedTemplate(DOGE_ORANGE_SUN_RESPONSE_TEMPLATE_KEY, new Object(), message.getGuildIdLong());
         // template support does not support binary files

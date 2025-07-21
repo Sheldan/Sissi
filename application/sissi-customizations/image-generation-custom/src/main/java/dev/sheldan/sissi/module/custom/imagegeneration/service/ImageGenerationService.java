@@ -8,6 +8,8 @@ import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Component
 public class ImageGenerationService {
@@ -20,7 +22,7 @@ public class ImageGenerationService {
 
     public File getOrangeSunDogeImage(String inputText) {
         try {
-            return httpService.downloadFileToTempFile(dogeOrangeSunUrl.replace("{1}", inputText));
+            return httpService.downloadFileToTempFile(dogeOrangeSunUrl.replace("{1}", URLEncoder.encode(inputText, StandardCharsets.UTF_8)));
         } catch (IOException e) {
             throw new AbstractoRunTimeException(String.format("Failed to download orange doge image for url %s with error %s", inputText, e.getMessage()));
         }
