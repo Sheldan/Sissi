@@ -18,8 +18,8 @@
     <properties>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
-        <abstracto.version>1.6.11</abstracto.version>
-        <abstracto.templates.version>1.4.59</abstracto.templates.version>
+        <abstracto.version>1.6.12</abstracto.version>
+        <abstracto.templates.version>1.4.60</abstracto.templates.version>
         <apache-jena.version>4.9.0</apache-jena.version>
         <rssreader.version>3.5.0</rssreader.version>
     </properties>
@@ -28,7 +28,6 @@
         <module>application</module>
         <module>templates</module>
         <module>deployment</module>
-        <module>application/sissi-modules/miepscord</module>
     </modules>
 
     <repositories>
