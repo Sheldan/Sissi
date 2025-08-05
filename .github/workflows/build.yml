@@ -31,3 +31,23 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           user: Sheldan
           token: ${{ secrets.ABSTRACTO_PAT }}
+      - name: Login to Harbor
+        uses: docker/login-action@v3
+        with:
+          registry: harbor.sheldan.dev
+          username: ${{ secrets.HARBOR_USERNAME }}
+          password: ${{ secrets.HARBOR_TOKEN }}
+      - name: Load env file
+        id: dotenv
+        uses: falti/dotenv-action@v1.0.4
+        with:
+          path: .env
+      - name: Docker build
+        run: docker compose build
+        env:
+          REGISTRY_PREFIX: ${{ steps.dotenv.outputs.registry_prefix }}
+          VERSION: ${{ steps.dotenv.outputs.version }}
+      - name: Helm package and push
+        working-directory: ./deployment/helm/
+        run: |-
+          helm package sissi
