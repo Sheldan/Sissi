@@ -1,4 +1,3 @@
-version: "3.7"
 
 services:
   bot-packaging:
@@ -23,9 +22,9 @@ services:
         REGISTRY_PREFIX: ${ABSTRACTO_PREFIX}
         VERSION: ${VERSION}
         ABSTRACTO_VERSION: ${ABSTRACTO_VERSION}
+      additional_contexts:
+        debra_rest: "service:debra-rest-api"
     image: ${REGISTRY_PREFIX}sissi-rest-api:${VERSION:-latest}
-    depends_on:
-      - debra-rest-api
   private-rest-api-packaging:
     build:
       context: deployment/image-packaging/src/main/docker/private-rest-api
@@ -34,9 +33,9 @@ services:
         SISSI_REGISTRY_PREFIX: ${REGISTRY_PREFIX}
         ABSTRACTO_VERSION: ${ABSTRACTO_VERSION}
         VERSION: ${VERSION}
+      additional_contexts:
+        image_gen: "service:image-gen-api"
     image: ${REGISTRY_PREFIX}sissi-private-rest-api:${VERSION:-latest}
-    depends_on:
-      - image-gen-api
   db-data:
     build:
       context: deployment/image-packaging/src/main/docker/db-data

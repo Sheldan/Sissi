@@ -2,7 +2,7 @@ ARG REGISTRY_PREFIX
 ARG SISSI_REGISTRY_PREFIX
 ARG VERSION
 ARG ABSTRACTO_VERSION
-FROM ${SISSI_REGISTRY_PREFIX}sissi-debra-rest-api:${VERSION:-latest} AS debra-api
+FROM debra_rest AS debra-api
 FROM ${REGISTRY_PREFIX}abstracto-rest-api-experience:${ABSTRACTO_VERSION:-latest} AS experience-api
 FROM ${REGISTRY_PREFIX}abstracto-rest-api-core:${ABSTRACTO_VERSION:-latest} AS core-api
 

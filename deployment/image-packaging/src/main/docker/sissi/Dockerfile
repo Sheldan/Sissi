@@ -12,7 +12,7 @@ RUN $JAVA_HOME/bin/jlink \
          --compress=2 \
          --output /customjre
 
-FROM alpine:3.21
+FROM alpine:3.22.1
 
 ENV JAVA_HOME=/jre
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
