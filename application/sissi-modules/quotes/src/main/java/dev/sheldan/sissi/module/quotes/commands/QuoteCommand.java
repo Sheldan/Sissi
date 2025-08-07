@@ -23,6 +23,7 @@ import dev.sheldan.sissi.module.quotes.config.QuotesModuleDefinition;
 import dev.sheldan.sissi.module.quotes.exception.QuoteNotFoundException;
 import dev.sheldan.sissi.module.quotes.model.database.Quote;
 import dev.sheldan.sissi.module.quotes.service.QuoteServiceBean;
+import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -37,6 +38,7 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 @Component
+@Slf4j
 public class QuoteCommand extends AbstractConditionableCommand {
 
     private static final String QUOTE_COMMAND = "quote";
@@ -76,6 +78,7 @@ public class QuoteCommand extends AbstractConditionableCommand {
             foundQuote = quoteServiceBean.getRandomQuoteForMember(user);
         }
         Quote quoteToDisplay = foundQuote.orElseThrow(QuoteNotFoundException::new);
+        log.info("Displaying quote {} in server {}.", quoteToDisplay.getId(), quoteToDisplay.getServer().getId());
         return quoteServiceBean.renderQuoteToMessageToSend(quoteToDisplay)
                 .thenCompose(messageToSend -> self.sendMessageToChannel(messageToSend, commandContext.getChannel()))
                 .thenApply(unused -> CommandResult.fromSuccess());
@@ -98,6 +101,7 @@ public class QuoteCommand extends AbstractConditionableCommand {
             foundQuote = quoteServiceBean.getRandomQuote(server);
         }
         Quote quoteToDisplay = foundQuote.orElseThrow(QuoteNotFoundException::new);
+        log.info("Displaying quote {} in server {}.", quoteToDisplay.getId(), quoteToDisplay.getServer().getId());
         return quoteServiceBean.renderQuoteToMessageToSend(quoteToDisplay)
                 .thenCompose(messageToSend -> self.replyMessage(event, messageToSend))
                 .thenApply(unused -> CommandResult.fromSuccess());
