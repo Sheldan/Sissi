@@ -166,6 +166,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
         Parameter topicParameter = Parameter
                 .builder()
                 .templated(true)
+                .validators(Arrays.asList(MaxStringLengthValidator.max(256)))
                 .name(TOPIC_PARAMETER)
                 .type(String.class)
                 .build();
@@ -174,6 +175,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
                 .builder()
                 .templated(true)
                 .name(DESCRIPTION_PARAMETER)
+                .validators(Arrays.asList(MaxStringLengthValidator.max(2048)))
                 .remainder(true)
                 .optional(true)
                 .type(String.class)
@@ -184,6 +186,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
                 .templated(true)
                 .name(LOCATION_PARAMETER)
                 .remainder(true)
+                .validators(Arrays.asList(MaxStringLengthValidator.max(100)))
                 .optional(true)
                 .slashCommandOnly(true)
                 .type(String.class)
