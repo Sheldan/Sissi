@@ -1,5 +1,5 @@
 {
     <#include "user_detail">
-    <#assign user><@user_detail user=user/></#assign>
+    <#assign userText>${user.name} (${user.userMention}: ${user.id})</#assign>
     "additionalMessage": "<@safe_include "user_left_text"/>"
 }

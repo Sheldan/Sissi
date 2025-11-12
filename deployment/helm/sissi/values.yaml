@@ -93,7 +93,7 @@ templateDeployment:
   repository: harbor.sheldan.dev/abstracto
   pullPolicy: Always
   image: abstracto-template-deployment
-  tag: 1.6.15
+  tag: 1.6.16
 templateDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
@@ -104,7 +104,7 @@ dbConfigDeployment:
   repository: harbor.sheldan.dev/abstracto
   pullPolicy: Always
   image: abstracto-db-deployment
-  tag: 1.6.15
+  tag: 1.6.16
 dbConfigDeploymentData:
   repository: harbor.sheldan.dev/sissi
   pullPolicy: Always
