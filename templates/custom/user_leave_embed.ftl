@@ -71,6 +71,6 @@
     </#if>
 </#macro>
 <#include "user_detail">
-<#assign userText><@get_title 'bp'/><@get_title 'np'/><@get_title 'bk'/><@get_title 'mi'/><@get_title 'na'/><@get_title 'br'/><@get_title 'lo'/><@get_title 'lr'/><@get_title 'lm'/><@get_title 'bo'/><@get_title 'bm'/><@get_title 'gm'/><@get_title 'up'/><@get_title 'ap'/><@get_title 'dd'/><@get_title 'dr'/><@get_title 'di'/> ${user.name} <@get_title 'ms'/><@get_title 'bs'/><@get_title 'in'/> (${user.id?c})</#assign>
+<#assign userText><@get_title 'bp'/><@get_title 'np'/><@get_title 'bk'/><@get_title 'mi'/><@get_title 'na'/><@get_title 'br'/><@get_title 'lo'/><@get_title 'lr'/><@get_title 'lm'/><@get_title 'bo'/><@get_title 'bm'/><@get_title 'gm'/><@get_title 'up'/><@get_title 'ap'/><@get_title 'dd'/><@get_title 'dr'/><@get_title 'di'/><@get_title 'in'/> ${user.name} <@get_title 'ms'/><@get_title 'bs'/> (${user.id?c})</#assign>
     "additionalMessage": "<#compress><@safe_include "user_left_text"/></#compress>"
 }
