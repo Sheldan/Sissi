@@ -1,52 +1,52 @@
 package dev.sheldan.sissi.module.debra.service;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import dev.sheldan.abstracto.core.exception.AbstractoRunTimeException;
 import dev.sheldan.abstracto.core.interaction.ComponentPayloadService;
 import dev.sheldan.abstracto.core.interaction.ComponentService;
 import dev.sheldan.abstracto.core.models.database.AServer;
 import dev.sheldan.abstracto.core.service.ChannelService;
-import dev.sheldan.abstracto.core.service.ConfigService;
+import dev.sheldan.abstracto.core.service.HashService;
 import dev.sheldan.abstracto.core.service.PostTargetService;
 import dev.sheldan.abstracto.core.service.management.ServerManagementService;
 import dev.sheldan.abstracto.core.templating.model.MessageToSend;
 import dev.sheldan.abstracto.core.templating.service.TemplateService;
+import dev.sheldan.abstracto.core.utils.CompletableFutureList;
 import dev.sheldan.abstracto.core.utils.FutureUtils;
-import dev.sheldan.sissi.module.debra.exception.DonationAmountNotFoundException;
 import dev.sheldan.sissi.module.debra.config.DebraPostTarget;
 import dev.sheldan.sissi.module.debra.config.DebraProperties;
 import dev.sheldan.sissi.module.debra.converter.DonationConverter;
-import dev.sheldan.sissi.module.debra.model.api.Donation;
+import dev.sheldan.sissi.module.debra.model.api.DonationDto;
 import dev.sheldan.sissi.module.debra.model.api.DonationsResponse;
 import dev.sheldan.sissi.module.debra.model.commands.DebraInfoButtonPayload;
 import dev.sheldan.sissi.module.debra.model.commands.DebraInfoModel;
 import dev.sheldan.sissi.module.debra.model.commands.DonationItemModel;
 import dev.sheldan.sissi.module.debra.model.commands.DonationsModel;
+import dev.sheldan.sissi.module.debra.model.database.Donation;
 import dev.sheldan.sissi.module.debra.model.listener.DonationResponseModel;
 import dev.sheldan.sissi.module.debra.model.listener.DonationNotificationModel;
+import dev.sheldan.sissi.module.debra.service.management.DonationManagementServiceBean;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+import org.apache.commons.lang3.tuple.Pair;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static dev.sheldan.sissi.module.debra.config.DebraFeatureConfig.DEBRA_DONATION_API_FETCH_SIZE_KEY;
 import static dev.sheldan.sissi.module.debra.config.DebraFeatureConfig.DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME;
 
 @Component
@@ -63,13 +63,7 @@ public class DonationService {
     private TemplateService templateService;
 
     @Autowired
-    private OkHttpClient okHttpClient;
-
-    @Autowired
     private DonationConverter donationConverter;
-
-    @Autowired
-    private ConfigService configService;
 
     @Autowired
     private ChannelService channelService;
@@ -84,99 +78,208 @@ public class DonationService {
     private ServerManagementService serverManagementService;
 
     @Autowired
+    private DonationManagementServiceBean donationManagementServiceBean;
+
+    @Autowired
+    private HashService hashService;
+
+    @Autowired
     private DonationService self;
 
     private static final String DEBRA_DONATION_NOTIFICATION_TEMPLATE_KEY = "debra_donation_notification";
 
-    private static final Pattern MESSAGE_PATTERN = Pattern.compile("(.*) hat (\\d{1,9},\\d{2}) Euro gespendet!<br \\/>Vielen Dank!<br \\/>Nachricht:<br \\/>(.*)");
-
     private static final String DEBRA_INFO_BUTTON_MESSAGE_TEMPLATE_KEY = "debraInfoButton";
     public static final String DEBRA_INFO_BUTTON_ORIGIN = "DEBRA_INFO_BUTTON";
-
-    public DonationResponseModel parseDonationFromMessage(String message) {
-        Matcher matcher = MESSAGE_PATTERN.matcher(message);
-        if (matcher.find()) {
-            String donatorName = matcher.group(1);
-            String amountString = matcher.group(2);
-            BigDecimal amount = new BigDecimal(amountString.replace(',', '.'));
-            String donationMessage = Optional.ofNullable(matcher.group(3)).map(msg -> msg.replaceAll("(<br>)+", " ")).map(String::trim).orElse("");
-            return DonationResponseModel
-                    .builder()
-                    .message(donationMessage)
-                    .donatorName(donatorName)
-                    .amount(amount)
-                    .build();
-        } else {
-            throw new IllegalArgumentException("String in wrong format");
-        }
-    }
+    private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("d.M.y");
 
     public List<DonationItemModel> getHighestDonations(DonationsResponse response, Integer maxCount) {
-        List<Donation> topDonations = response
+        return response
                 .getDonations()
                 .stream()
-                .sorted(Comparator.comparing(Donation::getAmount)
+                .sorted(Comparator.comparing(DonationDto::getAmount)
                         .reversed())
-                .collect(Collectors.toList());
-        return topDonations
-                .stream()
                 .limit(maxCount)
                 .map(donation -> donationConverter.convertDonation(donation))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<DonationItemModel> getLatestDonations(DonationsResponse response, Integer maxCount) {
         return response
                 .getDonations()
                 .stream()
+                .sorted(Comparator.comparing(DonationDto::getDate).reversed())
                 .limit(maxCount)
                 .map(donation -> donationConverter.convertDonation(donation))
                 .collect(Collectors.toList());
     }
 
-    public synchronized DonationsResponse getSynchronizedCachedDonationAmount(Long serverId) {
-        return self.getCachedDonationAmount(serverId);
+    public synchronized DonationsResponse getSynchronizedCachedDonationAmount() {
+        return self.getCachedDonationAmount();
     }
 
     @Cacheable(value = "donation-cache")
-    public synchronized DonationsResponse getCachedDonationAmount(Long serverId) {
-        return self.fetchCurrentDonationAmount(serverId);
+    public synchronized DonationsResponse getCachedDonationAmount() {
+        return self.fetchCurrentDonations();
     }
 
-    public DonationsResponse fetchCurrentDonationAmount(Long serverId) {
+    public DonationsResponse fetchCurrentDonations() {
         try {
-            Long fetchSize = configService.getLongValueOrConfigDefault(DEBRA_DONATION_API_FETCH_SIZE_KEY, serverId);
-            Request request = new Request.Builder()
-                    .url(String.format(debraProperties.getDonationAPIUrl(), fetchSize))
-                    .get()
-                    .build();
-            Response response = okHttpClient.newCall(request).execute();
-            if(!response.isSuccessful()) {
-                log.error("Failed to retrieve donation response. Response had code {} with body {} and headers {}.",
-                        response.code(), response.body().string(), response.headers());
-                throw new DonationAmountNotFoundException();
+            Document donationPage = Jsoup.connect(debraProperties.getDonationPageUrl()).get();
+            DecimalFormat decimalFormat = getDecimalFormat();
+            Element endValueElement = donationPage.getElementById("end-value");
+            String endValueString = endValueElement.text();
+            Elements currentValueElement = donationPage.getElementsByClass("current_amount").get(0).getElementsByClass("value");
+            String[] valueArray = currentValueElement.text().split(" ");
+            String currentValueString = valueArray[0];
+            String currency = valueArray[1];
+            BigDecimal currentValue = (BigDecimal) decimalFormat.parse(currentValueString);
+            BigDecimal endValue = (BigDecimal) decimalFormat.parse(endValueString);
+            Element list = donationPage.getElementsByClass("donor-list").first();
+            Elements donationElements = list.getElementsByClass("list-item");
+            List<DonationDto> donations = new ArrayList<>();
+            for (Element donationMainElement : donationElements.asList()) {
+                Elements nameElement = donationMainElement.getElementsByClass("donor-list-name");
+                Elements dateElement = donationMainElement.getElementsByClass("donor-list-date");
+                Elements amountElement = donationMainElement.getElementsByClass("donor-list-amount");
+                Elements textElement = donationMainElement.getElementsByClass("donor-list-amount-text");
+                LocalDate dateValue;
+                if (dateElement.hasText()) {
+                    dateValue = LocalDate.parse(dateElement.text(), DATE_FORMAT);
+                } else {
+                    dateValue = null;
+                }
+                BigDecimal amount;
+                if (amountElement.hasText()) {
+                    String amountText = amountElement.text().split(" ")[0];
+                    amount = (BigDecimal) decimalFormat.parse(amountText);
+                } else {
+                    amount = null;
+                }
+                String additionalText = textElement.text();
+                String name = nameElement.text();
+                boolean anonymous = name.isBlank();
+                donations.add(DonationDto
+                        .builder()
+                        .anonymous(anonymous)
+                        .name(nameElement.text())
+                        .amount(amount)
+                        .currency(currency)
+                        .name(name)
+                        .text(additionalText)
+                        .date(dateValue)
+                        .build());
             }
-            Gson gson = getGson();
-            return gson.fromJson(response.body().string(), DonationsResponse.class);
+            return DonationsResponse
+                    .builder()
+                    .donations(donations)
+                    .currentDonationAmount(currentValue)
+                    .donationAmountGoal(endValue)
+                    .donationCount(donations.size())
+                    .build();
         } catch (Exception exception) {
             throw new AbstractoRunTimeException(exception);
         }
 
     }
 
-    private Gson getGson() {
-        return new GsonBuilder()
-                .registerTypeAdapter(BigDecimal.class, new BigDecimalGsonAdapter())
-                .create();
+    private DecimalFormat getDecimalFormat() {
+        DecimalFormatSymbols symbols = new DecimalFormatSymbols();
+        symbols.setGroupingSeparator('.');
+        symbols.setDecimalSeparator(',');
+        String pattern = "#,##0.0#";
+
+        DecimalFormat decimalFormat = new DecimalFormat(pattern, symbols);
+        decimalFormat.setParseBigDecimal(true);
+        return decimalFormat;
     }
 
-    private DonationsModel getDonationInfoModel(Long serverId) {
-        return donationConverter.convertDonationResponse(fetchCurrentDonationAmount(serverId));
+    private DonationsModel getDonationInfoModel() {
+        return donationConverter.convertDonationResponse(fetchCurrentDonations());
     }
 
-    public CompletableFuture<Void> sendDonationNotification(DonationResponseModel donation) throws IOException {
+
+    private String hashDonation(DonationDto donation) {
+        return hashService.sha256HashString(donation.stringRepresentation());
+    }
+
+    @Transactional
+    public void checkForNewDonations() {
+        List<Donation> allDonations = donationManagementServiceBean.getAllDonations();
+        Map<String, Integer> existingHashes = allDonations
+                .stream()
+                .collect(Collectors.toMap(Donation::getId, Donation::getCount));
+        DonationsResponse donationResponse = fetchCurrentDonations();
+        Map<String, Pair<Integer, DonationDto>> donationFromPageHashes = new HashMap<>();
+        donationResponse.getDonations().forEach(donationDto -> {
+            String thisHash = hashDonation(donationDto);
+            if(donationFromPageHashes.containsKey(thisHash)) {
+                donationFromPageHashes.put(thisHash, Pair.of(donationFromPageHashes.get(thisHash).getLeft() + 1, donationDto));
+            } else {
+                donationFromPageHashes.put(thisHash, Pair.of(1, donationDto));
+            }
+        });
+
+        Set<String> pageHashesToRemove = new HashSet<>();
+        donationFromPageHashes.entrySet().forEach(pageHash -> {
+            if(existingHashes.containsKey(pageHash.getKey())) {
+                Integer existingDonation = existingHashes.get(pageHash.getKey());
+                int amountDifference = pageHash.getValue().getKey() - existingDonation;
+                if(amountDifference == 0) {
+                    pageHashesToRemove.add(pageHash.getKey()); // it matches 1:1, we know about all of them already
+                } if(amountDifference < 0) {
+                    pageHashesToRemove.add(pageHash.getKey());
+                    log.warn("We have more donations than on the page of hash {}:{}.", pageHash.getKey(), amountDifference);
+                } else {
+                    pageHash.setValue(Pair.of(amountDifference, pageHash.getValue().getRight()));
+                }
+            }
+        });
+        pageHashesToRemove.forEach(donationFromPageHashes::remove);
+        if(donationFromPageHashes.isEmpty()) {
+            log.info("No new donations - ending search.");
+            return;
+        }
+
+        List<CompletableFuture<Void>> notificationFutures = new ArrayList<>();
+        donationFromPageHashes.values().forEach(donationInfo -> {
+            for (int i = 0; i < donationInfo.getLeft(); i++) {
+                DonationDto donationDto = donationInfo.getRight();
+                DonationResponseModel model = DonationResponseModel
+                        .builder()
+                        .message(donationDto.getText())
+                        .donatorName(donationDto.getName())
+                        .amount(donationDto.getAmount())
+                        .anonymous(donationDto.getAnonymous())
+                        .build();
+                notificationFutures.add(sendDonationNotification(model));
+            }
+        });
+        new CompletableFutureList<>(notificationFutures).getMainFuture().thenAccept(unused -> {
+            log.info("All {} notifications send.", notificationFutures.size());
+        }).exceptionally(throwable -> {
+            log.warn("Failed to send notifications about {} new donations.", notificationFutures.size(), throwable);
+            return null;
+        });
+        log.info("Creating/updating {} donation entries.", donationFromPageHashes.size());
+        allDonations.forEach(donation -> {
+            Set<String> donationsToRemoveBecauseUpdate = new HashSet<>();
+            donationFromPageHashes.forEach((key, value) -> {
+                // its assumed that donationFromPageHashes only contains donations that need to be created
+                if (donation.getId().equals(key)) {
+                    donation.setCount(value.getLeft() + donation.getCount());
+                    donationManagementServiceBean.updateDonation(donation);
+                    donationsToRemoveBecauseUpdate.add(key);
+                }
+            });
+            donationsToRemoveBecauseUpdate.forEach(donationFromPageHashes::remove);
+        });
+        donationFromPageHashes.forEach((key, value) ->
+                donationManagementServiceBean.saveDonation(key, value.getLeft()));
+    }
+
+    public CompletableFuture<Void> sendDonationNotification(DonationResponseModel donation) {
         Long targetServerId = Long.parseLong(System.getenv(DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME));
-        DonationsModel donationInfoModel = getDonationInfoModel(targetServerId);
+        DonationsModel donationInfoModel = getDonationInfoModel();
         DonationNotificationModel model = DonationNotificationModel
                 .builder()
                 .donation(donation)

@@ -2,12 +2,14 @@
     "embeds": [
         {
             "title": {
-                <#assign donatorName=donation.donatorName>
+                <#assign donatorName><#if donation.anonymous><#include "donations_response_anonymous"><#else>${donation.donatorName}</#if></#assign>
                 <#assign donationAmount=donation.amount>
                 "title": "<@safe_include "debra_donation_notification_embed_title"/>"
             },
-            <#assign donationMessage=donation.message>
-            "description": "${donationMessage?json_string}",
+            <#if donation.message != 'gespendet'>
+                <#assign donationMessage=donation.message>
+                "description": "${donationMessage?json_string}",
+            </#if>
             "fields": [
                 {
                     <#assign totalDonationAmount=totalDonationAmount>
@@ -24,7 +26,7 @@
     "buttons": [
         {
             "label": "<@safe_include "debra_donation_notification_link_button_label"/>",
-            "url": "http://tiny.cc/schmetterling2024",
+            "url": "https://tinyurl.com/debra25",
             "buttonStyle": "link",
             "metaConfig": {
                 "persistCallback": false

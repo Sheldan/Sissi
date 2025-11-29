@@ -13,7 +13,7 @@
                 ,"fields": [
                 <#list donations as donation>
                     {
-                        "name": "<#if donation.anonymous><#include "donations_response_anonymous"><#else>${donation.firstName}</#if>",
+                        "name": "<#if donation.anonymous><#include "donations_response_anonymous"><#else>${donation.name}</#if>",
                         "value": "${donation.donationAmount}€",
                         "inline": true
                     }

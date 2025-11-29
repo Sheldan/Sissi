@@ -1,21 +1,18 @@
 package dev.sheldan.sissi.module.debra.model.api;
 
-import com.google.gson.annotations.SerializedName;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.math.BigInteger;
+import java.math.BigDecimal;
 import java.util.List;
 
 @Getter
 @Setter
 @Builder
 public class DonationsResponse {
-    @SerializedName("page")
-    private Description page;
-    @SerializedName("donation_count")
-    private BigInteger donationCount;
-    @SerializedName("donations")
-    private List<Donation> donations;
+    private BigDecimal currentDonationAmount;
+    private BigDecimal donationAmountGoal;
+    private int donationCount;
+    private List<DonationDto> donations;
 }

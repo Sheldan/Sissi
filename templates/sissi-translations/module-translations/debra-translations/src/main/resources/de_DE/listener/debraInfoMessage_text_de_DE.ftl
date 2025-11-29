@@ -10,7 +10,7 @@ Alle Grafiken von diesem und den letzten Jahren findest du in diesem Ordner. All
 
 Spendenlink
 Wir empfehlen neben dem Einrichten einer 'Kachel' auch, dass ihr einen !spenden Befehl bei eurem Bot (nightbot, moobot, self hosted etc.) hinzufügt.
-Bitte verlinke dabei auf <https://tiny.cc/schmetterling2024>
+Bitte verlinke dabei auf <https://tinyurl.com/debra25>
 
 Live-ping am Discord
 Damit wir deinen Account zur Going Live Liste hinzufügen können, musst du uns nach der Einrichtung des Streams bescheid geben.

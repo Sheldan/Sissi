@@ -11,6 +11,7 @@ import java.math.BigDecimal;
 @ToString
 public class DonationResponseModel {
     private String donatorName;
+    private Boolean anonymous;
     private BigDecimal amount;
     private String message;
 }

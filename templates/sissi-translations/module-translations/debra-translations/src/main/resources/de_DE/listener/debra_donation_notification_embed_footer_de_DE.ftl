@@ -1,1 +1,1 @@
-Spende auch du für Debra Austria unter http://tiny.cc/schmetterling2024.
+Spende auch du für Debra Austria unter https://tinyurl.com/debra25.

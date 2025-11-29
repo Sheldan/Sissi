@@ -1,1 +1,1 @@
-Also donate for Debra austria via http://tiny.cc/schmetterling2024.
+Also donate for Debra austria via https://tinyurl.com/debra25.

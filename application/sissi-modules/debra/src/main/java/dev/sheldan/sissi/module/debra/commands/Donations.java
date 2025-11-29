@@ -6,9 +6,9 @@ import dev.sheldan.abstracto.core.command.config.CommandConfiguration;
 import dev.sheldan.abstracto.core.command.config.HelpInfo;
 import dev.sheldan.abstracto.core.command.config.Parameter;
 import dev.sheldan.abstracto.core.command.execution.CommandContext;
+import dev.sheldan.abstracto.core.command.execution.CommandParameterKey;
 import dev.sheldan.abstracto.core.command.execution.CommandResult;
 import dev.sheldan.abstracto.core.config.FeatureDefinition;
-import dev.sheldan.abstracto.core.exception.AbstractoRunTimeException;
 import dev.sheldan.abstracto.core.interaction.InteractionService;
 import dev.sheldan.abstracto.core.interaction.slash.SlashCommandConfig;
 import dev.sheldan.abstracto.core.interaction.slash.parameter.SlashCommandParameterService;
@@ -26,7 +26,6 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -70,11 +69,12 @@ public class Donations extends AbstractConditionableCommand {
             Integer selectionValue = (Integer) parameters.get(1);
             Integer top = null;
             Integer latest = null;
-            switch (type) {
-                case "top": top = selectionValue; break;
-                default:
-                case "latest" :
-                    latest = selectionValue; break;
+            if(type != null) {
+                DonationsTypeParameterKey typeKey = CommandParameterKey.getEnumFromKey(DonationsTypeParameterKey.class, type);
+                switch (typeKey) {
+                    case LATEST -> latest = selectionValue;
+                    case TOP -> top = selectionValue;
+                }
             }
             messageToSend = getDonationMessageToSend(commandContext.getGuild().getIdLong(), top, latest);
         }
@@ -98,11 +98,10 @@ public class Donations extends AbstractConditionableCommand {
         Integer top = null;
         Integer latest = null;
         if(selectionType != null) {
-            switch (selectionType) {
-                case "top": top = selectionValue; break;
-                default:
-                case "latest" :
-                    latest = selectionValue; break;
+            DonationsTypeParameterKey typeKey = CommandParameterKey.getEnumFromKey(DonationsTypeParameterKey.class, selectionType);
+            switch (typeKey) {
+                case LATEST -> latest = selectionValue;
+                case TOP -> top = selectionValue;
             }
         }
 
@@ -113,7 +112,7 @@ public class Donations extends AbstractConditionableCommand {
 
     private MessageToSend getDonationMessageToSend(Long serverId, Integer top, Integer latest) {
         DonationsModel donationModel;
-        DonationsResponse donationResponse = donationService.fetchCurrentDonationAmount(serverId);
+        DonationsResponse donationResponse = donationService.fetchCurrentDonations();
         donationModel = donationConverter.convertDonationResponse(donationResponse);
         if(top != null) {
             donationModel.setDonations(donationService.getHighestDonations(donationResponse, top));
@@ -146,7 +145,7 @@ public class Donations extends AbstractConditionableCommand {
                 .templated(true)
                 .name(SELECTION_PARAMETER)
                 .optional(true)
-                .type(String.class)
+                .type(DonationsTypeParameterKey.class)
                 .build();
 
 

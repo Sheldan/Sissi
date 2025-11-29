@@ -36,8 +36,8 @@ public class EndlessStreamController {
     public EndlessStreamInfo getLatestDonations(@PathVariable("id") Long id) {
         Long serverId = Long.parseLong(System.getenv(DEBRA_DONATION_NOTIFICATION_SERVER_ID_ENV_NAME));
         EndlessStream endlessStream = endlessStreamManagementServiceBean.getEndlessStream(id);
-        DonationsResponse donationInfo = donationService.getSynchronizedCachedDonationAmount(serverId);
-        BigDecimal collectedAmount = donationInfo.getPage().getCollected();
+        DonationsResponse donationInfo = donationService.getSynchronizedCachedDonationAmount();
+        BigDecimal collectedAmount = donationInfo.getCurrentDonationAmount();
         Long minuteRate = configService.getLongValueOrConfigDefault(DebraFeatureConfig.ENDLESS_STREAM_MINUTE_RATE, serverId);
         Instant endDate = endlessStream.getStartTime().plus(collectedAmount.multiply(new BigDecimal(minuteRate)).toBigInteger().longValue(), ChronoUnit.MINUTES);
         return EndlessStreamInfo

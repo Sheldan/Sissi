@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Setter
 @Builder
 public class DonationInfo {
-    private String firstName;
+    private String name;
     private BigDecimal donationAmount;
     private Boolean anonymous;
 
@@ -20,7 +20,7 @@ public class DonationInfo {
                 .builder()
                 .donationAmount(donationItemModel.getDonationAmount())
                 .anonymous(donationItemModel.getAnonymous())
-                .firstName(donationItemModel.getFirstName())
+                .name(donationItemModel.getName())
                 .build();
     }
 }

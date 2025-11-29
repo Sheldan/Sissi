@@ -17,6 +17,7 @@ bot:
   host: null
   config:
     weeklyTextServerId: null
+    debraNotificationServerId: null
 restApi:
   enabled: true
   repository: harbor.sheldan.dev/sissi
