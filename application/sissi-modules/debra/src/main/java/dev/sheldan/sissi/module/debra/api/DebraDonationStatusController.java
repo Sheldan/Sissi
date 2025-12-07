@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.RoundingMode;
 import java.util.List;
 
 @RestController
@@ -50,6 +51,11 @@ public class DebraDonationStatusController {
 
         return CampaignInfo
                 .builder()
+                .donationCount(donationResponse.getDonationCount())
+                .collected(donationResponse.getCurrentDonationAmount())
+                .target(donationResponse.getDonationAmountGoal())
+                .percent(donationResponse.getCurrentDonationAmount().divide(donationResponse.getDonationAmountGoal(), RoundingMode.CEILING))
+                .currency("€")
                 .build();
     }
 }

@@ -239,7 +239,7 @@ def rendering_donation_image(donation_stats, parameters):
     height = parameters.font_size
     it = 0
     for donation in donations_to_draw:
-        name = donation['firstName'] if not donation['anonymous'] else 'anonym'
+        name = donation['name'] if not donation['anonymous'] and 'name' in donation else 'anonym'
         d1.text((0, height * it), f"{donation['donationAmount']}€ von {name}", fill=parameters.color, font=font)
         it += 1
     return flask_utils.serve_pil_image(img)
