@@ -20,8 +20,10 @@ import dev.sheldan.sissi.module.meetup.service.MeetupServiceBean;
 import dev.sheldan.sissi.module.meetup.service.management.MeetupManagementServiceBean;
 import dev.sheldan.sissi.module.meetup.service.management.MeetupParticipatorManagementServiceBean;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Member;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,11 +47,15 @@ public class MeetupDecisionListener implements ButtonClickedListener {
     @Autowired
     private ChannelService channelService;
 
+    @Autowired
+    private MeetupDecisionListener self;
+
     @Override
     public ButtonClickedListenerResult execute(ButtonClickedListenerModel model) {
         MeetupDecisionPayload payload = (MeetupDecisionPayload) model.getDeserializedPayload();
         Meetup meetup = meetupManagementServiceBean.getMeetup(payload.getMeetupId(),  payload.getGuildId());
-        AUserInAServer userInAServer = userInServerManagementService.loadOrCreateUser(model.getEvent().getMember());
+        Member member = model.getEvent().getMember();
+        AUserInAServer userInAServer = userInServerManagementService.loadOrCreateUser(member);
 
         Optional<MeetupParticipant> participationOptional = meetupParticipatorManagementServiceBean.getParticipation(meetup, userInAServer);
         if(participationOptional.isPresent()) {
@@ -57,19 +63,28 @@ public class MeetupDecisionListener implements ButtonClickedListener {
         } else {
             meetupParticipatorManagementServiceBean.createParticipation(meetup, userInAServer, payload.getMeetupDecision());
         }
-        MeetupMessageModel meetupMessageModel = meetupServiceBean.getMeetupMessageModel(meetup);
-        addParticipationToModel(meetupMessageModel, userInAServer, payload.getMeetupDecision());
-        MessageToSend messageToSend = meetupServiceBean.getMeetupMessage(meetupMessageModel, model.getServerId());
-        channelService.editMessageInAChannelFuture(messageToSend, model.getEvent().getChannel(), meetup.getMessageId())
-                .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetup.getId().getId(), meetup.getMeetupChannel().getId(), meetup.getServer().getId()))
-                .exceptionally(throwable -> {
-                    log.info("Failed to update message of meetup {} in channel {} in server {}.", meetup.getId().getId(), meetup.getMeetupChannel().getId(), meetup.getServer().getId(), throwable);
-                    return null;
-                });
+        Long meetupMessageId = meetup.getMessageId();
+        Long meetupId = meetup.getId().getId();
+        Long meetupServerId = meetup.getServer().getId();
+        meetupServiceBean.getMeetupMessageModel(meetup).thenAccept(meetupMessageModel -> {
+            self.updateMeetupMessage(model, meetupMessageModel, member, payload, meetupMessageId, meetupId, meetupServerId);
+        });
         return ButtonClickedListenerResult.ACKNOWLEDGED;
     }
 
-    private void addParticipationToModel(MeetupMessageModel model, AUserInAServer aUserInAServer, MeetupDecision decision) {
+    @Transactional
+    public void updateMeetupMessage(ButtonClickedListenerModel model, MeetupMessageModel meetupMessageModel, Member member, MeetupDecisionPayload payload, Long meetupMessageId, Long meetupId, Long meetupServerId) {
+        addParticipationToModel(meetupMessageModel, member, payload.getMeetupDecision());
+        MessageToSend messageToSend = meetupServiceBean.getMeetupMessage(meetupMessageModel, model.getServerId());
+        channelService.editMessageInAChannelFuture(messageToSend, model.getEvent().getChannel(), meetupMessageId)
+                .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetupId, meetupMessageId, meetupServerId))
+                .exceptionally(throwable -> {
+                    log.info("Failed to update message of meetup {} in channel {} in server {}.", meetupId, meetupMessageId, meetupServerId, throwable);
+                    return null;
+                });
+    }
+
+    private void addParticipationToModel(MeetupMessageModel model, Member aUserInAServer, MeetupDecision decision) {
         if(decision.equals(MeetupDecision.NO)) {
             addIfMissing(model.getDeclinedParticipants(), aUserInAServer);
         } else if(decision.equals(MeetupDecision.YES)) {
@@ -80,9 +95,9 @@ public class MeetupDecisionListener implements ButtonClickedListener {
             addIfMissing(model.getNoTimeParticipants(), aUserInAServer);
     }
 
-    private void addIfMissing(List<MemberDisplay> list, AUserInAServer aUserInAServer) {
-        if(list.stream().noneMatch(memberDisplay -> memberDisplay.getUserId().equals(aUserInAServer.getUserReference().getId()))) {
-            list.add(MemberDisplay.fromAUserInAServer(aUserInAServer));
+    private void addIfMissing(List<MemberDisplay> list, Member aUserInAServer) {
+        if(list.stream().noneMatch(memberDisplay -> memberDisplay.getUserId().equals(aUserInAServer.getIdLong()))) {
+            list.add(MemberDisplay.fromMember(aUserInAServer));
         }
     }
 

@@ -103,18 +103,26 @@ public class MeetupConfirmationListener implements ButtonClickedListener {
         String noButtonId = componentService.generateComponentId();
         String maybeButtonId = componentService.generateComponentId();
         String noTimeButtonId = componentService.generateComponentId();
-        MeetupMessageModel messageModel = meetupServiceBean.getMeetupMessageModel(meetup);
-        messageModel.setYesId(yesButtonId);
-        messageModel.setNoId(noButtonId);
-        messageModel.setMaybeId(maybeButtonId);
-        messageModel.setNoTimeId(noTimeButtonId);
+        Long meetupId = payload.getMeetupId();
+        Long serverId = payload.getGuildId();
         meetup.setYesButtonId(yesButtonId);
         meetup.setMaybeButtonId(maybeButtonId);
         meetup.setNoTimeButtonId(noTimeButtonId);
         meetup.setNotInterestedButtonId(noButtonId);
+        meetupServiceBean.getMeetupMessageModel(meetup).thenAccept(messageModel -> {
+            self.postMeetupMessage(model, messageModel, yesButtonId, noButtonId, maybeButtonId, noTimeButtonId, meetupId, serverId);
+        });
+        return ButtonClickedListenerResult.ACKNOWLEDGED;
+    }
+
+    @Transactional
+    public void postMeetupMessage(ButtonClickedListenerModel model, MeetupMessageModel messageModel, String yesButtonId, String noButtonId,
+                                  String maybeButtonId, String noTimeButtonId, Long meetupId, Long serverId) {
+        messageModel.setYesId(yesButtonId);
+        messageModel.setNoId(noButtonId);
+        messageModel.setMaybeId(maybeButtonId);
+        messageModel.setNoTimeId(noTimeButtonId);
         messageModel.setCancelled(false);
-        Long meetupId = payload.getMeetupId();
-        Long serverId = payload.getGuildId();
         MessageToSend messageToSend = meetupServiceBean.getMeetupMessage(messageModel, model.getServerId());
         List<CompletableFuture<Message>> messageFutures = channelService.sendMessageToSendToChannel(messageToSend, model.getEvent().getMessageChannel());
         FutureUtils.toSingleFutureGeneric(messageFutures).thenAccept(unused -> {
@@ -129,7 +137,6 @@ public class MeetupConfirmationListener implements ButtonClickedListener {
             log.error("Failed to send meetup message for meetup {}.", meetupId, throwable);
             return null;
         });
-        return ButtonClickedListenerResult.ACKNOWLEDGED;
     }
 
     private void cleanupConfirmationMessagePayloads(MeetupConfirmationPayload payload) {

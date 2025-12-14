@@ -1,19 +1,18 @@
 <#include "format_instant">
 {
+    <#macro display_user member_to_display><#if member_to_display.name??>${member_to_display.name}<#else>${member_to_display.memberMention}</#if></#macro>
     "components": [
         {
             "type": "textDisplay",
             <#assign roleMention="<@&371419588619141121>"/>
             "content": "<#if cancelled>~~</#if>${roleMention?json_string} ${topic?json_string} - <@safe_include "meetup_message_id_display"/><#if cancelled>~~</#if>"
         },
-        <#if description?has_content>
         {
-            <#assign descriptionText>${description?json_string}</#assign>
-            <#assign organizerText>${organizer.memberMention}</#assign>
+            <#assign descriptionText><#if description?has_content>${description?json_string}<#else><@safe_include "meetup_description_no_description"/></#if></#assign>
+            <#assign organizerText><@display_user member_to_display=organizer/></#assign>
             "type": "textDisplay",
             "content": "<#if cancelled>~~</#if><@safe_include "meetup_description_component"/><#if cancelled>~~</#if>"
         },
-        </#if>
         {
             <#assign time><@format_instant_long_date_time instant=meetupTime/></#assign>
             <#assign timeRelative><@format_instant_relative instant=meetupTime/></#assign>
@@ -54,10 +53,10 @@
                 }
             }
         </#macro>
-        <#assign participantsText> (${participants?size}) <#list participants as member>${member.memberMention}<#sep>, </#sep><#else><#include "meetup_message_no_member"></#list></#assign>
-        <#assign maybeParticipantsText> (${maybeParticipants?size}) <#list maybeParticipants as member>${member.memberMention}<#sep>, </#sep><#else><#include "meetup_message_no_member"></#list></#assign>
-        <#assign noTimeParticipantsText> (${noTimeParticipants?size}) <#list noTimeParticipants as member>${member.memberMention}<#sep>, </#sep><#else><#include "meetup_message_no_member"></#list></#assign>
-        <#assign declinedParticipantsText> (${declinedParticipants?size}) <#list declinedParticipants as member>${member.memberMention}<#sep>, </#sep><#else><#include "meetup_message_no_member"></#list></#assign>
+        <#assign participantsText> (${participants?size}) <#list participants as member><@display_user member_to_display=member/><#sep>, </#sep><#else><#include "meetup_message_no_member"></#list></#assign>
+        <#assign maybeParticipantsText> (${maybeParticipants?size}) <#list maybeParticipants as member><@display_user member_to_display=member/><#sep>, </#sep><#else><#include "meetup_message_no_member"></#list></#assign>
+        <#assign noTimeParticipantsText> (${noTimeParticipants?size}) <#list noTimeParticipants as member><@display_user member_to_display=member/><#sep>, </#sep><#else><#include "meetup_message_no_member"></#list></#assign>
+        <#assign declinedParticipantsText> (${declinedParticipants?size}) <#list declinedParticipants as member><@display_user member_to_display=member/><#sep>, </#sep><#else><#include "meetup_message_no_member"></#list></#assign>
         ,<@decision_component yesId "success" "meetup_message_yes_button_label" "meetup_user_display_participants" participantsText/>
         ,<@decision_component maybeId "secondary" "meetup_message_maybe_button_label" "meetup_user_display_maybe_participants" maybeParticipantsText/>
         ,<@decision_component noId "danger" "meetup_message_no_button_label" "meetup_user_display_declined_participants" declinedParticipantsText/>

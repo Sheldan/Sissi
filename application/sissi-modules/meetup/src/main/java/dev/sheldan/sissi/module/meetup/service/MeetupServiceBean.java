@@ -10,6 +10,7 @@ import dev.sheldan.abstracto.core.service.*;
 import dev.sheldan.abstracto.core.service.management.ServerManagementService;
 import dev.sheldan.abstracto.core.templating.model.MessageToSend;
 import dev.sheldan.abstracto.core.templating.service.TemplateService;
+import dev.sheldan.abstracto.core.utils.CompletableFutureList;
 import dev.sheldan.abstracto.core.utils.FileService;
 import dev.sheldan.abstracto.core.utils.FutureUtils;
 import dev.sheldan.abstracto.scheduling.model.JobParameters;
@@ -32,6 +33,8 @@ import dev.sheldan.sissi.module.meetup.service.management.MeetupComponentManagem
 import dev.sheldan.sissi.module.meetup.service.management.MeetupManagementServiceBean;
 import dev.sheldan.sissi.module.meetup.service.management.MeetupParticipatorManagementServiceBean;
 import lombok.extern.slf4j.Slf4j;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.MessageChannel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +51,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Component
@@ -109,8 +114,16 @@ public class MeetupServiceBean {
 
     @Autowired
     private MeetupComponentManagementServiceBean meetupComponentManagementServiceBean;
+
+    @Autowired
+    private MemberService memberService;
+
     private static final String ICS_TIME_STAMP_FORMAT = "yMMdd'T'kkmmss'Z'";
+    private static final ZoneId UTC = ZoneId.of("UTC");
     private static final DateTimeFormatter ICS_DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern(ICS_TIME_STAMP_FORMAT);
+    private static final Predicate<MeetupParticipant> MAYBE_OR_YES_PARTICIPATOR =  meetupParticipator ->
+            meetupParticipator.getDecision().equals(MeetupDecision.MAYBE) ||
+            meetupParticipator.getDecision().equals(MeetupDecision.YES);
 
     public void storeMeetupConfirmation(MeetupConfirmationModel model) {
         AServer server = serverManagementService.loadServer(model.getGuildId());
@@ -142,11 +155,11 @@ public class MeetupServiceBean {
     }
 
     private MeetupIcsModel getMeetupICSModel(Meetup meetup) {
-        ZonedDateTime startTime = meetup.getMeetupTime().atZone(ZoneId.of("UTC"));
-        ZonedDateTime endTime = meetup.getMeetupTime().plus(1, ChronoUnit.HOURS).atZone(ZoneId.of("UTC"));
+        ZonedDateTime startTime = meetup.getMeetupTime().atZone(UTC);
+        ZonedDateTime endTime = meetup.getMeetupTime().plus(1, ChronoUnit.HOURS).atZone(UTC);
         String icsFormattedStartTime = startTime.format(ICS_DATE_TIME_FORMATTER);
         String icsFormattedEndTime = endTime.format(ICS_DATE_TIME_FORMATTER);
-        String icsFormattedMeetupCreationTime = Instant.now().atZone(ZoneId.of("UTC"))
+        String icsFormattedMeetupCreationTime = Instant.now().atZone(UTC)
                 .format(ICS_DATE_TIME_FORMATTER);
         boolean attachIcsFile = featureModeService.featureModeActive(MeetupFeatureDefinition.MEETUP, meetup.getServer().getId(), MeetupFeatureMode.ATTACH_ICS_FILE);
         return MeetupIcsModel
@@ -158,26 +171,36 @@ public class MeetupServiceBean {
                 .build();
     }
 
-    public MeetupMessageModel getMeetupMessageModel(Meetup meetup) {
+    public CompletableFuture<MeetupMessageModel> getMeetupMessageModel(Meetup meetup) {
         List<MeetupParticipant> allParticipants = meetup.getParticipants();
-        List<MeetupParticipant> participating = allParticipants
+        Long serverId = meetup.getServer().getId();
+        Function<MeetupParticipant, Long> mapToUserId = (p) -> p.getParticipator().getUserReference().getId();
+        List<Long> participating = allParticipants
                 .stream()
                 .filter(meetupParticipator -> meetupParticipator.getDecision().equals(MeetupDecision.YES))
-                .collect(Collectors.toList());
-        List<MeetupParticipant> maybe = allParticipants
+                .map(mapToUserId)
+                .toList();
+        List<Long> maybe = allParticipants
                 .stream()
                 .filter(meetupParticipator -> meetupParticipator.getDecision().equals(MeetupDecision.MAYBE))
-                .collect(Collectors.toList());
-        List<MeetupParticipant> notParticipating = allParticipants
+                .map(mapToUserId)
+                .toList();
+        List<Long> notParticipating = allParticipants
                 .stream()
                 .filter(meetupParticipator -> meetupParticipator.getDecision().equals(MeetupDecision.NO))
-                .collect(Collectors.toList());
-        List<MeetupParticipant> notTimeParticipating = allParticipants
+                .map(mapToUserId)
+                .toList();
+        List<Long> notTimeParticipating = allParticipants
                 .stream()
                 .filter(meetupParticipator -> meetupParticipator.getDecision().equals(MeetupDecision.NO_TIME))
-                .collect(Collectors.toList());
+                .map(mapToUserId)
+                .toList();
         String rawLocation = java.net.URLDecoder.decode(meetup.getLocation(), StandardCharsets.UTF_8);
-        return MeetupMessageModel
+        List<Long> participantIds = allParticipants
+                .stream()
+                .map(mapToUserId)
+                .collect(Collectors.toList());
+        MeetupMessageModel.MeetupMessageModelBuilder builder = MeetupMessageModel
                 .builder()
                 .description(meetup.getDescription())
                 .topic(meetup.getTopic())
@@ -189,20 +212,63 @@ public class MeetupServiceBean {
                 .noId(meetup.getNotInterestedButtonId())
                 .meetupTime(meetup.getMeetupTime())
                 .meetupId(meetup.getId().getId())
-                .participants(getMemberDisplays(participating))
-                .declinedParticipants(getMemberDisplays(notParticipating))
-                .noTimeParticipants(getMemberDisplays(notTimeParticipating))
-                .maybeParticipants(getMemberDisplays(maybe))
                 .cancelled(meetup.getState().equals(MeetupState.CANCELLED))
-                .organizer(MemberDisplay.fromAUserInAServer(meetup.getOrganizer()))
-                .meetupIcsModel(getMeetupICSModel(meetup))
-                .build();
+                .meetupIcsModel(getMeetupICSModel(meetup));
+        Long organizerId = meetup.getOrganizer().getUserReference().getId();
+        participantIds.add(organizerId);
+        // only supports 100 members at once, should be enough
+        CompletableFuture<List<Member>> membersInServerAsync = memberService.getMembersInServerAsync(serverId, participantIds);
+        return membersInServerAsync.thenCompose(members -> {
+            Set<Long> foundMembers = members
+                    .stream()
+                    .map(Member::getIdLong)
+                    .collect(Collectors.toSet());
+            Set<Long> participatingMembers = new HashSet<>(participantIds);
+            participatingMembers.removeAll(foundMembers);
+            CompletableFuture<List<User>> userLoading = new CompletableFuture<>();
+            if(!participatingMembers.isEmpty()) {
+                CompletableFutureList<User> userFutureList = userService.retrieveUsers(new ArrayList<>(participatingMembers));
+                userFutureList.getMainFuture().thenAccept(unused -> {
+                    userLoading.complete(userFutureList.getObjects());
+                });
+            } else {
+                userLoading.complete(new ArrayList<>());
+            }
+
+            return userLoading.thenApply(users ->
+                    builder
+                        .participants(getMemberDisplays(members, users, participating, serverId))
+                        .declinedParticipants(getMemberDisplays(members, users, notParticipating, serverId))
+                        .noTimeParticipants(getMemberDisplays(members, users, notTimeParticipating, serverId))
+                        .maybeParticipants(getMemberDisplays(members, users, maybe, serverId))
+                        .organizer(getMemberDisplays(members, users, Arrays.asList(organizerId), serverId).get(0))
+                    .build());
+        });
     }
 
-    private List<MemberDisplay> getMemberDisplays(List<MeetupParticipant> participants) {
+    private List<MemberDisplay> getMemberDisplays(List<Member> members, List<User> users, List<Long> participants, Long serverId) {
+        Map<Long, Member> memberMap = members.stream()
+                .collect(Collectors.toMap(Member::getIdLong, Function.identity()));
+        Map<Long, User> userMap = users.stream()
+                .collect(Collectors.toMap(User::getIdLong, Function.identity()));
         return participants
                 .stream()
-                .map(meetupParticipator -> MemberDisplay.fromAUserInAServer(meetupParticipator.getParticipator()))
+                .map(meetupParticipator -> {
+                    if(memberMap.containsKey(meetupParticipator)) {
+                        return MemberDisplay.fromMember(memberMap.get(meetupParticipator));
+                    } else if(userMap.containsKey(meetupParticipator)) {
+                        User user = userMap.get(meetupParticipator);
+                        // a user display would be more appropriate, but I dont want to deal with the implications
+                        return MemberDisplay
+                                .builder()
+                                .serverId(serverId)
+                                .userId(user.getIdLong())
+                                .name(user.getEffectiveName())
+                                .avatarUrl(user.getEffectiveAvatarUrl())
+                                .build();
+                    }
+                    return MemberDisplay.fromIds(serverId, meetupParticipator);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -214,40 +280,43 @@ public class MeetupServiceBean {
         Long serverId = meetup.getServer().getId();
         Long meetupId = meetup.getId().getId();
         GuildMessageChannel channel = channelService.getMessageChannelFromServer(serverId, meetup.getMeetupChannel().getId());
-        MeetupMessageModel model = getMeetupMessageModel(meetup);
         List<String> componentPayloads = meetup
                 .getMeetupComponents()
                 .stream()
                 .map(meetupComponent -> meetupComponent.getId().getComponentId())
                 .collect(Collectors.toList());
-        model.setCancelled(true);
-        MessageToSend meetupMessage = getMeetupMessage(model, serverId);
-        return messageService.editMessageInChannel(channel, meetupMessage, meetup.getMessageId())
-                .thenAccept(unused -> self.notifyParticipants(meetupId, serverId))
-                .thenAccept(unused -> self.cleanupMeetup(meetupId, serverId, componentPayloads));
+        Long meetupMessageId = meetup.getMessageId();
+        return getMeetupMessageModel(meetup).thenCompose(model -> {
+            model.setCancelled(true);
+            MessageToSend meetupMessage = getMeetupMessage(model, serverId);
+            return messageService.editMessageInChannel(channel, meetupMessage, meetupMessageId)
+                    .thenAccept(unused -> self.notifyParticipants(meetupId, serverId))
+                    .thenAccept(unused -> self.cleanupMeetup(meetupId, serverId, componentPayloads));
+        });
     }
 
     @Transactional
     public void notifyParticipants(Long meetupId, Long serverId) {
         Meetup meetup = meetupManagementServiceBean.getMeetup(meetupId, serverId);
-        MeetupMessageModel model = getMeetupMessageModel(meetup);
+        List<Long> participatorIds = getYesOrMaybeParticipants(meetup);
+        getMeetupMessageModel(meetup).thenAccept(model -> {
+            self.sendNotifications(meetupId, serverId, model, participatorIds);
+        });
+
+    }
+
+    @Transactional
+    public void sendNotifications(Long meetupId, Long serverId, MeetupMessageModel model, List<Long> participatorIds) {
         MessageToSend messageToSend = templateService.renderEmbedTemplate(MEETUP_CANCELLATION_TEMPLATE, model, serverId);
-        meetup
-                .getParticipants()
-                .stream()
-                .filter(meetupParticipator ->
-                                meetupParticipator.getDecision().equals(MeetupDecision.MAYBE) ||
-                                meetupParticipator.getDecision().equals(MeetupDecision.YES))
-                .forEach(meetupParticipator -> {
-                    Long userId = meetupParticipator.getParticipator().getUserReference().getId();
-                    userService.retrieveUserForId(userId)
-                            .thenCompose(user -> messageService.sendMessageToSendToUser(user, messageToSend))
-                            .thenAccept(message -> log.info("Notified user {} about cancellation of meetup {} in server {}.", userId, meetupId, serverId))
-                            .exceptionally(throwable -> {
-                                log.warn("Failed to notify user {} about cancellation of meetup {} in server {}.", userId, meetupId, serverId);
-                                return null;
-                            });
-                });
+        participatorIds.forEach(userId -> {
+            userService.retrieveUserForId(userId)
+                    .thenCompose(user -> messageService.sendMessageToSendToUser(user, messageToSend))
+                    .thenAccept(message -> log.info("Notified user {} about cancellation of meetup {} in server {}.", userId, meetupId, serverId))
+                    .exceptionally(throwable -> {
+                        log.warn("Failed to notify user {} about cancellation of meetup {} in server {}.", userId, meetupId, serverId);
+                        return null;
+                    });
+        });
     }
 
     @Transactional
@@ -318,20 +387,29 @@ public class MeetupServiceBean {
     @Transactional
     public void remindParticipants(Long meetupId, Long serverId) {
         Meetup meetup = meetupManagementServiceBean.getMeetup(meetupId, serverId);
-        MeetupMessageModel model = getMeetupMessageModel(meetup);
+        List<Long> participatorIds = getYesOrMaybeParticipants(meetup);
+        getMeetupMessageModel(meetup).thenAccept(model -> {
+            self.sendMeetupReminderMessages(meetupId, serverId, model, participatorIds);
+        });
+    }
+
+    @Transactional
+    public void sendMeetupReminderMessages(Long meetupId, Long serverId, MeetupMessageModel model, List<Long> participatorIds) {
         MessageToSend messageToSend = templateService.renderEmbedTemplate(MEETUP_REMINDER_TEMPLATE, model, serverId);
-        meetup
+        participatorIds.forEach(userId -> {
+            userService.retrieveUserForId(userId)
+                    .thenCompose(user -> messageService.sendMessageToSendToUser(user, messageToSend))
+                    .thenAccept(message -> log.info("Notified user {} about incoming meetup {} in server {}.", userId, meetupId, serverId));
+        });
+    }
+
+    private List<Long> getYesOrMaybeParticipants(Meetup meetup) {
+        return meetup
                 .getParticipants()
                 .stream()
-                .filter(meetupParticipator ->
-                        meetupParticipator.getDecision().equals(MeetupDecision.MAYBE) ||
-                        meetupParticipator.getDecision().equals(MeetupDecision.YES))
-                .forEach(meetupParticipator -> {
-                    Long userId = meetupParticipator.getParticipator().getUserReference().getId();
-                    userService.retrieveUserForId(userId)
-                            .thenCompose(user -> messageService.sendMessageToSendToUser(user, messageToSend))
-                            .thenAccept(message -> log.info("Notified user {} about incoming meetup {} in server {}.", userId, meetupId, serverId));
-                });
+                .filter(MAYBE_OR_YES_PARTICIPATOR)
+                .map(meetupParticipant -> meetupParticipant.getParticipator().getUserReference().getId())
+                .toList();
     }
 
     @Transactional
@@ -376,11 +454,12 @@ public class MeetupServiceBean {
 
         Long serverId = meetup.getServer().getId();
 
+        Long meetupMessageId = meetup.getMessageId();
         ServerChannelMessage meetupMessage = ServerChannelMessage
                 .builder()
                 .serverId(serverId)
                 .channelId(meetup.getMeetupChannel().getId())
-                .messageId(meetup.getMessageId())
+                .messageId(meetupMessageId)
                 .build();
         MeetupTimeChangedNotificationModel notificationModel = MeetupTimeChangedNotificationModel
                 .builder()
@@ -418,18 +497,24 @@ public class MeetupServiceBean {
                 .toList();
         meetup
                 .getParticipants().removeIf(meetupParticipant -> userInServerIds.contains(meetupParticipant.getParticipator().getUserInServerId()));
-        MeetupMessageModel meetupMessageModel = getMeetupMessageModel(meetup);
+        Long meetupChannelId = meetup.getMeetupChannel().getId();
+        return getMeetupMessageModel(meetup).thenCompose(meetupMessageModel ->
+                self.changeMeetupTimeInternal(meetupMessageModel, serverId, meetupChannelId, meetupMessageId, meetupId));
+
+    }
+
+    @Transactional
+    public CompletableFuture<Void> changeMeetupTimeInternal(MeetupMessageModel meetupMessageModel, Long serverId, Long meetupChannelId, Long meetupMessageId, Long meetupId) {
         meetupMessageModel.setParticipants(new ArrayList<>());
         meetupMessageModel.setMaybeParticipants(new ArrayList<>());
         meetupMessageModel.setNoTimeParticipants(new ArrayList<>());
-
         MessageToSend updatedMeetupMessage = getMeetupMessage(meetupMessageModel, serverId);
-        GuildMessageChannel meetupChannel = channelService.getMessageChannelFromServer(serverId, meetup.getMeetupChannel().getId());
-        return channelService.editMessageInAChannelFuture(updatedMeetupMessage, meetupChannel, meetup.getMessageId())
-                .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId))
+        GuildMessageChannel meetupChannel = channelService.getMessageChannelFromServer(serverId, meetupChannelId);
+        return channelService.editMessageInAChannelFuture(updatedMeetupMessage, meetupChannel, meetupMessageId)
+                .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetupId, meetupChannelId, serverId))
                 .thenAccept(unused -> fileService.safeDeleteIgnoreException(updatedMeetupMessage.getAttachedFiles().get(0).getFile()))
                 .exceptionally(throwable -> {
-                    log.info("Failed to update message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId, throwable);
+                    log.info("Failed to update message of meetup {} in channel {} in server {}.", meetupId, meetupChannelId, serverId, throwable);
                     return null;
                 });
     }
@@ -456,14 +541,21 @@ public class MeetupServiceBean {
     private CompletableFuture<Void> updateMeetupMessage(Meetup meetup) {
         Long meetupId = meetup.getId().getId();
         Long serverId = meetup.getId().getServerId();
-        MeetupMessageModel meetupMessageModel = getMeetupMessageModel(meetup);
+        Long meetupChannelId = meetup.getMeetupChannel().getId();
+        Long meetupMessageId = meetup.getMessageId();
+        return getMeetupMessageModel(meetup).thenCompose(meetupMessageModel ->
+                self.updateMessageInternal(meetupMessageModel, serverId, meetupChannelId, meetupMessageId, meetupId));
+    }
+
+    @Transactional
+    public CompletableFuture<Void> updateMessageInternal(MeetupMessageModel meetupMessageModel, Long serverId, Long meetupChannelId, Long meetupMessageId, Long meetupId) {
         MessageToSend updatedMeetupMessage = getMeetupMessage(meetupMessageModel, serverId);
-        GuildMessageChannel meetupChannel = channelService.getMessageChannelFromServer(serverId, meetup.getMeetupChannel().getId());
-        return channelService.editMessageInAChannelFuture(updatedMeetupMessage, meetupChannel, meetup.getMessageId())
-                .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId))
+        GuildMessageChannel meetupChannel = channelService.getMessageChannelFromServer(serverId, meetupChannelId);
+        return channelService.editMessageInAChannelFuture(updatedMeetupMessage, meetupChannel, meetupMessageId)
+                .thenAccept(message -> log.info("Updated message of meetup {} in channel {} in server {}.", meetupId, meetupChannelId, serverId))
                 .thenAccept(unused -> fileService.safeDeleteIgnoreException(updatedMeetupMessage.getAttachedFiles().get(0).getFile()))
                 .exceptionally(throwable -> {
-                    log.info("Failed to update message of meetup {} in channel {} in server {}.", meetupId, meetup.getMeetupChannel().getId(), serverId, throwable);
+                    log.info("Failed to update message of meetup {} in channel {} in server {}.", meetupId, meetupChannelId, serverId, throwable);
                     return null;
                 });
     }

@@ -42,7 +42,14 @@ public class MeetupChangeTimeConfirmationListener implements ButtonClickedListen
         }
         if(model.getEvent().getComponentId().equals(payload.getConfirmationId())) {
             Meetup meetup = meetupManagementServiceBean.getMeetup(payload.getMeetupId(), payload.getGuildId());
-            meetupServiceBean.changeMeetupTimeAndNotifyParticipants(meetup, Instant.ofEpochSecond(payload.getNewTime()));
+            Long meetupId = meetup.getId().getId();
+            Long serverId = meetup.getId().getServerId();
+            meetupServiceBean.changeMeetupTimeAndNotifyParticipants(meetup, Instant.ofEpochSecond(payload.getNewTime())).thenAccept(unused -> {
+                log.info("Successfully changed time of meetup {} in server {}.", meetupId, serverId);
+            }).exceptionally(throwable -> {
+                log.error("Failed to update time of meetup {} in server {}.", meetupId, serverId);
+                return null;
+            });
             messageService.deleteMessage(model.getEvent().getMessage());
             cleanupConfirmationMessagePayloads(payload);
         } else if(model.getEvent().getComponentId().equals(payload.getCancelId())) {
