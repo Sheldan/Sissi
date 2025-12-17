@@ -5,19 +5,17 @@ import dev.sheldan.abstracto.core.service.PostTargetService;
 import dev.sheldan.abstracto.core.service.management.UserInServerManagementService;
 import dev.sheldan.abstracto.core.templating.model.MessageToSend;
 import dev.sheldan.abstracto.core.templating.service.TemplateService;
-import dev.sheldan.abstracto.core.utils.CompletableFutureList;
+import dev.sheldan.abstracto.core.utils.FutureUtils;
 import dev.sheldan.sissi.module.miepscord.weeklytext.config.WeeklyTextPostTarget;
 import dev.sheldan.sissi.module.miepscord.weeklytext.model.database.TextItem;
 import dev.sheldan.sissi.module.miepscord.weeklytext.model.template.TextItemPostModel;
 import dev.sheldan.sissi.module.miepscord.weeklytext.service.management.TextItemServiceManagementBean;
 import lombok.extern.slf4j.Slf4j;
 import net.dv8tion.jda.api.entities.Member;
-import net.dv8tion.jda.api.entities.Message;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -66,9 +64,7 @@ public class TextItemServiceBean {
                 .text(textItem.getText())
                 .build();
         MessageToSend messageToSend = templateService.renderEmbedTemplate(WEEKLY_TEXT_ITEM_POST_TEMPLATE, model, serverId);
-        List<CompletableFuture<Message>> futures = postTargetService.sendEmbedInPostTarget(messageToSend, WeeklyTextPostTarget.TEXT_ITEM_TARGET, serverId);
-        CompletableFutureList<Message> futureList = new CompletableFutureList<>(futures);
-        return futureList.getMainFuture().thenAccept(unused -> {
+        return FutureUtils.toSingleFutureGenericList(postTargetService.sendEmbedInPostTarget(messageToSend, WeeklyTextPostTarget.TEXT_ITEM_TARGET, serverId)).thenAccept(unused -> {
             self.setTexItemToDone(textItemId);
         });
     }

@@ -87,6 +87,7 @@ public class DonationService {
     private DonationService self;
 
     private static final String DEBRA_DONATION_NOTIFICATION_TEMPLATE_KEY = "debra_donation_notification";
+    private static final String DEBRA_DONATION_PING_NOTIFICATION_TEMPLATE_KEY = "debra_donation_notification_ping_notification";
 
     private static final String DEBRA_INFO_BUTTON_MESSAGE_TEMPLATE_KEY = "debraInfoButton";
     public static final String DEBRA_INFO_BUTTON_ORIGIN = "DEBRA_INFO_BUTTON";
@@ -286,10 +287,9 @@ public class DonationService {
                 .totalDonationAmount(donationInfoModel.getTotalAmount())
                 .build();
         MessageToSend messageToSend = templateService.renderEmbedTemplate(DEBRA_DONATION_NOTIFICATION_TEMPLATE_KEY, model, targetServerId);
-        List<CompletableFuture<Message>> firstMessage = postTargetService.sendEmbedInPostTarget(messageToSend, DebraPostTarget.DEBRA_DONATION_NOTIFICATION, targetServerId);
-        List<CompletableFuture<Message>> secondMessage = postTargetService.sendEmbedInPostTarget(messageToSend, DebraPostTarget.DEBRA_DONATION_NOTIFICATION2, targetServerId);
-        firstMessage.addAll(secondMessage);
-        return FutureUtils.toSingleFutureGeneric(firstMessage);
+        MessageToSend pingMessageToSend = templateService.renderEmbedTemplate(DEBRA_DONATION_PING_NOTIFICATION_TEMPLATE_KEY, model, targetServerId);
+        return FutureUtils.toSingleFutureGenericList(postTargetService.sendEmbedInPostTarget(List.of(pingMessageToSend, messageToSend),
+                DebraPostTarget.DEBRA_DONATION_NOTIFICATION, targetServerId));
     }
 
     public CompletableFuture<Void> sendDebraInfoButtonMessage(GuildMessageChannel guildMessageChannel) {
