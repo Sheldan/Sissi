@@ -18,8 +18,8 @@
     <properties>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
-        <abstracto.version>1.6.19-SNAPSHOT</abstracto.version>
-        <abstracto.templates.version>1.4.64</abstracto.templates.version>
+        <abstracto.version>1.6.19</abstracto.version>
+        <abstracto.templates.version>1.4.65</abstracto.templates.version>
         <apache-jena.version>4.9.0</apache-jena.version>
         <rssreader.version>3.5.0</rssreader.version>
         <jsoup.version>1.21.2</jsoup.version>
