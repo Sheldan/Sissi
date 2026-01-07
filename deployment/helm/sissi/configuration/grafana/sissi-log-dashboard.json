@@ -20,8 +20,8 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
+    "id": 12,
     "links": [],
-    "liveNow": false,
     "panels": [
       {
         "datasource": {
@@ -29,6 +29,10 @@
           "uid": "loki"
         },
         "description": "Display logs and search for logs",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
         "gridPos": {
           "h": 13,
           "w": 24,
@@ -38,6 +42,7 @@
         "id": 4,
         "options": {
           "dedupStrategy": "none",
+          "enableInfiniteScrolling": false,
           "enableLogDetails": true,
           "prettifyLogMessage": false,
           "showCommonLabels": false,
@@ -46,6 +51,7 @@
           "sortOrder": "Ascending",
           "wrapLogMessage": true
         },
+        "pluginVersion": "12.1.1",
         "targets": [
           {
             "datasource": {
@@ -68,6 +74,10 @@
           "uid": "loki"
         },
         "description": "Any line on level ERROR",
+        "fieldConfig": {
+          "defaults": {},
+          "overrides": []
+        },
         "gridPos": {
           "h": 8,
           "w": 12,
@@ -77,6 +87,7 @@
         "id": 2,
         "options": {
           "dedupStrategy": "none",
+          "enableInfiniteScrolling": false,
           "enableLogDetails": true,
           "prettifyLogMessage": false,
           "showCommonLabels": false,
@@ -85,6 +96,7 @@
           "sortOrder": "Ascending",
           "wrapLogMessage": true
         },
+        "pluginVersion": "12.1.1",
         "targets": [
           {
             "datasource": {
@@ -113,11 +125,13 @@
               "mode": "palette-classic"
             },
             "custom": {
+              "axisBorderShow": false,
               "axisCenteredZero": false,
               "axisColorMode": "text",
               "axisLabel": "",
               "axisPlacement": "auto",
               "barAlignment": 0,
+              "barWidthFactor": 0.6,
               "drawStyle": "line",
               "fillOpacity": 0,
               "gradientMode": "none",
@@ -149,7 +163,7 @@
               "steps": [
                 {
                   "color": "green",
-                  "value": null
+                  "value": 0
                 },
                 {
                   "color": "red",
@@ -175,10 +189,12 @@
             "showLegend": true
           },
           "tooltip": {
+            "hideZeros": false,
             "mode": "single",
             "sort": "none"
           }
         },
+        "pluginVersion": "12.1.1",
         "targets": [
           {
             "datasource": {
@@ -195,20 +211,18 @@
         "type": "timeseries"
       }
     ],
+    "preload": false,
     "refresh": "",
-    "schemaVersion": 38,
-    "style": "dark",
+    "schemaVersion": 41,
     "tags": [],
     "templating": {
       "list": [
         {
           "current": {
-            "selected": false,
             "text": "",
             "value": ""
           },
           "description": "What to search in the logs",
-          "hide": 0,
           "name": "logFilter",
           "options": [
             {
@@ -218,7 +232,6 @@
             }
           ],
           "query": "",
-          "skipUrlSync": false,
           "type": "textbox"
         }
       ]
@@ -231,7 +244,7 @@
     "timezone": "",
     "title": "Sissi Logs",
     "uid": "a5b429af-860c-4438-a575-24bed6dcba09",
-    "version": 2,
+    "version": 3,
     "weekStart": ""
   },
   "overwrite": true
