@@ -30,10 +30,6 @@ public class MeetupComponentManagementServiceBean {
         return meetupComponentRepository.save(component);
     }
 
-    public void deleteComponent(MeetupComponent meetupComponent) {
-        meetupComponentRepository.delete(meetupComponent);
-    }
-
     public void deleteAllComponents(Meetup meetup) {
         meetupComponentRepository.deleteAll(meetup.getMeetupComponents());
     }

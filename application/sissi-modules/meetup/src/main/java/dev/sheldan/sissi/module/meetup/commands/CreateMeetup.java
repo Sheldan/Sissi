@@ -23,6 +23,7 @@ import dev.sheldan.abstracto.core.service.management.UserInServerManagementServi
 import dev.sheldan.abstracto.core.templating.model.MessageToSend;
 import dev.sheldan.abstracto.core.templating.service.TemplateService;
 import dev.sheldan.abstracto.core.utils.FutureUtils;
+import dev.sheldan.abstracto.core.utils.ParseUtils;
 import dev.sheldan.sissi.module.meetup.config.MeetupFeatureDefinition;
 import dev.sheldan.sissi.module.meetup.config.MeetupSlashCommandNames;
 import dev.sheldan.sissi.module.meetup.model.command.MeetupConfirmationModel;
@@ -114,7 +115,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
 
     @Override
     public CompletableFuture<CommandResult> executeSlash(SlashCommandInteractionEvent event) {
-        Integer time = slashCommandParameterService.getCommandOption(MEETUP_TIME_PARAMETER, event, Long.class, Integer.class);
+        String time = slashCommandParameterService.getCommandOption(MEETUP_TIME_PARAMETER, event, Instant.class, String.class);
         String topic = slashCommandParameterService.getCommandOption(TOPIC_PARAMETER, event, String.class);
         String description;
         if(slashCommandParameterService.hasCommandOption(DESCRIPTION_PARAMETER, event)) {
@@ -129,7 +130,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
         } else {
             location = DEFAULT_LOCATION_STRING;
         }
-        Instant meetupTime = Instant.ofEpochSecond(time);
+        Instant meetupTime = ParseUtils.parseInstant(time);
         AUserInAServer organizer = userInServerManagementService.loadOrCreateUser(event.getMember());
         AChannel meetupChannel = channelManagementService.loadChannel(event.getChannel().getIdLong());
         Meetup meetup = meetupManagementServiceBean.createMeetup(meetupTime, topic, description, organizer, meetupChannel, location);

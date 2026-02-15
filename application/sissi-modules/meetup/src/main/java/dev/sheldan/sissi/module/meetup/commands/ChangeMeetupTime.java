@@ -5,7 +5,6 @@ import dev.sheldan.abstracto.core.command.condition.AbstractConditionableCommand
 import dev.sheldan.abstracto.core.command.config.CommandConfiguration;
 import dev.sheldan.abstracto.core.command.config.HelpInfo;
 import dev.sheldan.abstracto.core.command.config.Parameter;
-import dev.sheldan.abstracto.core.command.execution.CommandContext;
 import dev.sheldan.abstracto.core.command.execution.CommandResult;
 import dev.sheldan.abstracto.core.config.FeatureDefinition;
 import dev.sheldan.abstracto.core.interaction.ComponentService;
@@ -13,10 +12,7 @@ import dev.sheldan.abstracto.core.interaction.InteractionService;
 import dev.sheldan.abstracto.core.interaction.slash.SlashCommandConfig;
 import dev.sheldan.abstracto.core.interaction.slash.SlashCommandPrivilegeLevels;
 import dev.sheldan.abstracto.core.interaction.slash.parameter.SlashCommandParameterService;
-import dev.sheldan.abstracto.core.service.ChannelService;
-import dev.sheldan.abstracto.core.templating.model.MessageToSend;
-import dev.sheldan.abstracto.core.templating.service.TemplateService;
-import dev.sheldan.abstracto.core.utils.FutureUtils;
+import dev.sheldan.abstracto.core.utils.ParseUtils;
 import dev.sheldan.sissi.module.meetup.config.MeetupFeatureDefinition;
 import dev.sheldan.sissi.module.meetup.config.MeetupSlashCommandNames;
 import dev.sheldan.sissi.module.meetup.exception.MeetupPastTimeException;
@@ -57,44 +53,6 @@ public class ChangeMeetupTime extends AbstractConditionableCommand {
     @Autowired
     private MeetupServiceBean meetupServiceBean;
 
-    @Autowired
-    private ChannelService channelService;
-
-    @Autowired
-    private TemplateService templateService;
-
-    @Override
-    public CompletableFuture<CommandResult> executeAsync(CommandContext commandContext) {
-        List<Object> parameters = commandContext.getParameters().getParameters();
-        Long meetupId = (Long) parameters.get(0);
-        Meetup meetup = meetupManagementServiceBean.getMeetup(meetupId, commandContext.getGuild().getIdLong());
-        if(!meetup.getOrganizer().getUserReference().getId().equals(commandContext.getAuthor().getIdLong())) {
-            throw new NotMeetupOrganizerException();
-        }
-        Long newTimestamp = (Long) parameters.get(1);
-        Instant newMeetupTime = Instant.ofEpochSecond(newTimestamp);
-        if(newMeetupTime.isBefore(Instant.now())) {
-            throw new MeetupPastTimeException();
-        }
-        String confirmationId = componentService.generateComponentId();
-        String cancelId = componentService.generateComponentId();
-        MeetupChangeTimeConfirmationModel model = MeetupChangeTimeConfirmationModel
-                .builder()
-                .meetupTime(newMeetupTime)
-                .topic(meetup.getTopic())
-                .description(meetup.getDescription())
-                .userId(commandContext.getAuthor().getIdLong())
-                .guildId(commandContext.getGuild().getIdLong())
-                .meetupId(meetupId)
-                .confirmationId(confirmationId)
-                .cancelId(cancelId)
-                .build();
-        MessageToSend messageToSend = templateService.renderEmbedTemplate(CHANGE_MEETUP_TIME_CONFIRMATION, model, commandContext.getGuild().getIdLong());
-        return FutureUtils.toSingleFutureGeneric(channelService.sendMessageToSendToChannel(messageToSend, commandContext.getChannel()))
-                .thenAccept(unused -> meetupServiceBean.storeMeetupChangeTimeConfirmation(model))
-                .thenApply(unused -> CommandResult.fromSuccess());
-    }
-
     @Override
     public CompletableFuture<CommandResult> executeSlash(SlashCommandInteractionEvent event) {
         Long meetupId = slashCommandParameterService.getCommandOption(MEETUP_ID_PARAMETER, event, Integer.class).longValue();
@@ -102,8 +60,8 @@ public class ChangeMeetupTime extends AbstractConditionableCommand {
         if(!meetup.getOrganizer().getUserReference().getId().equals(event.getMember().getIdLong())) {
             throw new NotMeetupOrganizerException();
         }
-        Integer time = slashCommandParameterService.getCommandOption(MEETUP_NEW_TIMESTAMP_PARAMETER, event, Long.class, Integer.class);
-        Instant meetupTime = Instant.ofEpochSecond(time);
+        String time = slashCommandParameterService.getCommandOption(MEETUP_NEW_TIMESTAMP_PARAMETER, event, String.class, String.class);
+        Instant meetupTime = ParseUtils.parseInstant(time);
         if(meetupTime.isBefore(Instant.now())) {
             throw new MeetupPastTimeException();
         }
@@ -138,7 +96,7 @@ public class ChangeMeetupTime extends AbstractConditionableCommand {
                 .builder()
                 .templated(true)
                 .name(MEETUP_NEW_TIMESTAMP_PARAMETER)
-                .type(Long.class)
+                .type(Instant.class)
                 .build();
 
         List<Parameter> parameters = Arrays.asList(meetupIdParameter, newTimeStampParameter);
@@ -162,6 +120,7 @@ public class ChangeMeetupTime extends AbstractConditionableCommand {
                 .async(true)
                 .slashCommandConfig(slashCommandConfig)
                 .supportsEmbedException(true)
+                .slashCommandOnly(true)
                 .causesReaction(true)
                 .parameters(parameters)
                 .help(helpInfo)

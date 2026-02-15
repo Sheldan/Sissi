@@ -1,1 +1,1 @@
-New time of the meetup (https://www.unixtimestamp.com/)
+New time of the meetup (https://www.unixtimestamp.com/) or use @time: <time>
