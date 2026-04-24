@@ -16,7 +16,7 @@ public class MeetupMessageModel {
     private String description;
     private Instant meetupTime;
     private String location;
-    private String decodedLocation;
+    private String locationEncoded;
     private MemberDisplay organizer;
     private Long meetupId;
     private String yesId;

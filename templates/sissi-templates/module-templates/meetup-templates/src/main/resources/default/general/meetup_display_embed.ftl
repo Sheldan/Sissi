@@ -17,18 +17,22 @@
             <#assign time><@format_instant_long_date_time instant=meetupTime/></#assign>
             <#assign timeRelative><@format_instant_relative instant=meetupTime/></#assign>
 
-            <#if location?? && location != "%22%22">
+            <#if location?has_content>
             "type": "section",
             "components": [
                 {
                     "type": "textDisplay",
                     "content": "<@safe_include "meetup_display_time_component"/>"
+                },
+                {
+                    "type": "textDisplay",
+                    "content": "<@safe_include "meetup_message_location_button_label"/>: ${location?json_string}"
                 }
             ],
             "accessory": {
                 "type": "button",
                 "label": "<@safe_include "meetup_message_location_button_label"/>",
-                "url": "https://www.google.com/maps?q=${location?json_string}",
+                "url": "https://www.google.com/maps?q=${locationEncoded?json_string}",
                 "buttonStyle": "link"
             }
             <#else>

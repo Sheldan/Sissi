@@ -35,6 +35,8 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
@@ -76,7 +78,7 @@ public class CreateMeetup extends AbstractConditionableCommand {
     private static final String DESCRIPTION_PARAMETER = "description";
     private static final String LOCATION_PARAMETER = "location";
     private static final String CONFIRMATION_TEMPLATE = "createMeetup_confirmation";
-    private static final String DEFAULT_LOCATION_STRING = "\"\"";
+    private static final String DEFAULT_LOCATION_STRING = "";
 
     @Override
     public CompletableFuture<CommandResult> executeAsync(CommandContext commandContext) {
@@ -94,13 +96,14 @@ public class CreateMeetup extends AbstractConditionableCommand {
         Meetup meetup = meetupManagementServiceBean.createMeetup(meetupTime, meetupTopic, description, organizer, meetupChannel, DEFAULT_LOCATION_STRING);
         String confirmationId = componentService.generateComponentId();
         String cancelId = componentService.generateComponentId();
+        String locationEncoded = URLEncoder.encode(meetup.getLocation(), StandardCharsets.UTF_8);
         MeetupConfirmationModel model = MeetupConfirmationModel
                 .builder()
                 .meetupTime(meetupTime)
                 .guildId(commandContext.getGuild().getIdLong())
                 .description(description)
                 .topic(meetupTopic)
-                .location(meetup.getLocation())
+                .location(locationEncoded)
                 .confirmationId(confirmationId)
                 .cancelId(cancelId)
                 .meetupId(meetup.getId().getId())
@@ -136,13 +139,14 @@ public class CreateMeetup extends AbstractConditionableCommand {
         Meetup meetup = meetupManagementServiceBean.createMeetup(meetupTime, topic, description, organizer, meetupChannel, location);
         String confirmationId = componentService.generateComponentId();
         String cancelId = componentService.generateComponentId();
+        String locationEncoded = URLEncoder.encode(meetup.getLocation(), StandardCharsets.UTF_8);
         MeetupConfirmationModel model = MeetupConfirmationModel
                 .builder()
                 .meetupTime(meetupTime)
                 .guildId(event.getGuild().getIdLong())
                 .description(description)
                 .topic(topic)
-                .location(meetup.getLocation())
+                .location(locationEncoded)
                 .confirmationId(confirmationId)
                 .cancelId(cancelId)
                 .meetupId(meetup.getId().getId())

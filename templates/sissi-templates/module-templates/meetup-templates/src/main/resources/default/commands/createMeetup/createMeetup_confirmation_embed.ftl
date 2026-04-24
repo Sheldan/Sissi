@@ -2,7 +2,7 @@
 {
     "components": [
         {
-            <#assign hasLocation=location?? && location != "%22%22">
+            <#assign hasLocation=location?has_content>
             "type": "textDisplay",
             "content": "<#include "createMeetup_meetup_information">"
         },

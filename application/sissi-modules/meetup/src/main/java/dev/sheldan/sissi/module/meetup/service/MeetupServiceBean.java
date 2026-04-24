@@ -195,17 +195,17 @@ public class MeetupServiceBean {
                 .filter(meetupParticipator -> meetupParticipator.getDecision().equals(MeetupDecision.NO_TIME))
                 .map(mapToUserId)
                 .toList();
-        String rawLocation = java.net.URLDecoder.decode(meetup.getLocation(), StandardCharsets.UTF_8);
         List<Long> participantIds = allParticipants
                 .stream()
                 .map(mapToUserId)
                 .collect(Collectors.toList());
+        String locationEncoded = URLEncoder.encode(meetup.getLocation(), StandardCharsets.UTF_8);
         MeetupMessageModel.MeetupMessageModelBuilder builder = MeetupMessageModel
                 .builder()
                 .description(meetup.getDescription())
                 .topic(meetup.getTopic())
                 .location(meetup.getLocation())
-                .decodedLocation(rawLocation)
+                .locationEncoded(locationEncoded)
                 .noTimeId(meetup.getNoTimeButtonId())
                 .yesId(meetup.getYesButtonId())
                 .maybeId(meetup.getMaybeButtonId())
@@ -525,11 +525,7 @@ public class MeetupServiceBean {
     }
 
     public CompletableFuture<Void> changeMeetupLocation(Meetup meetup, String newLocation) {
-        try {
-            meetup.setLocation(URLEncoder.encode(newLocation, StandardCharsets.UTF_8.toString()));
-        } catch (UnsupportedEncodingException e) {
-            throw new AbstractoRunTimeException(e);
-        }
+        meetup.setLocation(newLocation);
         return updateMeetupMessage(meetup);
     }
 

@@ -35,23 +35,18 @@ public class MeetupManagementServiceBean {
             throw new MeetupPastTimeException();
         }
         Long meetupId = counterService.getNextCounterValue(organizer.getServerReference(), MEETUP_COUNTER_KEY);
-        Meetup meetup = null;
-        try {
-            meetup = Meetup
+        Meetup meetup = Meetup
                     .builder()
                     .meetupTime(timeStamp)
                     .description(description)
                     .topic(topic)
-                    .location(URLEncoder.encode(location, StandardCharsets.UTF_8.toString()))
+                    .location(location)
                     .organizer(organizer)
                     .server(organizer.getServerReference())
                     .meetupChannel(meetupChannel)
                     .state(MeetupState.NEW)
                     .id(new ServerSpecificId(organizer.getServerReference().getId(), meetupId))
                     .build();
-        } catch (UnsupportedEncodingException e) {
-            throw new AbstractoRunTimeException(e);
-        }
         return meetupRepository.save(meetup);
     }
 
