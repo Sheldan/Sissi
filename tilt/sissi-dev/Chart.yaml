@@ -6,6 +6,6 @@ dependencies:
   - name: sissi
     repository: file://../../deployment/helm/sissi
     version: ">= 0.0.1"
-  - name: postgresql
-    repository: oci://registry-1.docker.io/bitnamicharts
-    version: 15.3.2
+  - name: postgres
+    repository: oci://registry-1.docker.io/cloudpirates
+    version: 0.19.5
