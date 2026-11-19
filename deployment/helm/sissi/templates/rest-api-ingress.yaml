@@ -19,7 +19,6 @@ metadata:
     {{- end }}
   {{- end }}
 spec:
-  ingressClassName: nginx
   {{- with .Values.restApi.ingress.tls }}
   tls:
     {{- tpl (toYaml .) $ | nindent 4 }}
